@@ -415,7 +415,7 @@ Features:
 
 # 👨‍💻 Developed By
 
-**ASB Business**
+**Bilal Hussain Full Stack Dev.**
 
 ERP System for Petrol Pump & General Store Operations.
 
