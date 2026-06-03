@@ -1,58 +1,426 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# SBA Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> Petrol Pump & General Store ERP System built with Laravel, Vue 3, Inertia.js, Sanctum, and MySQL.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📖 Overview
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+SBA Management System is a complete ERP solution designed to manage two business domains within a single platform:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+* 🛢️ Petrol Pump Management
+* 🏪 General Store Management
 
-## Learning Laravel
+The system provides inventory control, supplier management, customer credit tracking, profit calculation, partner profit distribution, expense management, reporting, and ledger accounting.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+# 🚀 Technology Stack
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## Backend
 
-## Agentic Development
+* Laravel 13
+* PHP 8.3+
+* Laravel Sanctum
+* MySQL
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Frontend
 
-```bash
-composer require laravel/boost --dev
+* Vue 3
+* Inertia.js
+* Axios
+* Tailwind CSS
+* Vite
 
-php artisan boost:install
+## Reporting
+
+* Laravel DomPDF
+* Laravel Excel
+
+---
+
+# 🏗️ System Architecture
+
+```text
+Frontend (Vue 3 + Inertia)
+            │
+            ▼
+      Laravel Backend
+            │
+            ▼
+          MySQL
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+---
 
-## Contributing
+# 📦 Core Modules
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🛢️ Petrol Pump Module
 
-## Code of Conduct
+### Supplier Management
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Manage fuel suppliers and supplier ledgers.
 
-## Security Vulnerabilities
+Features:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+* Fuel purchase records
+* Payment tracking
+* Outstanding balance tracking
+* Supplier ledger reports
+
+### Partners Management
+
+Manage business partners and profit sharing.
+
+Features:
+
+* Partner registration
+* Share percentage management
+* Monthly profit distribution
+* Distribution reports
+
+### Permanent Customers
+
+Manage customers purchasing fuel on credit.
+
+Features:
+
+* Customer ledger
+* Credit tracking
+* Monthly settlement
+* Payment history
+
+### Fuel Transactions
+
+Manage daily fuel sales.
+
+Features:
+
+* Cash sales
+* Credit sales
+* Dynamic fuel pricing
+* Profit tracking
+
+### Fuel Rate Management
+
+Manage changing fuel prices.
+
+Features:
+
+* Historical pricing
+* Purchase rate tracking
+* Selling rate tracking
+* Automatic profit calculations
+
+### Expenses Management
+
+Track operational expenses.
+
+Features:
+
+* Salaries
+* Utility bills
+* Maintenance expenses
+* Miscellaneous expenses
+
+### Profit Engine
+
+Automatically calculates:
+
+```text
+Revenue
+- Fuel Cost
+- Expenses
+= Net Profit
+```
+
+Partner profit:
+
+```text
+Partner Share = Net Profit × Share %
+```
+
+---
+
+## 🏪 General Store Module
+
+### Supplier Management
+
+Manage suppliers and installment payments.
+
+Features:
+
+* Purchase records
+* Supplier ledger
+* Due balance tracking
+
+### Inventory Management
+
+Complete stock control system.
+
+Features:
+
+* Categories
+* Products
+* Stock history
+* Purchase tracking
+* Price history
+* Inventory valuation
+
+### Sales Management
+
+Features:
+
+* Cash sales
+* Credit sales
+* Invoice generation
+* Profit tracking
+
+### Customer Credit System
+
+Features:
+
+* Credit customers
+* Customer ledger
+* Monthly billing
+* Payment management
+
+### Inventory Profit System
+
+Features:
+
+* Item-wise profit
+* Monthly profit reports
+* Inventory performance analysis
+
+---
+
+# 📒 Ledger System
+
+The platform maintains separate ledgers for:
+
+* Suppliers
+* Customers
+* Partners
+
+Every financial transaction automatically updates the relevant ledger.
+
+---
+
+# 📊 Reporting System
+
+Supported reports:
+
+### Petrol Pump Reports
+
+* Fuel Purchase Report
+* Supplier Ledger
+* Customer Ledger
+* Expense Report
+* Monthly Profit Report
+* Partner Distribution Report
+
+### Store Reports
+
+* Inventory Report
+* Stock Movement Report
+* Supplier Ledger
+* Customer Ledger
+* Sales Report
+* Profit Analysis
+
+### Export Formats
+
+* PDF
+* Excel (XLSX)
+
+---
+
+# 📈 Business Rules
+
+## Dynamic Pricing
+
+Fuel prices may change weekly.
+
+Store item prices may vary based on purchase history.
+
+---
+
+## Credit Management
+
+Supported for:
+
+* Petrol Customers
+* Store Customers
+* Suppliers
+
+Monthly settlements are supported.
+
+---
+
+## Profit Distribution
+
+Partner distributions are calculated only after:
+
+* Revenue calculation
+* Cost deduction
+* Expense deduction
+
+---
+
+# 🗄️ Database Modules
+
+## Petrol Pump
+
+* Suppliers
+* Fuel Purchases
+* Fuel Stock
+* Fuel Transactions
+* Customers
+* Customer Payments
+* Expenses
+* Partners
+* Profit Distribution
+
+## General Store
+
+* Suppliers
+* Products
+* Categories
+* Inventory
+* Purchases
+* Sales
+* Customers
+* Customer Payments
+
+---
+
+# 📂 Project Structure
+
+```text
+app/
+├── Http/
+│   ├── Controllers/
+│   ├── Middleware/
+│
+├── Services/
+│   ├── ProfitService.php
+│   ├── LedgerService.php
+│   ├── PricingService.php
+│
+├── Models/
+
+resources/
+├── js/
+│   ├── Pages/
+│   ├── Components/
+│   ├── Layouts/
+│
+├── css/
+
+routes/
+├── web.php
+├── api.php
+```
+
+---
+
+# 🛠️ Installation
+
+Clone repository:
+
+```bash
+git clone https://github.com/yourusername/asb-business.git
+```
+
+Install PHP dependencies:
+
+```bash
+composer install
+```
+
+Install Node dependencies:
+
+```bash
+npm install
+```
+
+Copy environment file:
+
+```bash
+cp .env.example .env
+```
+
+Generate application key:
+
+```bash
+php artisan key:generate
+```
+
+Configure database credentials in `.env`
+
+Run migrations:
+
+```bash
+php artisan migrate
+```
+
+Start development server:
+
+```bash
+php artisan serve
+```
+
+Start Vite:
+
+```bash
+npm run dev
+```
+
+---
+
+# 🔐 Authentication
+
+Authentication is powered by:
+
+* Laravel Breeze
+* Laravel Sanctum
+* Inertia.js
+* Vue 3
+
+Features:
+
+* Login
+* Registration
+* Password Reset
+* Email Verification
+* Profile Management
+
+---
+
+# 🎯 Future Enhancements
+
+* Multi Branch Support
+* POS System
+* Barcode Scanner Integration
+* Fuel Nozzle Integration
+* SMS Notifications
+* WhatsApp Notifications
+* Mobile Application
+* Advanced Analytics Dashboard
+* Audit Logs
+* Role & Permission Management
+
+---
+
+# 👨‍💻 Developed By
+
+**ASB Business**
+
+ERP System for Petrol Pump & General Store Operations.
+
+---
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is proprietary software and intended for business management purposes.
