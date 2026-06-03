@@ -1,4 +1,4 @@
-# SBA Management System
+# ASB Management System
 
 > Petrol Pump & General Store ERP System built with Laravel, Vue 3, Inertia.js, Sanctum, and MySQL.
 
@@ -6,7 +6,7 @@
 
 ## 📖 Overview
 
-SBA Management System is a complete ERP solution designed to manage two business domains within a single platform:
+ASB Management System is a complete ERP solution designed to manage two business domains within a single platform:
 
 * 🛢️ Petrol Pump Management
 * 🏪 General Store Management
