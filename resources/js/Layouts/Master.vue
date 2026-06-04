@@ -12,7 +12,7 @@
                 <app-header />
 
                 <div
-                    class="min-h-screen p-4 mx-auto md:p-6 bg-gray-50 dark:bg-gray-900"
+                    class="min-h-screen p-4 mx-auto md:p-6 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white"
                 >
                     <!-- Page Heading -->
                     <header class="bg-white shadow" v-if="$slots.header">
