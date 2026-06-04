@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from "vue";
-
+import { PencilSquareIcon, TrashIcon } from "@heroicons/vue/24/outline";
 const props = defineProps({
     users: {
         type: Array,
@@ -8,10 +8,7 @@ const props = defineProps({
     },
 });
 
-const emit = defineEmits([
-    "edit",
-    "delete",
-]);
+const emit = defineEmits(["edit", "delete"]);
 
 const search = ref("");
 const statusFilter = ref("All");
@@ -44,10 +41,7 @@ const totalPages = computed(() =>
 const paginatedUsers = computed(() => {
     const start = (currentPage.value - 1) * perPage;
 
-    return filteredUsers.value.slice(
-        start,
-        start + perPage
-    );
+    return filteredUsers.value.slice(start, start + perPage);
 });
 
 function setFilter(filter) {
@@ -60,7 +54,7 @@ function changePage(page) {
 }
 </script>
 
-<template> 
+<template>
     <div
         class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]"
     >
@@ -69,22 +63,16 @@ function changePage(page) {
             class="flex flex-col gap-4 border-b border-gray-200 px-5 py-4 lg:flex-row lg:items-center lg:justify-between dark:border-gray-800"
         >
             <div>
-                <h3
-                    class="text-lg font-semibold text-gray-800 dark:text-white"
-                >
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
                     Users Management
                 </h3>
 
-                <p
-                    class="text-sm text-gray-500 dark:text-gray-400"
-                >
+                <p class="text-sm text-gray-500 dark:text-gray-400">
                     Manage all registered users
                 </p>
             </div>
 
-            <div
-                class="flex flex-col gap-3 sm:flex-row sm:items-center"
-            >
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <!-- Filter Tabs -->
 
                 <div
@@ -96,7 +84,7 @@ function changePage(page) {
                             'px-4 py-2 rounded-md text-sm font-medium',
                             statusFilter === 'All'
                                 ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow'
-                                : 'text-gray-500'
+                                : 'text-gray-500',
                         ]"
                     >
                         All
@@ -108,7 +96,7 @@ function changePage(page) {
                             'px-4 py-2 rounded-md text-sm font-medium',
                             statusFilter === 'Active'
                                 ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow'
-                                : 'text-gray-500'
+                                : 'text-gray-500',
                         ]"
                     >
                         Active
@@ -120,7 +108,7 @@ function changePage(page) {
                             'px-4 py-2 rounded-md text-sm font-medium',
                             statusFilter === 'Inactive'
                                 ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow'
-                                : 'text-gray-500'
+                                : 'text-gray-500',
                         ]"
                     >
                         Inactive
@@ -143,9 +131,7 @@ function changePage(page) {
         <div class="overflow-x-auto custom-scrollbar">
             <table class="w-full">
                 <thead>
-                    <tr
-                        class="border-b border-gray-200 dark:border-gray-800"
-                    >
+                    <tr class="border-b border-gray-200 dark:border-gray-800">
                         <th
                             class="p-4 text-left text-xs font-medium text-gray-500"
                         >
@@ -212,7 +198,7 @@ function changePage(page) {
                                     'rounded-full px-2 py-1 text-xs font-medium',
                                     user.status === 'Active'
                                         ? 'bg-success-50 text-success-700 dark:bg-success-500/15 dark:text-success-500'
-                                        : 'bg-error-50 text-error-700 dark:bg-error-500/15 dark:text-error-500'
+                                        : 'bg-error-50 text-error-700 dark:bg-error-500/15 dark:text-error-500',
                                 ]"
                             >
                                 {{ user.status }}
@@ -220,37 +206,30 @@ function changePage(page) {
                         </td>
 
                         <td class="p-4">
-                            <div
-                                class="flex justify-center gap-3"
-                            >
+                            <div class="flex justify-center gap-3">
                                 <!-- Edit -->
-
                                 <button
                                     @click="emit('edit', user)"
-                                    class="text-blue-600 hover:text-blue-800"
+                                    class="rounded-lg p-2 text-blue-600 transition hover:bg-blue-50 hover:text-blue-800 dark:hover:bg-blue-500/10"
+                                    title="Edit User"
                                 >
-                                    ✏️
+                                    <PencilSquareIcon class="h-5 w-5" />
                                 </button>
 
                                 <!-- Delete -->
-
                                 <button
                                     @click="emit('delete', user.id)"
-                                    class="text-red-600 hover:text-red-800"
+                                    class="rounded-lg p-2 text-red-600 transition hover:bg-red-50 hover:text-red-800 dark:hover:bg-red-500/10"
+                                    title="Delete User"
                                 >
-                                    🗑️
+                                    <TrashIcon class="h-5 w-5" />
                                 </button>
                             </div>
                         </td>
                     </tr>
 
-                    <tr
-                        v-if="paginatedUsers.length === 0"
-                    >
-                        <td
-                            colspan="6"
-                            class="p-6 text-center text-gray-500"
-                        >
+                    <tr v-if="paginatedUsers.length === 0">
+                        <td colspan="6" class="p-6 text-center text-gray-500">
                             No records found.
                         </td>
                     </tr>
@@ -264,9 +243,7 @@ function changePage(page) {
             class="flex flex-col gap-4 border-t border-gray-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between dark:border-gray-800"
         >
             <div>
-                <span
-                    class="text-sm text-gray-500 dark:text-gray-400"
-                >
+                <span class="text-sm text-gray-500 dark:text-gray-400">
                     Showing
                     <strong>
                         {{
@@ -314,7 +291,7 @@ function changePage(page) {
                         'rounded-lg px-4 py-2',
                         currentPage === page
                             ? 'bg-brand-500 text-white'
-                            : 'border'
+                            : 'border',
                     ]"
                 >
                     {{ page }}
@@ -322,10 +299,7 @@ function changePage(page) {
 
                 <button
                     @click="changePage(currentPage + 1)"
-                    :disabled="
-                        currentPage === totalPages ||
-                        totalPages === 0
-                    "
+                    :disabled="currentPage === totalPages || totalPages === 0"
                     class="rounded-lg border px-3 py-2 disabled:opacity-50"
                 >
                     Next

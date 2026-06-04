@@ -211,15 +211,13 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { ref } from "vue";
+import { Link } from "@inertiajs/vue3";
 
 import {
   GridIcon,
   CalenderIcon,
   UserCircleIcon,
-  ChatIcon,
-  MailIcon,
-  DocsIcon,
   PieChartIcon,
   ChevronDownIcon,
   HorizontalDots,
@@ -228,123 +226,256 @@ import {
   ListIcon,
   PlugInIcon,
 } from "../../icons";
-import SidebarWidget from "./SidebarWidget.vue";
+
 import BoxCubeIcon from "@/icons/BoxCubeIcon.vue";
+import SidebarWidget from "./SidebarWidget.vue";
 import { useSidebar } from "@/composables/useSidebar";
 
-const currentPath = window.location.pathname.replace(/\/$/, "") || "/";
+const {
+  isExpanded,
+  isMobileOpen,
+  isHovered,
+  setIsHovered,
+} = useSidebar();
 
-const { isExpanded, isMobileOpen, isHovered, openSubmenu, toggleSubmenu, setIsHovered } = useSidebar();
+const currentPath =
+  window.location.pathname.replace(/\/$/, "") || "/";
 
 const menuGroups = [
-  {
-    title: "Menu",
-    items: [
-      {
-        icon: GridIcon,
-        name: "Dashboard",
-        subItems: [{ name: "Ecommerce", path: "/", pro: false }],
-      },
-      {
-        icon: CalenderIcon,
-        name: "Calendar",
-        path: "/calendar",
-      },
-      {
-        icon: UserCircleIcon,
-        name: "User Profile",
-        path: "/profile",
-      },
+    {
+        title: "Main",
+        items: [
+            {
+                icon: GridIcon,
+                name: "Dashboard",
+                path: "/dashboard",
+            },
+        ],
+    },
 
-      {
-        name: "Forms",
-        icon: ListIcon,
-        subItems: [
-          { name: "Form Elements", path: "/form-elements", pro: false },
+    {
+        title: "Administration",
+        items: [
+            {
+                icon: UserCircleIcon,
+                name: "User Management",
+                subItems: [
+                    {
+                        name: "Users",
+                        path: "/users",
+                    },
+                    {
+                        name: "Roles",
+                        path: "/roles",
+                    },
+                    {
+                        name: "Permissions",
+                        path: "/permissions",
+                    },
+                ],
+            },
         ],
-      },
-      {
-        name: "Tables",
-        icon: TableIcon,
-        subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }],
-      },
-      {
-        name: "Pages",
-        icon: PageIcon,
-        subItems: [
-          { name: "Black Page", path: "/blank", pro: false },
-          { name: "404 Page", path: "/error-404", pro: false },
+    },
+
+    {
+        title: "Contacts",
+        items: [
+            {
+                icon: UserCircleIcon,
+                name: "Parties",
+                subItems: [
+                    {
+                        name: "Customers",
+                        path: "/customers",
+                    },
+                    {
+                        name: "Suppliers",
+                        path: "/suppliers",
+                    },
+                ],
+            },
         ],
-      },
-    ],
-  },
-  {
-    title: "Others",
-    items: [
-      {
-        icon: PieChartIcon,
-        name: "Charts",
-        subItems: [
-          { name: "Line Chart", path: "/line-chart", pro: false },
-          { name: "Bar Chart", path: "/bar-chart", pro: false },
+    },
+
+    {
+        title: "Inventory",
+        items: [
+            {
+                icon: BoxCubeIcon,
+                name: "Inventory",
+                subItems: [
+                    {
+                        name: "Categories",
+                        path: "/categories",
+                    },
+                    {
+                        name: "Products",
+                        path: "/products",
+                    },
+                    {
+                        name: "Stock",
+                        path: "/stock",
+                    },
+                ],
+            },
         ],
-      },
-      {
-        icon: BoxCubeIcon,
-        name: "Ui Elements",
-        subItems: [
-          { name: "Alerts", path: "/alerts", pro: false },
-          { name: "Avatars", path: "/avatars", pro: false },
-          { name: "Badge", path: "/badge", pro: false },
-          { name: "Buttons", path: "/buttons", pro: false },
-          { name: "Images", path: "/images", pro: false },
-          { name: "Videos", path: "/videos", pro: false },
+    },
+
+    {
+        title: "Transactions",
+        items: [
+            {
+                icon: TableIcon,
+                name: "Purchases",
+                subItems: [
+                    {
+                        name: "Purchase Orders",
+                        path: "/purchases",
+                    },
+                    {
+                        name: "Purchase Returns",
+                        path: "/purchase-returns",
+                    },
+                ],
+            },
+            {
+                icon: TableIcon,
+                name: "Sales",
+                subItems: [
+                    {
+                        name: "Sales",
+                        path: "/sales",
+                    },
+                    {
+                        name: "Sale Returns",
+                        path: "/sale-returns",
+                    },
+                ],
+            },
         ],
-      },
-      {
-        icon: PlugInIcon,
-        name: "Authentication",
-        subItems: [
-          { name: "Signin", path: "/signin", pro: false },
-          { name: "Signup", path: "/signup", pro: false },
+    },
+
+    {
+        title: "Petrol Pump",
+        items: [
+            {
+                icon: PlugInIcon,
+                name: "Fuel Management",
+                subItems: [
+                    {
+                        name: "Fuel Products",
+                        path: "/fuel-products",
+                    },
+                    {
+                        name: "Tanks",
+                        path: "/tanks",
+                    },
+                    {
+                        name: "Nozzles",
+                        path: "/nozzles",
+                    },
+                    {
+                        name: "Meter Readings",
+                        path: "/meter-readings",
+                    },
+                ],
+            },
         ],
-      },
-      // ... Add other menu items here
-    ],
-  },
+    },
+
+    {
+        title: "Accounts",
+        items: [
+            {
+                icon: PieChartIcon,
+                name: "Accounts",
+                subItems: [
+                    {
+                        name: "Expenses",
+                        path: "/expenses",
+                    },
+                    {
+                        name: "Income",
+                        path: "/income",
+                    },
+                    {
+                        name: "Cash Book",
+                        path: "/cash-book",
+                    },
+                ],
+            },
+        ],
+    },
+
+    {
+        title: "Reports",
+        items: [
+            {
+                icon: PageIcon,
+                name: "Reports",
+                subItems: [
+                    {
+                        name: "Sales Report",
+                        path: "/reports/sales",
+                    },
+                    {
+                        name: "Purchase Report",
+                        path: "/reports/purchases",
+                    },
+                    {
+                        name: "Stock Report",
+                        path: "/reports/stock",
+                    },
+                    {
+                        name: "Profit & Loss",
+                        path: "/reports/profit-loss",
+                    },
+                ],
+            },
+        ],
+    },
+
+    {
+        title: "Settings",
+        items: [
+            {
+                icon: ListIcon,
+                name: "Settings",
+                subItems: [
+                    {
+                        name: "Company",
+                        path: "/settings/company",
+                    },
+                    {
+                        name: "System",
+                        path: "/settings/system",
+                    },
+                ],
+            },
+        ],
+    },
 ];
 
-const isActive = (path) => currentPath === path;
+const openSubmenus = ref({});
 
-const isAnySubmenuRouteActive = computed(() => {
-  return menuGroups.some((group) =>
-    group.items.some(
-      (item) =>
-        item.subItems && item.subItems.some((subItem) => isActive(subItem.path))
-    )
-  );
-});
+const isActive = (path) => {
+  return currentPath === path;
+};
+
+const toggleSubmenu = (groupIndex, itemIndex) => {
+  const key = `${groupIndex}-${itemIndex}`;
+
+  openSubmenus.value[key] = !openSubmenus.value[key];
+};
 
 const isSubmenuOpen = (groupIndex, itemIndex) => {
   const key = `${groupIndex}-${itemIndex}`;
-  return (
-    openSubmenu.value === key ||
-    (isAnySubmenuRouteActive.value &&
-      menuGroups[groupIndex].items[itemIndex].subItems?.some((subItem) =>
-        isActive(subItem.path)
-      ))
-  );
-};
 
-const startTransition = (el) => {
-  el.style.height = "auto";
-  const height = el.scrollHeight;
-  el.style.height = "0px";
-  el.offsetHeight; // force reflow
-  el.style.height = height + "px";
-};
+  const item = menuGroups[groupIndex].items[itemIndex];
 
-const endTransition = (el) => {
-  el.style.height = "";
+  const hasActiveChild =
+    item.subItems?.some((sub) => isActive(sub.path));
+
+  return openSubmenus.value[key] || hasActiveChild;
 };
 </script>

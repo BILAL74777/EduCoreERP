@@ -37,6 +37,7 @@
         "vuevectormap": "^2.0.1"
     },
     "dependencies": {
+        "@heroicons/vue": "^2.2.0",
         "@inertiajs/vue3": "^3.3.0",
         "axios": "^1.17.0"
     }
