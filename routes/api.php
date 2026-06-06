@@ -17,10 +17,12 @@ Route::get('/test', function () {
         Route::post('/{customer}', [CustomerController::class, 'update']);
         Route::delete('/{customer}', [CustomerController::class, 'destroy']);
     });
-
-    // Suppliers
-    Route::post('/suppliers', [SupplierController::class, 'store']);
-    Route::put('/suppliers/{supplier}', [SupplierController::class, 'update']);
-    Route::delete('/suppliers/{supplier}', [SupplierController::class, 'destroy']);
+    Route::prefix('suppliers')->group(function () {
+        Route::get('/', [SupplierController::class, 'getAll']);
+        Route::post('/', [SupplierController::class, 'store']);
+        Route::post('/{supplier}', [SupplierController::class, 'update']);
+        Route::delete('/{supplier}', [SupplierController::class, 'destroy']);
+    });
+ 
 
 // });

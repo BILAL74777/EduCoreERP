@@ -24,11 +24,11 @@ function goToPage(url) {
         <div>
             <span class="text-sm text-gray-500 dark:text-gray-400">
                 Showing
-                <strong>{{ pagination.from ?? 0 }}</strong>
+                <strong>{{ pagination?.from ?? 0 }}</strong>
                 to
-                <strong>{{ pagination.to ?? 0 }}</strong>
+                <strong>{{ pagination?.to ?? 0 }}</strong>
                 of
-                <strong>{{ pagination.total ?? 0 }}</strong>
+                <strong>{{ pagination?.total ?? 0 }}</strong>
                 records
             </span>
         </div>
@@ -37,8 +37,8 @@ function goToPage(url) {
             <!-- Previous -->
 
             <button
-                @click="goToPage(pagination.prev_page_url)"
-                :disabled="!pagination.prev_page_url"
+                @click="goToPage(pagination?.prev_page_url)"
+                :disabled="!pagination?.prev_page_url"
                 class="rounded-lg border px-3 py-2 disabled:opacity-50"
             >
                 Previous
@@ -47,7 +47,7 @@ function goToPage(url) {
             <!-- Page Numbers -->
 
             <button
-                v-for="link in (pagination.links || []).slice(1, -1)"
+                v-for="link in (pagination?.links || []).slice(1, -1)"
                 :key="link.label"
                 @click="goToPage(link.url)"
                 :disabled="!link.url"
@@ -64,8 +64,8 @@ function goToPage(url) {
             <!-- Next -->
 
             <button
-                @click="goToPage(pagination.next_page_url)"
-                :disabled="!pagination.next_page_url"
+                @click="goToPage(pagination?.next_page_url)"
+                :disabled="!pagination?.next_page_url"
                 class="rounded-lg border px-3 py-2 disabled:opacity-50"
             >
                 Next

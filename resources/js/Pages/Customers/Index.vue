@@ -149,7 +149,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="Customers" />
 
     <Master>
         <div class="mb-6">

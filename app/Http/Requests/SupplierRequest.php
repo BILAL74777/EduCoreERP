@@ -12,7 +12,7 @@ class SupplierRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -30,5 +30,6 @@ class SupplierRequest extends FormRequest
             'opening_balance' => ['nullable', 'numeric'],
             'status' => ['required', 'boolean'],
         ];
+        
     }
 }

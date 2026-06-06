@@ -6,6 +6,7 @@ use App\Http\Requests\SupplierRequest;
 use App\Models\Supplier;
 use App\Services\SupplierService;
 use Inertia\Inertia;
+use Illuminate\Http\Request;
 
 class SupplierController extends Controller
 {
@@ -13,36 +14,58 @@ class SupplierController extends Controller
         protected SupplierService $supplierService
     ) {}
 
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('Suppliers/Index', [
-            'suppliers' => $this->supplierService->getAll(),
+        return Inertia::render('Suppliers/Index');
+    }
+    public function getAll(Request $request)
+    {
+        $suppliers = $this->supplierService->getAll(
+            $request->search
+        );
+ 
+        return response()->json([
+            'suppliers' => $suppliers,
+            'filters' => [
+                'search' => $request->search,
+            ],
         ]);
     }
 
-    public function store(SupplierRequest $request)
+   public function store(SupplierRequest $request)
     {
-        $this->supplierService->create(
+        $supplier = $this->supplierService->create(
             $request->validated()
         );
 
-        return back()->with('success', 'Supplier created successfully.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Supplier created successfully',
+            'data' => $supplier,
+        ], 201);
     }
 
     public function update(SupplierRequest $request, Supplier $supplier)
     {
-        $this->supplierService->update(
+        $supplier = $this->supplierService->update(
             $supplier,
             $request->validated()
         );
 
-        return back()->with('success', 'Supplier updated successfully.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Supplier updated successfully',
+            'data' => $supplier,
+        ]);
     }
 
     public function destroy(Supplier $supplier)
     {
         $this->supplierService->delete($supplier);
 
-        return back()->with('success', 'Supplier deleted successfully.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Supplier deleted successfully.'
+        ]);
     }
 }
