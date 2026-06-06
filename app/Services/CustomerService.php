@@ -18,7 +18,7 @@ class CustomerService
                 )
             )
             ->latest()
-            ->paginate(10)
+            ->paginate(1)
             ->withQueryString();
     }
 

@@ -12,7 +12,7 @@ const showFormModal = ref(false);
 const showDeleteModal = ref(false);
 const editing = ref(false);
 const selectedId = ref(null);
-const customers = ref([]);
+const customers = ref({});
 const loading = ref(false);
 const errors = ref({});
 
@@ -27,10 +27,15 @@ const form = ref({
     status: "Active",
 });
 
-async function getCustomers() {
+async function getCustomers(page = 1) {
     loading.value = true;
+
     try {
-        const response = await axios.get("/api/customers");
+        const response = await axios.get("/api/customers", {
+            params: {
+                page,
+            },
+        });
 
         customers.value = response.data.customers;
     } catch (error) {
@@ -208,6 +213,7 @@ onMounted(() => {
                 :customers="customers"
                 @edit="editCustomer"
                 @delete="askDelete"
+                @page-change="getCustomers"
             />
         </div>
 

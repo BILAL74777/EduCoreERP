@@ -1,42 +1,26 @@
 <script setup>
 import { ref, computed } from "vue";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/vue/24/outline";
+import Pagination from "@/Components/Pagination.vue";
 
 const props = defineProps({
     customers: {
-        type: [Array, Object],
+        type: Object,
         required: true,
     },
 });
 
-const emit = defineEmits(["edit", "delete"]);
+const emit = defineEmits([
+    "edit",
+    "delete",
+    "page-change",
+]);
 
 const search = ref("");
 const statusFilter = ref("All");
 
-const currentPage = ref(1);
-const perPage = 3;
-
-/*
-|--------------------------------------------------------------------------
-| Normalize Customers
-|--------------------------------------------------------------------------
-|
-| Supports both:
-| Array
-| { data: [...] } (Laravel paginator)
-|
-*/
 const customerList = computed(() => {
-    if (Array.isArray(props.customers)) {
-        return props.customers;
-    }
-
-    if (props.customers?.data) {
-        return props.customers.data;
-    }
-
-    return [];
+    return props.customers?.data || [];
 });
 
 const filteredCustomers = computed(() => {
@@ -45,8 +29,8 @@ const filteredCustomers = computed(() => {
 
         const matchesSearch =
             (customer.name ?? "").toLowerCase().includes(searchTerm) ||
-            (customer.address ?? "").toLowerCase().includes(searchTerm) ||
-            (customer.phone ?? "").toLowerCase().includes(searchTerm);
+            (customer.phone ?? "").toLowerCase().includes(searchTerm) ||
+            (customer.address ?? "").toLowerCase().includes(searchTerm);
 
         const matchesStatus =
             statusFilter.value === "All"
@@ -59,25 +43,8 @@ const filteredCustomers = computed(() => {
     });
 });
 
-const totalPages = computed(() => {
-    return Math.ceil(filteredCustomers.value.length / perPage);
-});
-
-const paginatedCustomers = computed(() => {
-    const start = (currentPage.value - 1) * perPage;
-
-    return filteredCustomers.value.slice(start, start + perPage);
-});
-
 function setFilter(filter) {
     statusFilter.value = filter;
-    currentPage.value = 1;
-}
-
-function changePage(page) {
-    if (page < 1 || page > totalPages.value) return;
-
-    currentPage.value = page;
 }
 </script>
 
@@ -100,7 +67,7 @@ function changePage(page) {
             </div>
 
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
-                <!-- Filter Tabs -->
+                <!-- Status Filter -->
 
                 <div
                     class="inline-flex rounded-lg bg-gray-100 p-1 dark:bg-gray-900"
@@ -155,54 +122,39 @@ function changePage(page) {
 
         <!-- Table -->
 
-        <div class="overflow-x-auto custom-scrollbar">
+        <div class="overflow-x-auto">
             <table class="w-full">
                 <thead>
                     <tr class="border-b border-gray-200 dark:border-gray-800">
-                        <th
-                            class="p-4 text-left text-xs font-medium text-gray-500"
-                        >
+                        <th class="p-4 text-left text-xs font-medium text-gray-500">
                             #
                         </th>
 
-                        <th
-                            class="p-4 text-left text-xs font-medium text-gray-500"
-                        >
+                        <th class="p-4 text-left text-xs font-medium text-gray-500">
                             Name
                         </th>
-                        <th
-                            class="p-4 text-left text-xs font-medium text-gray-500"
-                        >
+
+                        <th class="p-4 text-left text-xs font-medium text-gray-500">
                             Phone
                         </th>
 
-                        <th
-                            class="p-4 text-left text-xs font-medium text-gray-500"
-                        >
+                        <th class="p-4 text-left text-xs font-medium text-gray-500">
                             CNIC
                         </th>
 
-                        <th
-                            class="p-4 text-left text-xs font-medium text-gray-500"
-                        >
+                        <th class="p-4 text-left text-xs font-medium text-gray-500">
                             Opening Balance
                         </th>
 
-                        <th
-                            class="p-4 text-left text-xs font-medium text-gray-500"
-                        >
+                        <th class="p-4 text-left text-xs font-medium text-gray-500">
                             Credit Limit
                         </th>
 
-                        <th
-                            class="p-4 text-left text-xs font-medium text-gray-500"
-                        >
+                        <th class="p-4 text-left text-xs font-medium text-gray-500">
                             Status
                         </th>
 
-                        <th
-                            class="p-4 text-center text-xs font-medium text-gray-500"
-                        >
+                        <th class="p-4 text-center text-xs font-medium text-gray-500">
                             Actions
                         </th>
                     </tr>
@@ -210,11 +162,20 @@ function changePage(page) {
 
                 <tbody>
                     <tr
-                        v-for="(customer, index) in paginatedCustomers"
+                        v-for="(customer, index) in filteredCustomers"
                         :key="customer.id"
                         class="border-b border-gray-100 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-900"
                     >
-                        <td class="p-4">{{ index + 1 }}</td>
+                        <!-- Serial Number -->
+                        <td class="p-4">
+                            {{
+                                ((customers.current_page - 1) *
+                                    customers.per_page) +
+                                index +
+                                1
+                            }}
+                        </td>
+
                         <td class="p-4">{{ customer.name }}</td>
                         <td class="p-4">{{ customer.phone }}</td>
                         <td class="p-4">{{ customer.cnic }}</td>
@@ -226,8 +187,8 @@ function changePage(page) {
                                 :class="[
                                     'rounded-full px-2 py-1 text-xs font-medium',
                                     customer.status
-                                        ? 'bg-success-50 text-success-700 dark:bg-success-500/15 dark:text-success-500'
-                                        : 'bg-error-50 text-error-700 dark:bg-error-500/15 dark:text-error-500',
+                                        ? 'bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-500'
+                                        : 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-500',
                                 ]"
                             >
                                 {{ customer.status ? "Active" : "Inactive" }}
@@ -236,20 +197,16 @@ function changePage(page) {
 
                         <td class="p-4">
                             <div class="flex justify-center gap-3">
-                                <!-- Edit -->
                                 <button
                                     @click="emit('edit', customer)"
-                                    class="rounded-lg p-2 text-blue-600 transition hover:bg-blue-50 hover:text-blue-800 dark:hover:bg-blue-500/10"
-                                    title="Edit Customer"
+                                    class="rounded-lg p-2 text-blue-600 hover:bg-blue-50"
                                 >
                                     <PencilSquareIcon class="h-5 w-5" />
                                 </button>
 
-                                <!-- Delete -->
                                 <button
                                     @click="emit('delete', customer.id)"
-                                    class="rounded-lg p-2 text-red-600 transition hover:bg-red-50 hover:text-red-800 dark:hover:bg-red-500/10"
-                                    title="Delete Customer"
+                                    class="rounded-lg p-2 text-red-600 hover:bg-red-50"
                                 >
                                     <TrashIcon class="h-5 w-5" />
                                 </button>
@@ -257,83 +214,34 @@ function changePage(page) {
                         </td>
                     </tr>
 
-                    <tr v-if="paginatedCustomers.length === 0">
-                        <td colspan="6" class="p-6 text-center text-gray-500">
-                            No records found.
+                    <tr v-if="filteredCustomers.length === 0">
+                        <td colspan="8" class="p-6 text-center text-gray-500">
+                            No customers found.
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
+        <!-- Pagination -->
+
+        <Pagination
+            :pagination="customers"
+            @page-change="emit('page-change', $event)"
+        />
+
         <!-- Footer -->
 
         <div
-            class="flex flex-col gap-4 border-t border-gray-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between dark:border-gray-800"
+            class="border-t border-gray-200 px-5 py-4 text-sm text-gray-500 dark:border-gray-800 dark:text-gray-400"
         >
-            <div>
-                <span class="text-sm text-gray-500 dark:text-gray-400">
-                    Showing
-                    <strong>
-                        {{
-                            filteredCustomers.length === 0
-                                ? 0
-                                : (currentPage - 1) * perPage + 1
-                        }}
-                    </strong>
-
-                    to
-
-                    <strong>
-                        {{
-                            Math.min(
-                                currentPage * perPage,
-                                filteredCustomers.length
-                            )
-                        }}
-                    </strong>
-
-                    of
-
-                    <strong>
-                        {{ filteredCustomers.length }}
-                    </strong>
-
-                    records
-                </span>
-            </div>
-
-            <div class="flex gap-2">
-                <button
-                    @click="changePage(currentPage - 1)"
-                    :disabled="currentPage === 1"
-                    class="rounded-lg border px-3 py-2 disabled:opacity-50"
-                >
-                    Previous
-                </button>
-
-                <button
-                    v-for="page in totalPages"
-                    :key="page"
-                    @click="changePage(page)"
-                    :class="[
-                        'rounded-lg px-4 py-2',
-                        currentPage === page
-                            ? 'bg-brand-500 text-white'
-                            : 'border',
-                    ]"
-                >
-                    {{ page }}
-                </button>
-
-                <button
-                    @click="changePage(currentPage + 1)"
-                    :disabled="currentPage === totalPages || totalPages === 0"
-                    class="rounded-lg border px-3 py-2 disabled:opacity-50"
-                >
-                    Next
-                </button>
-            </div>
+            Showing
+            <strong>{{ customers.from ?? 0 }}</strong>
+            to
+            <strong>{{ customers.to ?? 0 }}</strong>
+            of
+            <strong>{{ customers.total ?? 0 }}</strong>
+            records
         </div>
     </div>
 </template>
