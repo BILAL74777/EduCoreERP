@@ -8,13 +8,16 @@ import axios from "axios";
 import Modal from "@/Components/Modal.vue";
 import DeleteConfirmModal from "@/Components/DeleteConfirmModal.vue";
 import CustomerTable from "./CustomerTable.vue";
+import SuccessButton from "@/Components/SuccessButton.vue";
 const showFormModal = ref(false);
 const showDeleteModal = ref(false);
 const editing = ref(false);
 const selectedId = ref(null);
 const customers = ref({});
 const loading = ref(false);
+const saving = ref(false);
 const errors = ref({});
+const search = ref("");
 
 const form = ref({
     id: null,
@@ -34,6 +37,7 @@ async function getCustomers(page = 1) {
         const response = await axios.get("/api/customers", {
             params: {
                 page,
+                search: search.value,
             },
         });
 
@@ -43,6 +47,11 @@ async function getCustomers(page = 1) {
     } finally {
         loading.value = false;
     }
+}
+function searchCustomers(value) {
+    search.value = value;
+
+    getCustomers();
 }
 
 function openCreateModal() {
@@ -73,6 +82,7 @@ function editCustomer(customer) {
 }
 
 async function saveCustomer() {
+    saving.value = true;
     try {
         errors.value = {};
 
@@ -90,6 +100,8 @@ async function saveCustomer() {
         }
 
         console.error(error);
+    } finally {
+        saving.value = false;
     }
 }
 function clearError(field) {
@@ -211,9 +223,11 @@ onMounted(() => {
             <CustomerTable
                 v-else
                 :customers="customers"
+                :search-value="search"
                 @edit="editCustomer"
                 @delete="askDelete"
-                @page-change="getCustomers"
+                @search="searchCustomers"
+                @page-change="changePage"
             />
         </div>
 
@@ -358,19 +372,17 @@ onMounted(() => {
                 </div>
 
                 <div class="flex justify-end gap-3 mt-6">
-                    <button
-                        @click="showFormModal = false"
-                        class="px-4 py-2 bg-gray-500 text-white rounded-lg"
-                    >
-                        Cancel
-                    </button>
-
-                    <button
-                        @click="saveCustomer"
-                        class="px-4 py-2 bg-green-600 text-white rounded-lg"
-                    >
-                        {{ editing ? "Update" : "Save" }}
-                    </button>
+                    <SuccessButton @click="saveCustomer" :loading="saving">
+                        {{
+                            saving
+                                ? editing
+                                    ? "Updating..."
+                                    : "Saving..."
+                                : editing
+                                ? "Update"
+                                : "Save"
+                        }}
+                    </SuccessButton>
                 </div>
             </div>
         </Modal>

@@ -6,19 +6,19 @@ use App\Models\Customer;
 
 class CustomerService
 {
-    public function getAll(?string $search = null)
+    public function getAll(?string $search = null,?string $status = null) 
     {
         return Customer::query()
             ->when(
                 $search,
-                fn ($query) => $query->where(
-                    'name',
-                    'like',
-                    "%{$search}%"
-                )
+                fn ($q) => $q->where('name', 'like', "%{$search}%")
+            )
+            ->when(
+                $status !== null,
+                fn ($q) => $q->where('status', $status)
             )
             ->latest()
-            ->paginate(1)
+            ->paginate(10)
             ->withQueryString();
     }
 

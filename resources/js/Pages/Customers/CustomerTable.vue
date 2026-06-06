@@ -1,23 +1,32 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/vue/24/outline";
 import Pagination from "@/Components/Pagination.vue";
+import debounce from "lodash/debounce";
 
 const props = defineProps({
     customers: {
         type: Object,
         required: true,
     },
+
+    searchValue: {
+        type: String,
+        default: "",
+    },
 });
 
-const emit = defineEmits([
-    "edit",
-    "delete",
-    "page-change",
-]);
+const emit = defineEmits(["edit", "delete", "page-change", "search"]);
 
-const search = ref("");
+const search = ref(props.searchValue);
 const statusFilter = ref("All");
+
+watch(
+    () => props.searchValue,
+    (value) => {
+        search.value = value;
+    }
+);
 
 const customerList = computed(() => {
     return props.customers?.data || [];
@@ -25,26 +34,30 @@ const customerList = computed(() => {
 
 const filteredCustomers = computed(() => {
     return customerList.value.filter((customer) => {
-        const searchTerm = search.value.toLowerCase();
+        if (statusFilter.value === "All") {
+            return true;
+        }
 
-        const matchesSearch =
-            (customer.name ?? "").toLowerCase().includes(searchTerm) ||
-            (customer.phone ?? "").toLowerCase().includes(searchTerm) ||
-            (customer.address ?? "").toLowerCase().includes(searchTerm);
+        if (statusFilter.value === "Active") {
+            return customer.status == 1;
+        }
 
-        const matchesStatus =
-            statusFilter.value === "All"
-                ? true
-                : statusFilter.value === "Active"
-                ? customer.status == 1
-                : customer.status == 0;
-
-        return matchesSearch && matchesStatus;
+        return customer.status == 0;
     });
 });
 
 function setFilter(filter) {
     statusFilter.value = filter;
+}
+
+const searchCustomer = debounce(() => {
+    emit("search", search.value);
+}, 500);
+
+function resetSearch() {
+    search.value = "";
+    statusFilter.value = "";
+    emit("search", "");
 }
 </script>
 
@@ -69,54 +82,67 @@ function setFilter(filter) {
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <!-- Status Filter -->
 
-                <div
-                    class="inline-flex rounded-lg bg-gray-100 p-1 dark:bg-gray-900"
-                >
-                    <button
-                        @click="setFilter('All')"
-                        :class="[
-                            'px-4 py-2 rounded-md text-sm font-medium',
-                            statusFilter === 'All'
-                                ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow'
-                                : 'text-gray-500',
-                        ]"
-                    >
-                        All
-                    </button>
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <!-- Filter -->
 
-                    <button
-                        @click="setFilter('Active')"
-                        :class="[
-                            'px-4 py-2 rounded-md text-sm font-medium',
-                            statusFilter === 'Active'
-                                ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow'
-                                : 'text-gray-500',
-                        ]"
+                    <div
+                        class="inline-flex rounded-lg bg-gray-100 p-1 dark:bg-gray-900"
                     >
-                        Active
-                    </button>
+                        <button
+                            @click="setFilter('All')"
+                            :class="[
+                                'px-4 py-2 rounded-md text-sm font-medium',
+                                statusFilter === 'All'
+                                    ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow'
+                                    : 'text-gray-500',
+                            ]"
+                        >
+                            All
+                        </button>
 
-                    <button
-                        @click="setFilter('Inactive')"
-                        :class="[
-                            'px-4 py-2 rounded-md text-sm font-medium',
-                            statusFilter === 'Inactive'
-                                ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow'
-                                : 'text-gray-500',
-                        ]"
-                    >
-                        Inactive
-                    </button>
+                        <button
+                            @click="setFilter('Active')"
+                            :class="[
+                                'px-4 py-2 rounded-md text-sm font-medium',
+                                statusFilter === 'Active'
+                                    ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow'
+                                    : 'text-gray-500',
+                            ]"
+                        >
+                            Active
+                        </button>
+
+                        <button
+                            @click="setFilter('Inactive')"
+                            :class="[
+                                'px-4 py-2 rounded-md text-sm font-medium',
+                                statusFilter === 'Inactive'
+                                    ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow'
+                                    : 'text-gray-500',
+                            ]"
+                        >
+                            Inactive
+                        </button>
+                    </div>
+                    <!-- Search -->
+                    <div class="flex gap-2">
+                        <input
+                            v-model="search"
+                            @input="searchCustomer"
+                            type="text"
+                            placeholder="Search customers..."
+                            class="h-11 rounded-lg border border-gray-300 px-4 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                        />
+
+                        <button
+                            v-if="search || statusFilter !== 'All'"
+                            @click="resetSearch"
+                            class="h-11 px-4 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-white"
+                        >
+                            Reset
+                        </button>
+                    </div>
                 </div>
-
-                <!-- Search -->
-
-                <input
-                    v-model="search"
-                    type="text"
-                    placeholder="Search customers..."
-                    class="h-11 rounded-lg border border-gray-300 px-4 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                />
             </div>
         </div>
 
@@ -126,35 +152,51 @@ function setFilter(filter) {
             <table class="w-full">
                 <thead>
                     <tr class="border-b border-gray-200 dark:border-gray-800">
-                        <th class="p-4 text-left text-xs font-medium text-gray-500">
+                        <th
+                            class="p-4 text-left text-xs font-medium text-gray-500"
+                        >
                             #
                         </th>
 
-                        <th class="p-4 text-left text-xs font-medium text-gray-500">
+                        <th
+                            class="p-4 text-left text-xs font-medium text-gray-500"
+                        >
                             Name
                         </th>
 
-                        <th class="p-4 text-left text-xs font-medium text-gray-500">
+                        <th
+                            class="p-4 text-left text-xs font-medium text-gray-500"
+                        >
                             Phone
                         </th>
 
-                        <th class="p-4 text-left text-xs font-medium text-gray-500">
+                        <th
+                            class="p-4 text-left text-xs font-medium text-gray-500"
+                        >
                             CNIC
                         </th>
 
-                        <th class="p-4 text-left text-xs font-medium text-gray-500">
+                        <th
+                            class="p-4 text-left text-xs font-medium text-gray-500"
+                        >
                             Opening Balance
                         </th>
 
-                        <th class="p-4 text-left text-xs font-medium text-gray-500">
+                        <th
+                            class="p-4 text-left text-xs font-medium text-gray-500"
+                        >
                             Credit Limit
                         </th>
 
-                        <th class="p-4 text-left text-xs font-medium text-gray-500">
+                        <th
+                            class="p-4 text-left text-xs font-medium text-gray-500"
+                        >
                             Status
                         </th>
 
-                        <th class="p-4 text-center text-xs font-medium text-gray-500">
+                        <th
+                            class="p-4 text-center text-xs font-medium text-gray-500"
+                        >
                             Actions
                         </th>
                     </tr>
@@ -169,8 +211,8 @@ function setFilter(filter) {
                         <!-- Serial Number -->
                         <td class="p-4">
                             {{
-                                ((customers.current_page - 1) *
-                                    customers.per_page) +
+                                (customers.current_page - 1) *
+                                    customers.per_page +
                                 index +
                                 1
                             }}
@@ -230,18 +272,6 @@ function setFilter(filter) {
             @page-change="emit('page-change', $event)"
         />
 
-        <!-- Footer -->
-
-        <div
-            class="border-t border-gray-200 px-5 py-4 text-sm text-gray-500 dark:border-gray-800 dark:text-gray-400"
-        >
-            Showing
-            <strong>{{ customers.from ?? 0 }}</strong>
-            to
-            <strong>{{ customers.to ?? 0 }}</strong>
-            of
-            <strong>{{ customers.total ?? 0 }}</strong>
-            records
-        </div>
+        
     </div>
 </template>

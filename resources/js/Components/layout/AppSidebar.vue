@@ -31,7 +31,7 @@
         <img
           v-if="isExpanded || isHovered || isMobileOpen"
           class="hidden dark:block"
-          :src="'/images/logo/logo-dark.svg'"
+          :src="'/images/logo/asb-business-logo-dark.png'"
           alt="Logo"
           width="150"
           height="40"
