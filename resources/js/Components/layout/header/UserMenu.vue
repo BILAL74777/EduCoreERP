@@ -68,8 +68,7 @@ const dropdownRef = ref(null)
 
 const menuItems = [
   { href: '/profile', icon: UserCircleIcon, text: 'Edit profile' },
-  { href: '/chat', icon: SettingsIcon, text: 'Account settings' },
-  { href: '/profile', icon: InfoCircleIcon, text: 'Support' },
+  
 ]
 
 const toggleDropdown = () => {
@@ -83,7 +82,7 @@ const closeDropdown = () => {
 const signOut = async () => {
   try {
     await axios.post('/logout')
-    window.location.href = '/signin'
+    window.location.href = '/login'
   } catch (error) {
     console.error('Sign out failed:', error)
   } finally {

@@ -1,10 +1,13 @@
 <script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import GuestLayout from "@/Layouts/GuestLayout.vue";
+import InputError from "@/Components/InputError.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import SuccessButton from "@/Components/SuccessButton.vue";
+import TextInput from "@/Components/TextInput.vue";
+import { Head, useForm } from "@inertiajs/vue3";
+import { ref } from "vue";
+
+const loading = ref(false);
 
 defineProps({
     status: {
@@ -13,11 +16,16 @@ defineProps({
 });
 
 const form = useForm({
-    email: '',
+    email: "",
 });
 
 const submit = () => {
-    form.post(route('password.email'));
+    loading.value = true;
+    form.post(route("password.email"), {
+        onFinish: () => {
+            loading.value = false;
+        },
+    });
 };
 </script>
 
@@ -31,10 +39,7 @@ const submit = () => {
             you to choose a new one.
         </div>
 
-        <div
-            v-if="status"
-            class="mb-4 text-sm font-medium text-green-600"
-        >
+        <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
             {{ status }}
         </div>
 
@@ -45,7 +50,7 @@ const submit = () => {
                 <TextInput
                     id="email"
                     type="email"
-                    class="mt-1 block w-full"
+                    class="w-full border rounded-lg px-3 py-2"
                     v-model="form.email"
                     required
                     autofocus
@@ -56,12 +61,9 @@ const submit = () => {
             </div>
 
             <div class="mt-4 flex items-center justify-end">
-                <PrimaryButton
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                >
+                <SuccessButton @click="submit" :loading="loading" class="ms-4">
                     Email Password Reset Link
-                </PrimaryButton>
+                </SuccessButton>
             </div>
         </form>
     </GuestLayout>

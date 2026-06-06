@@ -109,10 +109,10 @@ const maxWidthClass = computed(() => {
                 leave-to-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
                 <div
-    v-show="show"
-    class="relative z-[9999] mx-auto mt-20 w-full transform overflow-hidden rounded-lg bg-white text-gray-900 shadow-xl transition-all dark:bg-gray-800 dark:text-gray-100"
-    :class="maxWidthClass"
->
+                    v-show="show"
+                    class="relative z-[9999] mx-auto mt-20 w-full transform overflow-hidden rounded-lg bg-white text-gray-900 shadow-xl transition-all dark:bg-gray-800 dark:text-gray-100"
+                    :class="maxWidthClass"
+                >
                     <button
                         v-if="closeable"
                         type="button"

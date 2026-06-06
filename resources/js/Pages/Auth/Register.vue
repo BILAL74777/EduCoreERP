@@ -2,9 +2,10 @@
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
+import SuccessButton from '@/Components/SuccessButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import { ref } from "vue";
 
 const form = useForm({
     name: '',
@@ -12,10 +13,14 @@ const form = useForm({
     password: '',
     password_confirmation: '',
 });
-
+const loading = ref(false);
 const submit = () => {
+    loading.value = true;
     form.post(route('register'), {
-        onFinish: () => form.reset('password', 'password_confirmation'),
+        onFinish: () => {
+            loading.value = false;
+            form.reset('password', 'password_confirmation');
+        }
     });
 };
 </script>
@@ -31,7 +36,7 @@ const submit = () => {
                 <TextInput
                     id="name"
                     type="text"
-                    class="mt-1 block w-full"
+                    class="w-full border rounded-lg px-3 py-2"
                     v-model="form.name"
                     required
                     autofocus
@@ -47,7 +52,7 @@ const submit = () => {
                 <TextInput
                     id="email"
                     type="email"
-                    class="mt-1 block w-full"
+                    class="w-full border rounded-lg px-3 py-2"
                     v-model="form.email"
                     required
                     autocomplete="username"
@@ -62,7 +67,7 @@ const submit = () => {
                 <TextInput
                     id="password"
                     type="password"
-                    class="mt-1 block w-full"
+                    class="w-full border rounded-lg px-3 py-2"
                     v-model="form.password"
                     required
                     autocomplete="new-password"
@@ -80,7 +85,7 @@ const submit = () => {
                 <TextInput
                     id="password_confirmation"
                     type="password"
-                    class="mt-1 block w-full"
+                    class="w-full border rounded-lg px-3 py-2"
                     v-model="form.password_confirmation"
                     required
                     autocomplete="new-password"
@@ -100,13 +105,13 @@ const submit = () => {
                     Already registered?
                 </Link>
 
-                <PrimaryButton
+                <SuccessButton
+                @click="submit" :loading="loading" 
                     class="ms-4"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
+                      
                 >
                     Register
-                </PrimaryButton>
+                </SuccessButton>
             </div>
         </form>
     </GuestLayout>
