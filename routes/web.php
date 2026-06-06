@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CustomerController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -27,6 +28,22 @@ Route::middleware('auth')->group(function () {
     Route::get('/example', function () {
     return Inertia::render('Example/Index');
 })->name('example');
+
+ 
+
+    Route::resource('customers', CustomerController::class)
+        ->only(['index', 'store', 'update', 'destroy']);
+
+    Route::resource('suppliers', SupplierController::class)
+        ->only(['index', 'store', 'update', 'destroy']);
+
+    Route::resource('partners', PartnerController::class)
+        ->only(['index', 'store', 'update', 'destroy']);
+
+    Route::resource('fuel-products', FuelProductController::class)
+        ->only(['index', 'store', 'update', 'destroy']);
+ 
+
 });
 
 require __DIR__.'/auth.php';

@@ -23,9 +23,9 @@
         <img
           v-if="isExpanded || isHovered || isMobileOpen"
           class="dark:hidden"
-          :src="'/images/logo/logo.svg'"
+          :src="'/images/logo/asb-business-logo.PNG'"
           alt="Logo"
-          width="150"
+          width="230"
           height="40"
         />
         <img
@@ -240,7 +240,8 @@ const {
 
 const currentPath =
   window.location.pathname.replace(/\/$/, "") || "/";
-
+const startTransition = ref();
+const endTransition = ref();
 const menuGroups = [
     {
         title: "Main",
