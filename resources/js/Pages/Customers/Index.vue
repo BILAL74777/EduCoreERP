@@ -14,7 +14,6 @@ const deleting = ref(false);
 const selectedCustomer = ref(null);
 
 const editing = ref(false);
-const selectedId = ref(null);
 const customers = ref({});
 const loading = ref(false);
 const saving = ref(false);
@@ -89,10 +88,10 @@ async function saveCustomer() {
         errors.value = {};
 
         if (editing.value) {
-            await axios.post(`/api/customer/${form.value.id}`, form.value);
+            await axios.post(`/api/customers/${form.value.id}`, form.value);
         } else {
-            await axios.post("/api/customer", form.value);
-            toast.success("Customer created successfully");
+            await axios.post("/api/customers", form.value);
+            // toast.success("Customer created successfully");
         }
 
         showFormModal.value = false;
@@ -113,38 +112,36 @@ async function saveCustomer() {
         saving.value = false;
     }
 }
+// This function is used to clear error for a specific field when user starts typing
 function clearError(field) {
     delete errors.value[field];
 }
-
+// This function is used to clear all errors when opening the form modal
 function clearErrors() {
     errors.value = {};
 }
-const askDelete = (customer) => {
-    selectedCustomer.value = customer;
+const askDelete = (customer_id) => {
+    selectedCustomer.value = customer_id;
     showDeleteModal.value = true;
 };
- 
 
 const deleteCustomer = async () => {
     try {
         deleting.value = true;
 
-        await axios.delete(
-            `/customers/${selectedCustomer.value.id}`
-        );
-
-        toast.success("Customer deleted successfully");
+        await axios.delete(`/api/customers/${selectedCustomer.value}`);
 
         showDeleteModal.value = false;
-        loadCustomers();
+
+        await getCustomers();
     } catch (error) {
+        console.error(error);
         toast.error("Failed to delete customer");
     } finally {
+        toast.success("Customer deleted successfully");
         deleting.value = false;
     }
 };
- 
 
 onMounted(() => {
     getCustomers();
@@ -237,9 +234,9 @@ onMounted(() => {
             >
                 No customers found.
             </div>
- 
+
             <CustomerTable
-            v-else
+                v-else
                 :customers="customers"
                 :search-value="search"
                 :show-delete-modal="showDeleteModal"
@@ -410,6 +407,7 @@ onMounted(() => {
         <!-- Delete Modal -->
         <DeleteConfirmModal
             :show="showDeleteModal"
+            :loading="deleting"
             @close="showDeleteModal = false"
             @confirm="deleteCustomer"
         />

@@ -63,6 +63,9 @@ class CustomerController extends Controller
     {
         $this->customerService->delete($customer);
 
-        return back()->with('success', 'Customer deleted successfully.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Customer deleted successfully.'
+        ]);
     }
 }

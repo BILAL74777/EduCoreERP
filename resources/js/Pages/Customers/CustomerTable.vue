@@ -3,28 +3,20 @@ import { ref, computed, watch } from "vue";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/vue/24/outline";
 import Pagination from "@/Components/Pagination.vue";
 import debounce from "lodash/debounce";
-import DangerButton from "@/Components/DangerButton.vue";
-
 
 const props = defineProps({
-    customers: Array,
+    customers: Object,
     searchValue: String,
 
     showDeleteModal: Boolean,
     deleting: Boolean,
-    
 });
 
-const emit = defineEmits([
-    "edit",
-    "delete",
-    "confirm-delete",
-    "close-delete",
-]); 
+const emit = defineEmits(["edit", "delete", "confirm-delete", "close-delete"]);
 
 const search = ref(props.searchValue);
 const statusFilter = ref("All");
-const loading = ref(false);
+
 watch(
     () => props.searchValue,
     (value) => {
@@ -66,13 +58,10 @@ function resetSearch() {
 </script>
 
 <template>
-    <div
-        class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]"
-    >
+    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
         <!-- Header -->
         <div
-            class="flex flex-col gap-4 border-b border-gray-200 px-5 py-4 lg:flex-row lg:items-center lg:justify-between dark:border-gray-800"
-        >
+            class="flex flex-col gap-4 border-b border-gray-200 px-5 py-4 lg:flex-row lg:items-center lg:justify-between dark:border-gray-800">
             <div>
                 <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
                     All Customers
@@ -89,60 +78,41 @@ function resetSearch() {
                 <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
                     <!-- Filter -->
 
-                    <div
-                        class="inline-flex rounded-lg bg-gray-100 p-1 dark:bg-gray-900"
-                    >
-                        <button
-                            @click="setFilter('All')"
-                            :class="[
-                                'px-4 py-2 rounded-md text-sm font-medium',
-                                statusFilter === 'All'
-                                    ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow'
-                                    : 'text-gray-500',
-                            ]"
-                        >
+                    <div class="inline-flex rounded-lg bg-gray-100 p-1 dark:bg-gray-900">
+                        <button @click="setFilter('All')" :class="[
+                            'px-4 py-2 rounded-md text-sm font-medium',
+                            statusFilter === 'All'
+                                ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow'
+                                : 'text-gray-500',
+                        ]">
                             All
                         </button>
 
-                        <button
-                            @click="setFilter('Active')"
-                            :class="[
-                                'px-4 py-2 rounded-md text-sm font-medium',
-                                statusFilter === 'Active'
-                                    ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow'
-                                    : 'text-gray-500',
-                            ]"
-                        >
+                        <button @click="setFilter('Active')" :class="[
+                            'px-4 py-2 rounded-md text-sm font-medium',
+                            statusFilter === 'Active'
+                                ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow'
+                                : 'text-gray-500',
+                        ]">
                             Active
                         </button>
 
-                        <button
-                            @click="setFilter('Inactive')"
-                            :class="[
-                                'px-4 py-2 rounded-md text-sm font-medium',
-                                statusFilter === 'Inactive'
-                                    ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow'
-                                    : 'text-gray-500',
-                            ]"
-                        >
+                        <button @click="setFilter('Inactive')" :class="[
+                            'px-4 py-2 rounded-md text-sm font-medium',
+                            statusFilter === 'Inactive'
+                                ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow'
+                                : 'text-gray-500',
+                        ]">
                             Inactive
                         </button>
                     </div>
                     <!-- Search -->
                     <div class="flex gap-2">
-                        <input
-                            v-model="search"
-                            @input="searchCustomer"
-                            type="text"
-                            placeholder="Search customers..."
-                            class="h-11 rounded-lg border border-gray-300 px-4 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                        />
+                        <input v-model="search" @input="searchCustomer" type="text" placeholder="Search customers..."
+                            class="h-11 rounded-lg border border-gray-300 px-4 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
 
-                        <button
-                            v-if="search || statusFilter !== 'All'"
-                            @click="resetSearch"
-                            class="h-11 px-4 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-white"
-                        >
+                        <button v-if="search || statusFilter !== 'All'" @click="resetSearch"
+                            class="h-11 px-4 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-white">
                             Reset
                         </button>
                     </div>
@@ -156,67 +126,48 @@ function resetSearch() {
             <table class="w-full">
                 <thead>
                     <tr class="border-b border-gray-200 dark:border-gray-800">
-                        <th
-                            class="p-4 text-left text-xs font-medium text-gray-500"
-                        >
+                        <th class="p-4 text-left text-xs font-medium text-gray-500">
                             #
                         </th>
 
-                        <th
-                            class="p-4 text-left text-xs font-medium text-gray-500"
-                        >
+                        <th class="p-4 text-left text-xs font-medium text-gray-500">
                             Name
                         </th>
 
-                        <th
-                            class="p-4 text-left text-xs font-medium text-gray-500"
-                        >
+                        <th class="p-4 text-left text-xs font-medium text-gray-500">
                             Phone
                         </th>
 
-                        <th
-                            class="p-4 text-left text-xs font-medium text-gray-500"
-                        >
+                        <th class="p-4 text-left text-xs font-medium text-gray-500">
                             CNIC
                         </th>
 
-                        <th
-                            class="p-4 text-left text-xs font-medium text-gray-500"
-                        >
+                        <th class="p-4 text-left text-xs font-medium text-gray-500">
                             Opening Balance
                         </th>
 
-                        <th
-                            class="p-4 text-left text-xs font-medium text-gray-500"
-                        >
+                        <th class="p-4 text-left text-xs font-medium text-gray-500">
                             Credit Limit
                         </th>
 
-                        <th
-                            class="p-4 text-left text-xs font-medium text-gray-500"
-                        >
+                        <th class="p-4 text-left text-xs font-medium text-gray-500">
                             Status
                         </th>
 
-                        <th
-                            class="p-4 text-center text-xs font-medium text-gray-500"
-                        >
+                        <th class="p-4 text-center text-xs font-medium text-gray-500">
                             Actions
                         </th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    <tr
-                        v-for="(customer, index) in filteredCustomers"
-                        :key="customer.id"
-                        class="border-b border-gray-100 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-900"
-                    >
+                    <tr v-for="(customer, index) in filteredCustomers" :key="customer.id"
+                        class="border-b border-gray-100 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-900">
                         <!-- Serial Number -->
                         <td class="p-4">
                             {{
                                 (customers.current_page - 1) *
-                                    customers.per_page +
+                                customers.per_page +
                                 index +
                                 1
                             }}
@@ -229,38 +180,30 @@ function resetSearch() {
                         <td class="p-4">{{ customer.credit_limit }}</td>
 
                         <td class="p-4">
-                            <span
-                                :class="[
-                                    'rounded-full px-2 py-1 text-xs font-medium',
-                                    customer.status
-                                        ? 'bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-500'
-                                        : 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-500',
-                                ]"
-                            >
+                            <span :class="[
+                                'rounded-full px-2 py-1 text-xs font-medium',
+                                customer.status
+                                    ? 'bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-500'
+                                    : 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-500',
+                            ]">
                                 {{ customer.status ? "Active" : "Inactive" }}
                             </span>
                         </td>
 
                         <td class="p-4">
                             <div class="flex justify-center gap-3">
-                                <button
-                                    @click="emit('edit', customer)"
-                                    class="rounded-lg p-2 text-blue-600 hover:bg-blue-50"
-                                >
+                                <button @click="emit('edit', customer)"
+                                    class="rounded-lg p-2 text-blue-600 hover:bg-blue-50">
                                     <PencilSquareIcon class="h-5 w-5" />
                                 </button>
 
-                                
-                                <button @click="emit('delete', customer)">
-    Delete
-</button>
-
-                                <button
-                                    @click="emit('delete', customer.id)"
-                                    class="rounded-lg p-2 text-red-600 hover:bg-red-50"
-                                >
+                                <button @click="emit('delete', customer.id)"
+                                    class="rounded-lg p-2 text-red-600 hover:bg-red-50">
                                     <TrashIcon class="h-5 w-5" />
                                 </button>
+
+
+
                             </div>
                         </td>
                     </tr>
@@ -276,43 +219,6 @@ function resetSearch() {
 
         <!-- Pagination -->
 
-        <Pagination
-            :pagination="customers"
-            @page-change="emit('page-change', $event)"
-        />
-
-    <DangerButton
-    @click="emit('confirm')"
-    :disabled="loading"
-    class="px-4 py-2 flex items-center gap-2"
->
-    <svg
-        v-if="loading"
-        class="animate-spin h-4 w-4"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-    >
-        <circle
-            class="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            stroke-width="4"
-        />
-        <path
-            class="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-        />
-    </svg>
-
-    <span>
-        {{ loading ? "Deleting..." : "Delete" }}
-    </span>
-</DangerButton>
-
-        
+        <Pagination :pagination="customers" @page-change="emit('page-change', $event)" />
     </div>
 </template>

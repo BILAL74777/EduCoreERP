@@ -11,10 +11,12 @@ Route::get('/test', function () {
  
 // Route::middleware(['auth:sanctum'])->group(function () {
     // Customers
-    Route::get('/customers', [CustomerController::class, 'getAll']);
-    Route::post('/customer', [CustomerController::class, 'store']);
-    Route::post('/customer/{customer}', [CustomerController::class, 'update']);
-    Route::delete('/customer/{customer}', [CustomerController::class, 'destroy']);
+    Route::prefix('customers')->group(function () {
+        Route::get('/', [CustomerController::class, 'getAll']);
+        Route::post('/', [CustomerController::class, 'store']);
+        Route::post('/{customer}', [CustomerController::class, 'update']);
+        Route::delete('/{customer}', [CustomerController::class, 'destroy']);
+    });
 
     // Suppliers
     Route::post('/suppliers', [SupplierController::class, 'store']);
