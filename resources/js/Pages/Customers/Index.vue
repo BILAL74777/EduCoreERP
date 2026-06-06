@@ -1,16 +1,18 @@
 <script setup>
 import Master from "@/Layouts/Master.vue";
 import { Head } from "@inertiajs/vue3";
-import Alert from "@/Components/ui/Alert.vue";
 import { ref, onMounted } from "vue";
 import axios from "axios";
-
+import { toast } from "vue3-toastify";
 import Modal from "@/Components/Modal.vue";
 import DeleteConfirmModal from "@/Components/DeleteConfirmModal.vue";
 import CustomerTable from "./CustomerTable.vue";
 import SuccessButton from "@/Components/SuccessButton.vue";
 const showFormModal = ref(false);
 const showDeleteModal = ref(false);
+const deleting = ref(false);
+const selectedCustomer = ref(null);
+
 const editing = ref(false);
 const selectedId = ref(null);
 const customers = ref({});
@@ -90,13 +92,20 @@ async function saveCustomer() {
             await axios.post(`/api/customer/${form.value.id}`, form.value);
         } else {
             await axios.post("/api/customer", form.value);
+            toast.success("Customer created successfully");
         }
 
         showFormModal.value = false;
+        toast.success(
+            `Customer ${editing.value ? "updated" : "created"} successfully`
+        );
         await getCustomers();
     } catch (error) {
         if (error.response?.status === 422) {
+            toast.error("Please fix the errors below.");
             errors.value = error.response.data.errors;
+        } else {
+            toast.error("An error occurred while saving the customer.");
         }
 
         console.error(error);
@@ -111,22 +120,31 @@ function clearError(field) {
 function clearErrors() {
     errors.value = {};
 }
-function askDelete(id) {
-    selectedId.value = id;
+const askDelete = (customer) => {
+    selectedCustomer.value = customer;
     showDeleteModal.value = true;
-}
+};
+ 
 
-async function deleteCustomer() {
+const deleteCustomer = async () => {
     try {
-        await axios.delete(`/api/customer/${selectedId.value}`);
+        deleting.value = true;
+
+        await axios.delete(
+            `/customers/${selectedCustomer.value.id}`
+        );
+
+        toast.success("Customer deleted successfully");
 
         showDeleteModal.value = false;
-
-        await getCustomers();
+        loadCustomers();
     } catch (error) {
-        console.error(error.response?.data || error);
+        toast.error("Failed to delete customer");
+    } finally {
+        deleting.value = false;
     }
-}
+};
+ 
 
 onMounted(() => {
     getCustomers();
@@ -219,15 +237,17 @@ onMounted(() => {
             >
                 No customers found.
             </div>
-
+ 
             <CustomerTable
-                v-else
+            v-else
                 :customers="customers"
                 :search-value="search"
+                :show-delete-modal="showDeleteModal"
+                :deleting="deleting"
                 @edit="editCustomer"
                 @delete="askDelete"
-                @search="searchCustomers"
-                @page-change="changePage"
+                @confirm-delete="deleteCustomer"
+                @close-delete="showDeleteModal = false"
             />
         </div>
 

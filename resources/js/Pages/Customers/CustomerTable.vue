@@ -3,24 +3,28 @@ import { ref, computed, watch } from "vue";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/vue/24/outline";
 import Pagination from "@/Components/Pagination.vue";
 import debounce from "lodash/debounce";
+import DangerButton from "@/Components/DangerButton.vue";
+
 
 const props = defineProps({
-    customers: {
-        type: Object,
-        required: true,
-    },
+    customers: Array,
+    searchValue: String,
 
-    searchValue: {
-        type: String,
-        default: "",
-    },
+    showDeleteModal: Boolean,
+    deleting: Boolean,
+    
 });
 
-const emit = defineEmits(["edit", "delete", "page-change", "search"]);
+const emit = defineEmits([
+    "edit",
+    "delete",
+    "confirm-delete",
+    "close-delete",
+]); 
 
 const search = ref(props.searchValue);
 const statusFilter = ref("All");
-
+const loading = ref(false);
 watch(
     () => props.searchValue,
     (value) => {
@@ -246,6 +250,11 @@ function resetSearch() {
                                     <PencilSquareIcon class="h-5 w-5" />
                                 </button>
 
+                                
+                                <button @click="emit('delete', customer)">
+    Delete
+</button>
+
                                 <button
                                     @click="emit('delete', customer.id)"
                                     class="rounded-lg p-2 text-red-600 hover:bg-red-50"
@@ -271,6 +280,38 @@ function resetSearch() {
             :pagination="customers"
             @page-change="emit('page-change', $event)"
         />
+
+    <DangerButton
+    @click="emit('confirm')"
+    :disabled="loading"
+    class="px-4 py-2 flex items-center gap-2"
+>
+    <svg
+        v-if="loading"
+        class="animate-spin h-4 w-4"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+    >
+        <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+        />
+        <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+        />
+    </svg>
+
+    <span>
+        {{ loading ? "Deleting..." : "Delete" }}
+    </span>
+</DangerButton>
 
         
     </div>
