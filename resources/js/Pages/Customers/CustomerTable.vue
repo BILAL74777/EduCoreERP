@@ -44,15 +44,9 @@ const filteredCustomers = computed(() => {
         const searchTerm = search.value.toLowerCase();
 
         const matchesSearch =
-            (customer.name ?? "")
-                .toLowerCase()
-                .includes(searchTerm) ||
-            (customer.address ?? "")
-                .toLowerCase()
-                .includes(searchTerm) ||
-            (customer.phone ?? "")
-                .toLowerCase()
-                .includes(searchTerm);
+            (customer.name ?? "").toLowerCase().includes(searchTerm) ||
+            (customer.address ?? "").toLowerCase().includes(searchTerm) ||
+            (customer.phone ?? "").toLowerCase().includes(searchTerm);
 
         const matchesStatus =
             statusFilter.value === "All"
@@ -97,7 +91,7 @@ function changePage(page) {
         >
             <div>
                 <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
-                    Customers Management
+                    All Customers
                 </h3>
 
                 <p class="text-sm text-gray-500 dark:text-gray-400">
@@ -168,7 +162,7 @@ function changePage(page) {
                         <th
                             class="p-4 text-left text-xs font-medium text-gray-500"
                         >
-                          #
+                            #
                         </th>
 
                         <th
@@ -216,7 +210,7 @@ function changePage(page) {
 
                 <tbody>
                     <tr
-                        v-for="customer in paginatedCustomers"
+                        v-for="(customer, index) in paginatedCustomers"
                         :key="customer.id"
                         class="border-b border-gray-100 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-900"
                     >
@@ -236,7 +230,7 @@ function changePage(page) {
                                         : 'bg-error-50 text-error-700 dark:bg-error-500/15 dark:text-error-500',
                                 ]"
                             >
-                                {{ customer.status ? 'Active' : 'Inactive' }}
+                                {{ customer.status ? "Active" : "Inactive" }}
                             </span>
                         </td>
 

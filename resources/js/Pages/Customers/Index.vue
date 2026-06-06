@@ -122,7 +122,7 @@ onMounted(() => {
     <Master>
         <div class="mb-6">
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-                Example Page
+                Customers Management
             </h1>
             <nav class="flex" aria-label="Breadcrumb">
                 <ol class="inline-flex items-center space-x-1 md:space-x-3">
@@ -149,7 +149,7 @@ onMounted(() => {
                             </svg>
                             <span
                                 class="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white"
-                                >Example</span
+                                >Customers</span
                             >
                         </div>
                     </li>
@@ -160,10 +160,10 @@ onMounted(() => {
         <!-- add margin top to each alert -->
 
         <div class="mt-10 bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-xl font-bold text-gray-900 dark:text-white">
+            <div class="flex justify-end items-center mb-6">
+                <!-- <h2 class="text-xl font-bold text-gray-900 dark:text-white">
                     All Customers
-                </h2>
+                </h2> -->
 
                 <button
                     @click="openCreateModal()"
