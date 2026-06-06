@@ -4,7 +4,7 @@ import { PencilSquareIcon, TrashIcon } from "@heroicons/vue/24/outline";
 
 const props = defineProps({
     customers: {
-        type: Array,
+        type: [Array, Object],
         required: true,
     },
 });
@@ -17,32 +17,62 @@ const statusFilter = ref("All");
 const currentPage = ref(1);
 const perPage = 3;
 
-const filteredUsers = computed(() => {
-    return props.customers.filter((customer) => {
+/*
+|--------------------------------------------------------------------------
+| Normalize Customers
+|--------------------------------------------------------------------------
+|
+| Supports both:
+| Array
+| { data: [...] } (Laravel paginator)
+|
+*/
+const customerList = computed(() => {
+    if (Array.isArray(props.customers)) {
+        return props.customers;
+    }
+
+    if (props.customers?.data) {
+        return props.customers.data;
+    }
+
+    return [];
+});
+
+const filteredCustomers = computed(() => {
+    return customerList.value.filter((customer) => {
         const searchTerm = search.value.toLowerCase();
 
         const matchesSearch =
-            customer.name.toLowerCase().includes(searchTerm) ||
-            customer.address.toLowerCase().includes(searchTerm) ||
-            customer.phone.toLowerCase().includes(searchTerm);
+            (customer.name ?? "")
+                .toLowerCase()
+                .includes(searchTerm) ||
+            (customer.address ?? "")
+                .toLowerCase()
+                .includes(searchTerm) ||
+            (customer.phone ?? "")
+                .toLowerCase()
+                .includes(searchTerm);
 
         const matchesStatus =
             statusFilter.value === "All"
                 ? true
-                : customer.status === statusFilter.value;
+                : statusFilter.value === "Active"
+                ? customer.status == 1
+                : customer.status == 0;
 
         return matchesSearch && matchesStatus;
     });
 });
 
-const totalPages = computed(() =>
-    Math.ceil(filteredUsers.value.length / perPage)
-);
+const totalPages = computed(() => {
+    return Math.ceil(filteredCustomers.value.length / perPage);
+});
 
-const paginatedUsers = computed(() => {
+const paginatedCustomers = computed(() => {
     const start = (currentPage.value - 1) * perPage;
 
-    return filteredUsers.value.slice(start, start + perPage);
+    return filteredCustomers.value.slice(start, start + perPage);
 });
 
 function setFilter(filter) {
@@ -51,6 +81,8 @@ function setFilter(filter) {
 }
 
 function changePage(page) {
+    if (page < 1 || page > totalPages.value) return;
+
     currentPage.value = page;
 }
 </script>
@@ -184,7 +216,7 @@ function changePage(page) {
 
                 <tbody>
                     <tr
-                        v-for="customer in paginatedUsers"
+                        v-for="customer in paginatedCustomers"
                         :key="customer.id"
                         class="border-b border-gray-100 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-900"
                     >
@@ -199,12 +231,12 @@ function changePage(page) {
                             <span
                                 :class="[
                                     'rounded-full px-2 py-1 text-xs font-medium',
-                                    customer.status === 'Active'
+                                    customer.status
                                         ? 'bg-success-50 text-success-700 dark:bg-success-500/15 dark:text-success-500'
                                         : 'bg-error-50 text-error-700 dark:bg-error-500/15 dark:text-error-500',
                                 ]"
                             >
-                                {{ customer.status }}
+                                {{ customer.status ? 'Active' : 'Inactive' }}
                             </span>
                         </td>
 
@@ -231,7 +263,7 @@ function changePage(page) {
                         </td>
                     </tr>
 
-                    <tr v-if="paginatedUsers.length === 0">
+                    <tr v-if="paginatedCustomers.length === 0">
                         <td colspan="6" class="p-6 text-center text-gray-500">
                             No records found.
                         </td>
@@ -250,7 +282,7 @@ function changePage(page) {
                     Showing
                     <strong>
                         {{
-                            filteredUsers.length === 0
+                            filteredCustomers.length === 0
                                 ? 0
                                 : (currentPage - 1) * perPage + 1
                         }}
@@ -262,7 +294,7 @@ function changePage(page) {
                         {{
                             Math.min(
                                 currentPage * perPage,
-                                filteredUsers.length
+                                filteredCustomers.length
                             )
                         }}
                     </strong>
@@ -270,7 +302,7 @@ function changePage(page) {
                     of
 
                     <strong>
-                        {{ filteredUsers.length }}
+                        {{ filteredCustomers.length }}
                     </strong>
 
                     records

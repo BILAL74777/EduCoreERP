@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\FuelProductController;
+use App\Http\Controllers\PartnerController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -31,17 +34,14 @@ Route::middleware('auth')->group(function () {
 
  
 
-    Route::resource('customers', CustomerController::class)
-        ->only(['index', 'store', 'update', 'destroy']);
+    Route::get('/customers', [CustomerController::class, 'index']);
+    
 
-    Route::resource('suppliers', SupplierController::class)
-        ->only(['index', 'store', 'update', 'destroy']);
+    Route::get('/suppliers', [SupplierController::class, 'index']);
 
-    Route::resource('partners', PartnerController::class)
-        ->only(['index', 'store', 'update', 'destroy']);
+    Route::get('/partners', [PartnerController::class, 'index']);
 
-    Route::resource('fuel-products', FuelProductController::class)
-        ->only(['index', 'store', 'update', 'destroy']);
+    Route::get('/fuel-products', [FuelProductController::class, 'index']);
  
 
 });

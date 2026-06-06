@@ -16,10 +16,16 @@ class CustomerController extends Controller
 
     public function index(Request $request)
     {
-        return Inertia::render('Customers/Index', [
-            'customers' => $this->customerService->getAll(
-                $request->search
-            ),
+        return Inertia::render('Customers/Index');
+    }
+    public function getAll(Request $request)
+    {
+        $customers = $this->customerService->getAll(
+            $request->search
+        );
+
+        return response()->json([
+            'customers' => $customers,
             'filters' => [
                 'search' => $request->search,
             ],
