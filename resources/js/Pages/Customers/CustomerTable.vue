@@ -168,7 +168,7 @@ function changePage(page) {
                         <th
                             class="p-4 text-left text-xs font-medium text-gray-500"
                         >
-                            ID
+                          #
                         </th>
 
                         <th
@@ -220,7 +220,7 @@ function changePage(page) {
                         :key="customer.id"
                         class="border-b border-gray-100 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-900"
                     >
-                        <td class="p-4">{{ customer.id }}</td>
+                        <td class="p-4">{{ index + 1 }}</td>
                         <td class="p-4">{{ customer.name }}</td>
                         <td class="p-4">{{ customer.phone }}</td>
                         <td class="p-4">{{ customer.cnic }}</td>

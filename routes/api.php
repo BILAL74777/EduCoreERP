@@ -12,9 +12,9 @@ Route::get('/test', function () {
 // Route::middleware(['auth:sanctum'])->group(function () {
     // Customers
     Route::get('/customers', [CustomerController::class, 'getAll']);
-    Route::post('/customers', [CustomerController::class, 'store']);
-    Route::post('/customers/{customer}', [CustomerController::class, 'update']);
-    Route::delete('/customers/{customer}', [CustomerController::class, 'destroy']);
+    Route::post('/customer', [CustomerController::class, 'store']);
+    Route::post('/customer/{customer}', [CustomerController::class, 'update']);
+    Route::delete('/customer/{customer}', [CustomerController::class, 'destroy']);
 
     // Suppliers
     Route::post('/suppliers', [SupplierController::class, 'store']);

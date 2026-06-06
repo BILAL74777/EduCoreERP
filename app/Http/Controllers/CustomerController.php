@@ -32,23 +32,31 @@ class CustomerController extends Controller
         ]);
     }
 
-    public function store(CustomerRequest $request)
+   public function store(CustomerRequest $request)
     {
-        $this->customerService->create(
+        $customer = $this->customerService->create(
             $request->validated()
         );
 
-        return back()->with('success', 'Customer created successfully.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Customer created successfully',
+            'data' => $customer,
+        ], 201);
     }
 
     public function update(CustomerRequest $request, Customer $customer)
     {
-        $this->customerService->update(
+        $customer = $this->customerService->update(
             $customer,
             $request->validated()
         );
 
-        return back()->with('success', 'Customer updated successfully.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Customer updated successfully',
+            'data' => $customer,
+        ]);
     }
 
     public function destroy(Customer $customer)
