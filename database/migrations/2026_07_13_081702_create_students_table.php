@@ -49,6 +49,10 @@ return new class extends Migration
                 ->restrictOnDelete()
                 ->cascadeOnUpdate();
 
+            $table->foreignId('session_id')
+                ->constrained('sessions')
+                ->restrictOnDelete()
+                ->cascadeOnUpdate();
             $table->foreignId('year_id')
                 ->constrained('years')
                 ->restrictOnDelete()

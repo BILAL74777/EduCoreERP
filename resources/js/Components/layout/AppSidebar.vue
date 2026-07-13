@@ -279,18 +279,18 @@ const menuGroups = [
     },
 
     {
-        title: "Contacts",
+        title: "Studnets",
         items: [
             {
                 icon: UserCircleIcon,
-                name: "Parties",
+                name: "Students",
                 subItems: [
                     {
-                        name: "Customers",
-                        path: "/customers",
+                        name: "Enrolled Students",
+                        path: "/students",
                     },
                     {
-                        name: "Suppliers",
+                        name: "StruckUp Students",
                         path: "/suppliers",
                     },
                 ],
@@ -299,22 +299,26 @@ const menuGroups = [
     },
 
     {
-        title: "Inventory",
+        title: "General",
         items: [
             {
                 icon: BoxCubeIcon,
-                name: "Inventory",
+                name: "General",
                 subItems: [
                     {
-                        name: "Categories",
+                        name: "Sessions",
                         path: "/categories",
                     },
                     {
-                        name: "Products",
+                        name: "Desciplines",
                         path: "/products",
                     },
                     {
-                        name: "Stock",
+                        name: "Years",
+                        path: "/stock",
+                    },
+                    {
+                        name: "Classes",
                         path: "/stock",
                     },
                 ],
@@ -322,68 +326,9 @@ const menuGroups = [
         ],
     },
 
-    {
-        title: "Transactions",
-        items: [
-            {
-                icon: TableIcon,
-                name: "Purchases",
-                subItems: [
-                    {
-                        name: "Purchase Orders",
-                        path: "/purchases",
-                    },
-                    {
-                        name: "Purchase Returns",
-                        path: "/purchase-returns",
-                    },
-                ],
-            },
-            {
-                icon: TableIcon,
-                name: "Sales",
-                subItems: [
-                    {
-                        name: "Sales",
-                        path: "/sales",
-                    },
-                    {
-                        name: "Sale Returns",
-                        path: "/sale-returns",
-                    },
-                ],
-            },
-        ],
-    },
+     
 
-    {
-        title: "Petrol Pump",
-        items: [
-            {
-                icon: PlugInIcon,
-                name: "Fuel Management",
-                subItems: [
-                    {
-                        name: "Fuel Products",
-                        path: "/fuel-products",
-                    },
-                    {
-                        name: "Tanks",
-                        path: "/tanks",
-                    },
-                    {
-                        name: "Nozzles",
-                        path: "/nozzles",
-                    },
-                    {
-                        name: "Meter Readings",
-                        path: "/meter-readings",
-                    },
-                ],
-            },
-        ],
-    },
-
+     
     {
         title: "Accounts",
         items: [
