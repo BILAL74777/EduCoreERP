@@ -6,6 +6,7 @@ use App\Http\Requests\PartnerRequest;
 use App\Models\Partner;
 use App\Services\PartnerService;
 use Inertia\Inertia;
+use Illuminate\Http\Request;
 
 class PartnerController extends Controller
 {
@@ -13,36 +14,58 @@ class PartnerController extends Controller
         protected PartnerService $partnerService
     ) {}
 
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('Partners/Index', [
-            'partners' => $this->partnerService->getAll(),
+        return Inertia::render('Partners/Index');
+    }
+    public function getAll(Request $request)
+    {
+        $partners = $this->partnerService->getAll(
+            $request->search
+        );
+
+        return response()->json([
+            'partners' => $partners,
+            'filters' => [
+                'search' => $request->search,
+            ],
         ]);
     }
 
-    public function store(PartnerRequest $request)
+   public function store(PartnerRequest $request)
     {
-        $this->partnerService->create(
+        $partner = $this->partnerService->create(
             $request->validated()
         );
 
-        return back()->with('success', 'Partner created successfully.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Partner created successfully',
+            'data' => $partner,
+        ], 201);
     }
 
     public function update(PartnerRequest $request, Partner $partner)
     {
-        $this->partnerService->update(
+        $partner = $this->partnerService->update(
             $partner,
             $request->validated()
         );
 
-        return back()->with('success', 'Partner updated successfully.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Partner updated successfully',
+            'data' => $partner,
+        ]);
     }
 
     public function destroy(Partner $partner)
     {
         $this->partnerService->delete($partner);
 
-        return back()->with('success', 'Partner deleted successfully.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Partner deleted successfully.'
+        ]);
     }
 }
