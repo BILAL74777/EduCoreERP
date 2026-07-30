@@ -5,12 +5,13 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\FuelProductController;
 use App\Http\Controllers\PartnerController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
+    return Inertia::render('Auth/Login', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
@@ -32,16 +33,9 @@ Route::middleware('auth')->group(function () {
     return Inertia::render('Example/Index');
 })->name('example');
 
- 
+  
 
-    Route::get('/customers', [CustomerController::class, 'index']);
-    
-
-    Route::get('/suppliers', [SupplierController::class, 'index']);
-
-    Route::get('/partners', [PartnerController::class, 'index']);
-
-    Route::get('/fuel-products', [FuelProductController::class, 'index']);
+    Route::get('/users', [UserController::class, 'index']);
  
 
 });

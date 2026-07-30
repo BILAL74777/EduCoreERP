@@ -49,7 +49,7 @@ const submit = () => {
             </h1>
 
             <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                Sign in to access your ASB Business ERP Dashboard
+                Sign in to access your EDUCore ERP Dashboard
             </p>
         </div>
         <form @submit.prevent="submit">

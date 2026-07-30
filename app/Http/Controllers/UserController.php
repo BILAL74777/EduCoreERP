@@ -2,63 +2,88 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserRequest;
+use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class UserController extends Controller
 {
+    public function __construct(
+        protected UserService $userService
+    ) {}
+
     /**
-     * Display a listing of the resource.
+     * User Page
      */
     public function index()
-    {
-        //
+    { 
+        return Inertia::render('Master/Users/Index');
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Get All Users
      */
-    public function create()
+    public function getAll(Request $request)
     {
-        //
+        $users = $this->userService->getAll(
+            $request->search,
+            $request->status
+        );
+
+        return response()->json([
+            'users' => $users,
+            'filters' => [
+                'search' => $request->search,
+                'status' => $request->status,
+            ],
+        ]);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store User
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-        //
+        $user = $this->userService->create(
+            $request->validated()
+        );
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User created successfully.',
+            'data' => $user,
+        ], 201);
     }
 
     /**
-     * Display the specified resource.
+     * Update User
      */
-    public function show(string $id)
+    public function update(UserRequest $request, User $user)
     {
-        //
+        $user = $this->userService->update(
+            $user,
+            $request->validated()
+        );
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User updated successfully.',
+            'data' => $user,
+        ]);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Delete User
      */
-    public function edit(string $id)
+    public function destroy(User $user)
     {
-        //
-    }
+        $this->userService->delete($user);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return response()->json([
+            'success' => true,
+            'message' => 'User deleted successfully.',
+        ]);
     }
 }

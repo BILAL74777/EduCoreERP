@@ -1,28 +1,21 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\SupplierController;
+ 
+use App\Http\Controllers\UserController;
 Route::get('/test', function () {
     return response()->json([
         'message' => 'API Working'
     ]);
 });
  
-// Route::middleware(['auth:sanctum'])->group(function () {
-    // Customers
-    Route::prefix('customers')->group(function () {
-        Route::get('/', [CustomerController::class, 'getAll']);
-        Route::post('/', [CustomerController::class, 'store']);
-        Route::post('/{customer}', [CustomerController::class, 'update']);
-        Route::delete('/{customer}', [CustomerController::class, 'destroy']);
+Route::middleware(['auth:sanctum'])->group(function () {
+   
+    Route::prefix('users')->group(function () {
+           Route::get('/', [UserController::class, 'getAll']);
+            Route::post('/', [UserController::class, 'store']);
+            Route::post('/{user}', [UserController::class, 'update']);
+            Route::delete('/{user}', [UserController::class, 'destroy']);
     });
-    Route::prefix('suppliers')->group(function () {
-        Route::get('/', [SupplierController::class, 'getAll']);
-        Route::post('/', [SupplierController::class, 'store']);
-        Route::post('/{supplier}', [SupplierController::class, 'update']);
-        Route::delete('/{supplier}', [SupplierController::class, 'destroy']);
-    });
- 
 
-// });
+});

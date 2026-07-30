@@ -2,29 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Faculty extends Model
+class Faculty extends BaseModel
 {
-    use SoftDeletes;
-
-    protected $fillable = [
-        'name',
-    ];
-
-    public function disciplines()
+    public function disciplines(): HasMany
     {
         return $this->hasMany(Discipline::class);
-    }
-
-    public function years()
-    {
-        return $this->hasMany(Year::class);
-    }
-
-    public function students()
-    {
-        return $this->hasMany(Student::class);
     }
 }

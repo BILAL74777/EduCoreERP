@@ -9,7 +9,7 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import Toast from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 
-const appName = import.meta.env.VITE_APP_NAME || 'ASB Business';
+const appName = import.meta.env.VITE_APP_NAME || 'EduCoreERP';
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
