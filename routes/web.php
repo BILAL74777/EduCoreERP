@@ -115,9 +115,9 @@ Route::middleware('auth')->group(function () {
             | Academic Classes
             |--------------------------------------------------------------------------
             */
-
+ 
             Route::get('/classes', function () {
-                return Inertia::render('Academic/Class/Index');
+                return Inertia::render('Academic/Classes/Index');
             })->name('classes.index');
 
         });

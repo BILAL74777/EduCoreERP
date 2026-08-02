@@ -139,4 +139,16 @@ class DisciplineService
             return $discipline->fresh();
         });
     }
+
+    /**
+     * Faculty Dropdown
+     */
+    public function dropdown()
+    {
+        return Discipline::query()
+            ->where('is_active', true)
+            ->select('id', 'name')
+            ->orderBy('name')
+            ->get();
+    }
 }

@@ -132,4 +132,23 @@ class DisciplineController extends BaseController
 
         }
     }
+
+     public function getDropdown()
+    {
+        try {
+
+            $disciplines = $this->service->dropdown();
+
+            return response()->json([
+                'disciplines' => $disciplines,
+            ]);
+
+        } catch (Throwable $e) {
+
+            return $this->error(
+                $e->getMessage()
+            );
+
+        }
+    }
 }
