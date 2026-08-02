@@ -1,5 +1,5 @@
 <script setup>
-import Modal from "@/Components/Modal.vue";
+import Modal from "@/Components/Modal/Modal.vue";
 import DangerButton from "@/Components/DangerButton.vue";
 
 defineProps({

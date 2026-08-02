@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('academic_classes', function (Blueprint $table) {
 
-            $table->string('id')->primary(); // CLS000001
+            $table->uuid('id')->primary();
 
             $table->string('discipline_id');
 

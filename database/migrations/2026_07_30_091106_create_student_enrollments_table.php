@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('student_enrollments', function (Blueprint $table) {
 
-            $table->string('id')->primary(); 
+            $table->uuid('id')->primary(); 
 
             $table->string('student_id');
 

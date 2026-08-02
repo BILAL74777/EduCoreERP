@@ -4,23 +4,28 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 abstract class BaseModel extends Model
 {
-    use SoftDeletes;
+    use HasUuids, SoftDeletes;
 
-    /**
-     * The primary key type.
-     */
+    protected $guarded = [];
+
     protected $keyType = 'string';
 
-    /**
-     * IDs are generated manually.
-     */
     public $incrementing = false;
 
-    /**
-     * Guard nothing.
-     */
-    protected $guarded = [];
+    protected $hidden = [
+        'deleted_at',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime:Y-m-d H:i:s',
+            'updated_at' => 'datetime:Y-m-d H:i:s',
+            'deleted_at' => 'datetime:Y-m-d H:i:s',
+        ];
+    }
 }

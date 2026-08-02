@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
 
-            $table->string('id')->primary(); // STD000001
+            $table->uuid('id')->primary();
 
             // Documents
             $table->foreignId('form_b')

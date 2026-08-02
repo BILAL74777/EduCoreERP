@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('academic_sessions', function (Blueprint $table) {
 
-            $table->string('id')->primary();  
+            $table->uuid('id')->primary();  
 
             $table->string('session_name')->unique();  
 
