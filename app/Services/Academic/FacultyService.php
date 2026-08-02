@@ -118,4 +118,16 @@ class FacultyService
     {
         return Faculty::findOrFail($id);
     }
+
+    /**
+     * Faculty Dropdown
+     */
+    public function dropdown()
+    {
+        return Faculty::query()
+            ->where('is_active', true)
+            ->select('id', 'name')
+            ->orderBy('name')
+            ->get();
+    }
 }

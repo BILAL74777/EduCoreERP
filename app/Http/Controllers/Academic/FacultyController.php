@@ -126,4 +126,23 @@ class FacultyController extends BaseController
 
         }
     }
+ 
+    public function getDropdown()
+    {
+        try {
+
+            $faculties = $this->service->dropdown();
+
+            return response()->json([
+                'faculties' => $faculties,
+            ]);
+
+        } catch (Throwable $e) {
+
+            return $this->error(
+                $e->getMessage()
+            );
+
+        }
+    }
 }
