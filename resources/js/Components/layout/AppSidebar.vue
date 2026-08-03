@@ -23,7 +23,7 @@
         <img
           v-if="isExpanded || isHovered || isMobileOpen"
           class="dark:hidden"
-          :src="'/images/logo/edcore-erp-logo.PNG'"
+          :src="'/images/logo/narrow-logo.jpg'"
           alt="Logo"
           width="230"
           height="40"
@@ -31,7 +31,7 @@
         <img
           v-if="isExpanded || isHovered || isMobileOpen"
           class="hidden dark:block"
-          :src="'/images/logo/edcore-erp-logo.PNG'"
+          :src="'/images/logo/narrow-logo.jpg'"
           alt="Logo"
           width="150"
           height="40"

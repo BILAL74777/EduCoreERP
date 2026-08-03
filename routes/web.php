@@ -107,7 +107,7 @@ Route::middleware('auth')->group(function () {
             */
 
             Route::get('/sessions', function () {
-                return Inertia::render('Academic/Session/Index');
+                return Inertia::render('Academic/AcademicSessions/Index');
             })->name('sessions.index');
 
             /*
@@ -119,6 +119,19 @@ Route::middleware('auth')->group(function () {
             Route::get('/classes', function () {
                 return Inertia::render('Academic/Classes/Index');
             })->name('classes.index');
+
+            /*
+            |--------------------------------------------------------------------------
+            | Students
+            |--------------------------------------------------------------------------
+            */
+ 
+            Route::get('/students', function () {
+                return Inertia::render('Academic/Students/Index');
+            })->name('students.index');
+            Route::get('/students/create', function () {
+                return Inertia::render('Academic/Students/Create');
+            })->name('students.create');
 
         });
 

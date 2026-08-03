@@ -12,7 +12,7 @@ return new class extends Migration
 
             $table->uuid('id')->primary(); 
 
-            $table->string('student_id');
+            $table->uuid('student_id');
 
             $table->foreign('student_id')
                 ->references('id')
@@ -20,19 +20,35 @@ return new class extends Migration
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
 
-            $table->string('session_id');
+            $table->uuid('session_id');
 
             $table->foreign('session_id')
                 ->references('id')
                 ->on('academic_sessions')
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
+ 
 
-            $table->string('class_id');
-
+            $table->uuid('class_id');
             $table->foreign('class_id')
                 ->references('id')
                 ->on('academic_classes')
+                ->cascadeOnUpdate()
+                ->restrictOnDelete();
+
+            $table->uuid('faculty_id');
+
+            $table->foreign('faculty_id')
+                ->references('id')
+                ->on('faculties')
+                ->cascadeOnUpdate()
+                ->restrictOnDelete();
+
+        $table->uuid('discipline_id');
+
+            $table->foreign('discipline_id')
+                ->references('id')
+                ->on('disciplines')
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
 

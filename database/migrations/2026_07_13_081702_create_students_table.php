@@ -33,7 +33,7 @@ return new class extends Migration
             $table->date('date_of_admission');
 
             // Fee
-            $table->decimal('annual_fee', 12, 2)->default(0);
+            // $table->decimal('annual_fee', 12, 2)->default(0);
 
             // Personal Information
             $table->string('name');

@@ -1,0 +1,262 @@
+<?php
+
+namespace App\Http\Requests\Academic\Student;
+
+use App\Models\AcademicClass;
+use App\Models\Discipline;
+use Illuminate\Foundation\Http\FormRequest;
+
+class StoreStudentRequest extends FormRequest
+{
+    /**
+     * Authorize
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Rules
+     */
+    public function rules(): array
+    {
+        return [
+
+            /*
+            |--------------------------------------------------------------------------
+            | Admission
+            |--------------------------------------------------------------------------
+            */
+
+            'admission_no' => [
+                'required',
+                'string',
+                'max:100',
+                'unique:students,admission_no',
+            ],
+
+            'registration_no' => [
+                'nullable',
+                'string',
+                'max:100',
+                'unique:students,registration_no',
+            ],
+
+            'date_of_admission' => [
+                'required',
+                'date',
+                'before_or_equal:today',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Personal
+            |--------------------------------------------------------------------------
+            */
+
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+
+            'father_name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+
+            'father_cnic' => [
+                'nullable',
+                'regex:/^\d{5}-\d{7}-\d$/',
+            ],
+
+            'father_occupation' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+
+            'gender' => [
+                'required',
+                'in:Male,Female,Other',
+            ],
+
+            'date_of_birth' => [
+                'nullable',
+                'date',
+                'before:today',
+            ],
+
+            'religion' => [
+                'nullable',
+                'string',
+                'max:100',
+            ],
+
+            'tribe_cast' => [
+                'nullable',
+                'string',
+                'max:100',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Contact
+            |--------------------------------------------------------------------------
+            */
+
+            'contact_number' => [
+                'nullable',
+                'string',
+                'max:20',
+            ],
+
+            'address' => [
+                'nullable',
+                'string',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Enrollment
+            |--------------------------------------------------------------------------
+            */
+
+            'faculty_id' => [
+                'required',
+                'exists:faculties,id',
+            ],
+
+            'discipline_id' => [
+                'required',
+                'exists:disciplines,id',
+            ],
+
+            'session_id' => [
+                'required',
+                'exists:academic_sessions,id',
+            ],
+
+            'class_id' => [
+                'required',
+                'exists:academic_classes,id',
+            ],
+
+            'roll_no' => [
+                'nullable',
+                'string',
+                'max:30',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Fee Structure
+            |--------------------------------------------------------------------------
+            */
+
+            'annual_fee' => [
+                'required',
+                'numeric',
+                'min:0',
+            ],
+
+            'discount' => [
+                'nullable',
+                'numeric',
+                'min:0',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Documents
+            |--------------------------------------------------------------------------
+            */
+
+            'photo' => [
+                'nullable',
+                'image',
+                'mimes:jpg,jpeg,png,webp',
+                'max:2048',
+            ],
+
+            'form_b' => [
+                'nullable',
+                'file',
+                'mimes:pdf,jpg,jpeg,png',
+                'max:5120',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Flags
+            |--------------------------------------------------------------------------
+            */
+
+            'is_orphan' => [
+                'nullable',
+                'boolean',
+            ],
+
+            'is_father_shaheed' => [
+                'nullable',
+                'boolean',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Remarks
+            |--------------------------------------------------------------------------
+            */
+
+            'remarks' => [
+                'nullable',
+                'string',
+            ],
+        ];
+    }
+
+    /**
+     * Additional Validation
+     */
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+
+            $discipline = Discipline::find($this->discipline_id);
+
+            if (
+                $discipline &&
+                $discipline->faculty_id != $this->faculty_id
+            ) {
+                $validator->errors()->add(
+                    'discipline_id',
+                    'Selected discipline does not belong to the selected faculty.'
+                );
+            }
+
+            $class = AcademicClass::find($this->class_id);
+
+            if (
+                $class &&
+                $class->discipline_id != $this->discipline_id
+            ) {
+                $validator->errors()->add(
+                    'class_id',
+                    'Selected class does not belong to the selected discipline.'
+                );
+            }
+
+            if (
+                $this->filled('discount') &&
+                $this->discount > $this->annual_fee
+            ) {
+                $validator->errors()->add(
+                    'discount',
+                    'Discount cannot exceed annual fee.'
+                );
+            }
+        });
+    }
+}

@@ -5,7 +5,7 @@ namespace App\Services\Academic;
 use App\Models\Faculty;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-
+use Illuminate\Support\Str;
 class FacultyService
 {
     /**

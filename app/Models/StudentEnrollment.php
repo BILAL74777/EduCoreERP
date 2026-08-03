@@ -6,6 +6,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class StudentEnrollment extends BaseModel
 {
+
+    protected $fillable = [
+        'student_id',
+        'session_id',
+        'class_id',
+        'faculty_id',
+        'discipline_id',
+        'roll_no',
+        'status',
+        'is_current',
+        'remarks',
+    ];
     public function student(): BelongsTo
     {
         return $this->belongsTo(Student::class);
@@ -35,5 +47,12 @@ class StudentEnrollment extends BaseModel
     public function faculty()
     {
         return $this->academicClass->discipline->faculty();
+    }
+    public function feeStructure()
+    {
+        return $this->hasOne(
+            StudentFeeStructure::class,
+            'enrollment_id'
+        );
     }
 }   

@@ -6,7 +6,7 @@ use App\Models\AcademicClass;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-
+use Illuminate\Support\Str;
 class AcademicClassService
 {
     /**

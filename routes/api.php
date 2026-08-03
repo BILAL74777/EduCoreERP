@@ -5,7 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Academic\FacultyController;
 use App\Http\Controllers\Academic\DisciplineController;
 use App\Http\Controllers\Academic\AcademicClassController;
-
+use App\Http\Controllers\Academic\AcademicSessionController;
+use App\Http\Controllers\Academic\StudentController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -62,7 +63,35 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('/{academicClass}', [AcademicClassController::class, 'destroy']);
             Route::patch('/{academicClass}/status', [AcademicClassController::class, 'changeStatus']);
         });
+        
 
-    });
+        Route::prefix('sessions')->group(function () {
+
+            Route::get('/', [AcademicSessionController::class, 'index']);
+            Route::post('/', [AcademicSessionController::class, 'store']);
+            Route::get('/dropdown', [AcademicSessionController::class, 'getDropdown']);
+
+            Route::get('/{academicSession}', [AcademicSessionController::class, 'show']);
+            Route::put('/{academicSession}', [AcademicSessionController::class, 'update']);
+            Route::delete('/{academicSession}', [AcademicSessionController::class, 'destroy']);
+            Route::patch('/{academicSession}/status', [AcademicSessionController::class, 'changeStatus']);
+
+        });
+
+        Route::prefix('students')->group(function () { 
+
+            Route::get('/', [StudentController::class,'index']);
+            Route::post('/', [StudentController::class,'store']);
+             // Student Admission Dropdowns
+            Route::get('/dropdowns', [StudentController::class, 'getDropdowns']);
+            Route::get('/disciplines/{faculty}', [StudentController::class, 'getDisciplines']);
+            Route::get('/classes/{discipline}', [StudentController::class, 'getClasses']);
+
+            Route::get('/{student}', [StudentController::class,'show']);
+            Route::put('/{student}', [StudentController::class,'update']);
+            Route::delete('/{student}', [StudentController::class,'destroy']);
+        });
+
+        });
 
 });

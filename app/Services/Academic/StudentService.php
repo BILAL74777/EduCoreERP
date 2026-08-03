@@ -1,0 +1,461 @@
+<?php
+
+namespace App\Services\Academic;
+
+use App\Models\Student;
+use App\Models\StudentEnrollment;
+use App\Models\StudentFeeStructure;
+use App\Models\Faculty;
+use App\Models\AcademicSession;
+use App\Models\Discipline;
+use App\Models\Upload;
+use App\Models\AcademicClass;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+ 
+use Illuminate\Support\Str;
+
+class StudentService
+{
+
+    /**
+     * Student Listing
+     */
+    public function index(array $filters): LengthAwarePaginator
+    {
+        $query = Student::query()
+            ->with([
+                'currentEnrollment.academicClass.discipline.faculty',
+                'photo',
+            ]);
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Search
+        |--------------------------------------------------------------------------
+        */
+
+        if (!empty($filters['search'])) {
+
+            $search = $filters['search'];
+
+            $query->where(function ($q) use ($search) {
+
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('father_name', 'like', "%{$search}%")
+                    ->orWhere('admission_no', 'like', "%{$search}%")
+                    ->orWhere('registration_no', 'like', "%{$search}%")
+                    ->orWhere('contact_number', 'like', "%{$search}%");
+
+            });
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Sorting
+        |--------------------------------------------------------------------------
+        */
+
+        $query->orderBy(
+            $filters['sort'] ?? 'created_at',
+            $filters['direction'] ?? 'desc'
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Pagination
+        |--------------------------------------------------------------------------
+        */
+
+        return $query->paginate(
+            $filters['per_page'] ?? 10
+        );
+    }
+
+
+
+    /**
+     * Store Student
+    */
+   public function store(array $data, $request): Student
+{
+    return DB::transaction(function () use ($data, $request) {
+
+        /*
+        |--------------------------------------------------------------------------
+        | Upload Student Photo
+        |--------------------------------------------------------------------------
+        */
+
+        $photoId = null;
+
+        if ($request->hasFile('photo')) {
+
+            $file = $request->file('photo');
+
+            $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
+
+            $folder = 'students/photos';
+
+            $file->storeAs($folder, $fileName, 'public');
+
+            $upload = Upload::create([
+                'file_original_name' => $file->getClientOriginalName(),
+                'file_name'          => $fileName,
+                'file_size'          => $file->getSize(),
+                'extension'          => $file->getClientOriginalExtension(),
+                'mime_type'          => $file->getMimeType(),
+                'disk'               => 'public',
+                'folder'             => $folder,
+            ]);
+
+            $photoId = $upload->id;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Upload Form-B
+        |--------------------------------------------------------------------------
+        */
+
+        $formBId = null;
+
+        if ($request->hasFile('form_b')) {
+
+            $file = $request->file('form_b');
+
+            $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
+
+            $folder = 'students/form-b';
+
+            $file->storeAs($folder, $fileName, 'public');
+
+            $upload = Upload::create([
+                'file_original_name' => $file->getClientOriginalName(),
+                'file_name'          => $fileName,
+                'file_size'          => $file->getSize(),
+                'extension'          => $file->getClientOriginalExtension(),
+                'mime_type'          => $file->getMimeType(),
+                'disk'               => 'public',
+                'folder'             => $folder,
+            ]);
+
+            $formBId = $upload->id;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Student
+        |--------------------------------------------------------------------------
+        */
+
+        $student = Student::create([
+
+            'photo'               => $photoId,
+            'form_b'              => $formBId,
+
+            'admission_no'        => $data['admission_no'],
+            'registration_no'     => $data['registration_no'] ?? null,
+            'date_of_admission'   => $data['date_of_admission'],
+
+            'name'                => $data['name'],
+            'father_name'         => $data['father_name'],
+            'father_cnic'         => $data['father_cnic'] ?? null,
+            'father_occupation'   => $data['father_occupation'] ?? null,
+
+            'gender'              => $data['gender'],
+            'date_of_birth'       => $data['date_of_birth'] ?? null,
+            'religion'            => $data['religion'] ?? null,
+            'tribe_cast'          => $data['tribe_cast'] ?? null,
+
+            'contact_number'      => $data['contact_number'] ?? null,
+            'address'             => $data['address'] ?? null,
+
+            'is_orphan'           => $data['is_orphan'] ?? false,
+            'is_father_shaheed'   => $data['is_father_shaheed'] ?? false,
+
+            'remarks'             => $data['remarks'] ?? null,
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Enrollment
+        |--------------------------------------------------------------------------
+        */
+
+        $enrollment = StudentEnrollment::create([
+
+            'student_id'      => $student->id,
+
+            'faculty_id'      => $data['faculty_id'],
+            'discipline_id'   => $data['discipline_id'],
+
+            'session_id'      => $data['session_id'],
+            'class_id'        => $data['class_id'],
+
+            'roll_no'         => $data['roll_no'] ?? null,
+
+            'status'          => 'Active',
+            'is_current'      => true,
+
+            'remarks'         => $data['remarks'] ?? null,
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Fee Structure
+        |--------------------------------------------------------------------------
+        */
+
+        StudentFeeStructure::create([
+
+            'student_id'      => $student->id,
+
+            'enrollment_id'   => $enrollment->id,
+
+            // 'faculty_id'      => $data['faculty_id'],
+            // 'discipline_id'   => $data['discipline_id'],
+
+            'session_id'      => $data['session_id'],
+            'class_id'        => $data['class_id'],
+
+            'annual_fee'      => $data['annual_fee'],
+
+            'discount'        => $data['discount'] ?? 0,
+
+            'net_fee'         => $data['annual_fee'] - ($data['discount'] ?? 0),
+
+            'remarks'         => $data['remarks'] ?? null,
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Return
+        |--------------------------------------------------------------------------
+        */
+
+        return $student->load([
+            'photo',
+            'formB',
+            'currentEnrollment.academicClass.discipline.faculty',
+            'feeStructure',
+        ]);
+    });
+}
+
+    /**
+        * Update Student
+    */
+    public function update(
+        Student $student,
+        array $data,
+        $request
+    ): Student {
+
+        return DB::transaction(function () use (
+            $student,
+            $data
+        ) {
+
+            /*
+            |--------------------------------------------------------------------------
+            | Validate Faculty -> Discipline -> Class
+            |--------------------------------------------------------------------------
+            */
+
+            $class = AcademicClass::with('discipline')->findOrFail($data['class_id']);
+
+            if ($class->discipline_id != $data['discipline_id']) {
+                throw new \Exception(
+                    'Selected class does not belong to the selected discipline.'
+                );
+            }
+
+            if ($class->discipline->faculty_id != $data['faculty_id']) {
+                throw new \Exception(
+                    'Selected discipline does not belong to the selected faculty.'
+                );
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Student
+            |--------------------------------------------------------------------------
+            */
+
+            $student->update([
+
+                'admission_no' => $data['admission_no'],
+
+                'registration_no' => $data['registration_no'] ?? null,
+
+                'date_of_admission' => $data['date_of_admission'],
+
+                'name' => $data['name'],
+
+                'father_name' => $data['father_name'],
+
+                'father_cnic' => $data['father_cnic'] ?? null,
+
+                'father_occupation' => $data['father_occupation'] ?? null,
+
+                'gender' => $data['gender'],
+
+                'date_of_birth' => $data['date_of_birth'] ?? null,
+
+                'religion' => $data['religion'] ?? null,
+
+                'tribe_cast' => $data['tribe_cast'] ?? null,
+
+                'contact_number' => $data['contact_number'] ?? null,
+
+                'address' => $data['address'] ?? null,
+
+                'is_orphan' => $data['is_orphan'] ?? false,
+
+                'is_father_shaheed' => $data['is_father_shaheed'] ?? false,
+
+                'remarks' => $data['remarks'] ?? null,
+
+            ]);
+
+            /*
+            |--------------------------------------------------------------------------
+            | Enrollment
+            |--------------------------------------------------------------------------
+            */
+
+            $student->currentEnrollment()->update([
+
+                'faculty_id' => $data['faculty_id'],
+
+                'discipline_id' => $data['discipline_id'],
+
+                'session_id' => $data['session_id'],
+
+                'class_id' => $data['class_id'],
+
+                'roll_no' => $data['roll_no'],
+
+            ]);
+
+            /*
+            |--------------------------------------------------------------------------
+            | Fee Structure
+            |--------------------------------------------------------------------------
+            */
+
+            $student->feeStructure()->update([
+
+                'faculty_id' => $data['faculty_id'],
+
+                'discipline_id' => $data['discipline_id'],
+
+                'session_id' => $data['session_id'],
+
+                'class_id' => $data['class_id'],
+
+                'annual_fee' => $data['annual_fee'],
+
+                'discount_amount' => $data['discount'] ?? 0,
+
+                'net_fee' => $data['annual_fee'] - ($data['discount'] ?? 0),
+
+            ]);
+
+            return $this->find($student->id);
+
+        });
+    }
+
+
+
+    /**
+     * Delete
+     */
+    public function destroy(Student $student): bool
+    {
+        return DB::transaction(function () use ($student) {
+
+            return $student->delete();
+
+        });
+    }
+
+
+
+   /**
+     * Find
+     */
+    public function find(string $id): Student
+    {
+        return Student::with([
+
+            'photo',
+
+            'formB',
+
+            'feeStructure',
+
+            'currentEnrollment.academicSession',
+
+            'currentEnrollment.academicClass.discipline.faculty',
+
+        ])->findOrFail($id);
+    }
+
+
+
+    /**
+     * Dropdown
+     */
+    // public function dropdown()
+    // {
+    //     return Student::select(
+    //             'id',
+    //             'name',
+    //             'father_name',
+    //             'admission_no'
+    //         )
+    //         ->orderBy('name')
+    //         ->get();
+    // }
+
+    public function getDropdowns()
+{
+    return [
+        'faculties' => Faculty::where('is_active', true)
+            ->select('id', 'name')
+            ->orderBy('name')
+            ->get(),
+
+        'sessions' => AcademicSession::where('is_active', true)
+            ->select('id', 'session_name')
+            ->orderByDesc('start_date')
+            ->get(),
+    ];
+}
+
+public function getDisciplines(string $facultyId)
+{
+    return Discipline::where('faculty_id', $facultyId)
+        ->where('is_active', true)
+        ->select('id', 'name')
+        ->orderBy('name')
+        ->get();
+}
+
+public function getClasses(string $disciplineId)
+{
+    return AcademicClass::where('discipline_id', $disciplineId)
+        ->where('is_active', true)
+        ->orderBy('level')
+        ->select('id', 'name', 'level')
+        ->get();
+}
+
+}
