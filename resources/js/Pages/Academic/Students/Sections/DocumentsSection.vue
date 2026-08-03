@@ -13,7 +13,7 @@ const props = defineProps({
 
 const photoPreview = ref(props.student?.photo?.url ?? null);
 
-const formBName = ref(props.student?.form_b?.file_original_name ?? null);
+const formBPreview = ref(props.student?.form_b?.url ?? null);
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +42,12 @@ function selectFormB(event) {
 
     formBName.value = file.name;
 }
+
+function removeFormB() {
+    props.form.form_b = null;
+    formBPreview.value = null;
+}
+
 </script>
 
 <template>
@@ -65,13 +71,17 @@ function selectFormB(event) {
                 >
                     Student Photo
                 </label>
-
+ 
                 <ImageCropper
-                    v-model="form.photo"
-                    :preview-image="photoPreview"
-                    @cropped="photoPreview = URL.createObjectURL($event)"
-                    @remove="removePhoto"
-                />
+    v-model="form.photo"
+    :preview-image="photoPreview"
+    title="Student Photo"
+    :aspect-ratio="3 / 4"
+    :canvas-width="1200"
+    :canvas-height="1600"
+    @cropped="photoPreview = URL.createObjectURL($event)"
+    @remove="removePhoto"
+/>
 
                 <p v-if="errors.photo" class="mt-2 text-sm text-red-600">
                     {{ errors.photo[0] }}
@@ -90,11 +100,16 @@ function selectFormB(event) {
                 <div
                     class="rounded-lg border border-dashed p-5 dark:border-gray-700"
                 >
-                    <input
-                        type="file"
-                        accept="image/*,.pdf"
-                        @change="selectFormB"
-                    />
+                    <ImageCropper
+    v-model="form.form_b"
+    :preview-image="formBPreview"
+    title="Crop Form B"
+    :aspect-ratio="1 / Math.sqrt(2)"
+    :canvas-width="1240"
+    :canvas-height="1754"
+    @cropped="formBPreview = URL.createObjectURL($event)"
+    @remove="removeFormB"
+/>
 
                     <div
                         v-if="formBName"

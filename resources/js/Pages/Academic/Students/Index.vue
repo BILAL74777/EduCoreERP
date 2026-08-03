@@ -30,7 +30,7 @@ async function fetchStudents(page = 1, search = "") {
             },
         });
 
-        students.value = response.data.data;
+        students.value = response.data;
     } catch (error) {
         console.error(error);
 

@@ -7,6 +7,7 @@ use App\Http\Controllers\Academic\DisciplineController;
 use App\Http\Controllers\Academic\AcademicClassController;
 use App\Http\Controllers\Academic\AcademicSessionController;
 use App\Http\Controllers\Academic\StudentController;
+use App\Http\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
 | API Routes

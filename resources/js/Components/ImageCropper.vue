@@ -17,6 +17,26 @@ const props = defineProps({
         type: String,
         default: null,
     },
+
+    title: {
+        type: String,
+        default: "Crop Image",
+    },
+
+    aspectRatio: {
+        type: Number,
+        default: 3 / 4,
+    },
+
+    canvasWidth: {
+        type: Number,
+        default: 120,
+    },
+
+    canvasHeight: {
+        type: Number,
+        default: 160,
+    },
 });
 
 const emit = defineEmits(["update:modelValue", "cropped", "remove"]);
@@ -148,7 +168,7 @@ function removeImage() {
         <Modal :show="showModal" max-width="xl" @close="closeModal">
             <div class="p-6 space-y-5">
                 <h2 class="text-lg font-semibold text-gray-800 dark:text-white">
-                    Crop Student Photo
+                   {{ title }}
                 </h2>
 
                 <div class="h-[400px]">
@@ -156,11 +176,11 @@ function removeImage() {
                         ref="cropper"
                         :src="image"
                         :stencil-props="{
-                            aspectRatio: 3 / 4,
+                            aspectRatio: aspectRatio,
                         }"
                         :canvas="{
-                            width: 120,
-                            height: 160,
+                            width: canvasWidth,
+                            height: canvasHeight,
                         }"
                     />
                 </div>

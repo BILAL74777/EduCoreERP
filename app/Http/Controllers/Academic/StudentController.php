@@ -9,7 +9,8 @@ use App\Http\Controllers\BaseController;
 use App\Services\Academic\StudentService;
 use App\Http\Requests\Academic\Student\StoreStudentRequest;
 use App\Http\Requests\Academic\Student\UpdateStudentRequest;
-
+use Inertia\Inertia;
+use Inertia\Response;
 class StudentController extends BaseController
 {
     public function __construct(
@@ -46,6 +47,7 @@ class StudentController extends BaseController
      */
     public function store(StoreStudentRequest $request)
     {
+        // dd($request);
         try {
 
             $student = $this->service->store(
@@ -53,11 +55,8 @@ class StudentController extends BaseController
                 $request
             );
 
-            return $this->success(
-                $student,
-                'Student created successfully.',
-                201
-            );
+            return 'Student created successfully';
+             
 
         } catch (Throwable $e) {
 
@@ -71,24 +70,16 @@ class StudentController extends BaseController
     /**
      * Show
      */
-    public function show(Student $student)
-    {
-        try {
-
-            return $this->success(
-                $this->service->find(
-                    $student->id
-                )
-            );
-
-        } catch (Throwable $e) {
-
-            return $this->error(
-                $e->getMessage()
-            );
-
-        }
-    }
+ 
+public function show(Student $student): Response
+{ 
+    return Inertia::render(
+        'Academic/Students/Show',
+        [
+            'student' => $this->service->find($student->id),
+        ]
+    );
+}
 
     /**
      * Update
@@ -184,4 +175,5 @@ class StudentController extends BaseController
             'classes' => $this->service->getClasses($discipline),
         ]);
     }
+    
 }

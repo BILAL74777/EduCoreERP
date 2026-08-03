@@ -1,8 +1,8 @@
 <script setup>
 import { ref, computed, watch } from "vue";
 import debounce from "lodash/debounce";
-
-import { PencilSquareIcon, TrashIcon } from "@heroicons/vue/24/outline";
+import { Link } from "@inertiajs/vue3";
+import { PencilSquareIcon, TrashIcon, EyeIcon } from "@heroicons/vue/24/outline";
 
 import Pagination from "@/Components/Pagination/Pagination.vue";
 
@@ -259,22 +259,32 @@ function resetSearch() {
                         </td>
 
                         <td class="p-4">
-                            <div class="flex justify-center gap-3">
-                                <button
-                                    @click="emit('edit', student)"
-                                    class="rounded-lg p-2 text-blue-600 hover:bg-blue-50"
-                                >
-                                    <PencilSquareIcon class="h-5 w-5" />
-                                </button>
+    <div class="flex justify-center gap-3">
+        <Link
+            :href="route('academic.students.show', student.id)"
+            class="rounded-lg p-2 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
+            title="View Profile"
+        >
+            <EyeIcon class="h-5 w-5" />
+        </Link>
 
-                                <button
-                                    @click="emit('delete', student.id)"
-                                    class="rounded-lg p-2 text-red-600 hover:bg-red-50"
-                                >
-                                    <TrashIcon class="h-5 w-5" />
-                                </button>
-                            </div>
-                        </td>
+        <button
+            @click="emit('edit', student)"
+            class="rounded-lg p-2 text-blue-600 hover:bg-blue-50"
+            title="Edit"
+        >
+            <PencilSquareIcon class="h-5 w-5" />
+        </button>
+
+        <button
+            @click="emit('delete', student.id)"
+            class="rounded-lg p-2 text-red-600 hover:bg-red-50"
+            title="Delete"
+        >
+            <TrashIcon class="h-5 w-5" />
+        </button>
+    </div>
+</td>
                     </tr>
 
                     <tr v-if="filteredStudents.length === 0">
