@@ -133,6 +133,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/students/create', function () {
                 return Inertia::render('Academic/Students/Create');
             })->name('students.create');
+             
  
              Route::get('/students/{student}', [StudentController::class, 'show'])
         ->name('students.show');

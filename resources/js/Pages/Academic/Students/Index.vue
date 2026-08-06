@@ -79,7 +79,8 @@ function createStudent() {
 */
 
 function editStudent(student) {
-    router.visit(`/academic/students/${student.id}/edit`);
+    alert("called");
+    router.visit(`academic/students/show/${student.id}`);
 }
 
 /*

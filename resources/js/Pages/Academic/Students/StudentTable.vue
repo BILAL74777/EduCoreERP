@@ -268,13 +268,14 @@ function resetSearch() {
             <EyeIcon class="h-5 w-5" />
         </Link>
 
-        <button
-            @click="emit('edit', student)"
+         <Link
+            :href="route('academic.students.show', student.id)"
             class="rounded-lg p-2 text-blue-600 hover:bg-blue-50"
-            title="Edit"
+            title="View Profile"
         >
+        
             <PencilSquareIcon class="h-5 w-5" />
-        </button>
+        </Link>
 
         <button
             @click="emit('delete', student.id)"
