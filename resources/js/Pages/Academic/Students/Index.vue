@@ -8,10 +8,18 @@ import Master from "@/Layouts/Master.vue";
 import StudentTable from "./StudentTable.vue";
 
 const students = ref({});
-
 const searchValue = ref("");
-
 const loading = ref(false);
+const faculties = ref([]);
+const disciplines = ref([]);
+const classes = ref([]);
+const sessions = ref([]);
+const filters = ref({
+    faculty_id: "",
+    discipline_id: "",
+    class_id: "",
+    session_id: "",
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -19,15 +27,86 @@ const loading = ref(false);
 |--------------------------------------------------------------------------
 */
 
-async function fetchStudents(page = 1, search = "") {
+async function loadDropdowns() {
+    try {
+        const response = await axios.get("/api/academic/students/dropdowns");
+
+        faculties.value = response.data.faculties || [];
+        sessions.value = response.data.sessions || [];
+    } catch (error) {
+        console.error(error);
+        toast.error("Failed to load filter options");
+    }
+}
+
+async function loadDisciplines(facultyId) {
+    if (!facultyId) {
+        disciplines.value = [];
+        classes.value = [];
+        return;
+    }
+
+    try {
+        const response = await axios.get(
+            `/api/academic/students/disciplines/${facultyId}`
+        );
+
+        disciplines.value = response.data.disciplines || [];
+        classes.value = [];
+    } catch (error) {
+        console.error(error);
+        toast.error("Failed to load disciplines");
+    }
+}
+
+async function loadClasses(disciplineId) {
+    if (!disciplineId) {
+        classes.value = [];
+        return;
+    }
+
+    try {
+        const response = await axios.get(
+            `/api/academic/students/classes/${disciplineId}`
+        );
+
+        classes.value = response.data.classes || [];
+    } catch (error) {
+        console.error(error);
+        toast.error("Failed to load classes");
+    }
+}
+
+async function fetchStudents(page = 1, search = "", activeFilters = filters.value) {
     try {
         loading.value = true;
 
+        const params = {
+            page,
+        };
+
+        if (search) {
+            params.search = search;
+        }
+
+        if (activeFilters.faculty_id) {
+            params.faculty_id = activeFilters.faculty_id;
+        }
+
+        if (activeFilters.discipline_id) {
+            params.discipline_id = activeFilters.discipline_id;
+        }
+
+        if (activeFilters.class_id) {
+            params.class_id = activeFilters.class_id;
+        }
+
+        if (activeFilters.session_id) {
+            params.session_id = activeFilters.session_id;
+        }
+
         const response = await axios.get("/api/academic/students", {
-            params: {
-                page,
-                search,
-            },
+            params,
         });
 
         students.value = response.data;
@@ -49,7 +128,7 @@ async function fetchStudents(page = 1, search = "") {
 function searchStudents(value) {
     searchValue.value = value;
 
-    fetchStudents(1, value);
+    fetchStudents(1, value, filters.value);
 }
 
 /*
@@ -59,7 +138,7 @@ function searchStudents(value) {
 */
 
 function changePage(page) {
-    fetchStudents(page, searchValue.value);
+    fetchStudents(page, searchValue.value, filters.value);
 }
 
 /*
@@ -99,13 +178,52 @@ async function deleteStudent(id) {
 
         toast.success("Student deleted successfully");
 
-        fetchStudents(students.value.current_page, searchValue.value);
+        fetchStudents(students.value.current_page, searchValue.value, filters.value);
     } catch (error) {
         toast.error("Delete failed");
     }
 }
 
+async function applyFilters(nextFilters) {
+    if (nextFilters.faculty_id !== filters.value.faculty_id) {
+        nextFilters.discipline_id = "";
+        nextFilters.class_id = "";
+        disciplines.value = [];
+        classes.value = [];
+
+        if (nextFilters.faculty_id) {
+            await loadDisciplines(nextFilters.faculty_id);
+        }
+    } else if (nextFilters.discipline_id !== filters.value.discipline_id) {
+        nextFilters.class_id = "";
+        classes.value = [];
+
+        if (nextFilters.discipline_id) {
+            await loadClasses(nextFilters.discipline_id);
+        }
+    }
+
+    filters.value = nextFilters;
+
+    fetchStudents(1, searchValue.value, filters.value);
+}
+
+function resetFilters() {
+    filters.value = {
+        faculty_id: "",
+        discipline_id: "",
+        class_id: "",
+        session_id: "",
+    };
+
+    disciplines.value = [];
+    classes.value = [];
+
+    fetchStudents(1, searchValue.value, filters.value);
+}
+
 onMounted(() => {
+    loadDropdowns();
     fetchStudents();
 });
 </script>
@@ -140,10 +258,17 @@ onMounted(() => {
                 :students="students"
                 :search-value="searchValue"
                 :loading="loading"
+                :faculties="faculties"
+                :disciplines="disciplines"
+                :classes="classes"
+                :sessions="sessions"
+                :active-filters="filters"
                 @search="searchStudents"
                 @page-change="changePage"
                 @edit="editStudent"
                 @delete="deleteStudent"
+                @filter-change="applyFilters"
+                @reset-filters="resetFilters"
             />
         </div>
     </Master>

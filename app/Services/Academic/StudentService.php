@@ -57,6 +57,29 @@ class StudentService
 
         }
 
+        if (!empty($filters['faculty_id'])) {
+            $query->whereHas('currentEnrollment', function ($q) use ($filters) {
+                $q->where('faculty_id', $filters['faculty_id']);
+            });
+        }
+
+        if (!empty($filters['discipline_id'])) {
+            $query->whereHas('currentEnrollment', function ($q) use ($filters) {
+                $q->where('discipline_id', $filters['discipline_id']);
+            });
+        }
+
+        if (!empty($filters['class_id'])) {
+            $query->whereHas('currentEnrollment', function ($q) use ($filters) {
+                $q->where('class_id', $filters['class_id']);
+            });
+        }
+
+        if (!empty($filters['session_id'])) {
+            $query->whereHas('currentEnrollment', function ($q) use ($filters) {
+                $q->where('session_id', $filters['session_id']);
+            });
+        }
 
         /*
         |--------------------------------------------------------------------------

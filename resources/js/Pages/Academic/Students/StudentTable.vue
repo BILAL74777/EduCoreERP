@@ -12,23 +12,51 @@ import Pagination from "@/Components/Pagination/Pagination.vue";
 
 const props = defineProps({
     students: Object,
-
     searchValue: String,
-
     loading: Boolean,
+    faculties: Array,
+    disciplines: Array,
+    classes: Array,
+    sessions: Array,
+    activeFilters: Object,
 });
 
-const emit = defineEmits(["search", "edit", "delete", "page-change"]);
+const emit = defineEmits([
+    "search",
+    "edit",
+    "delete",
+    "page-change",
+    "filter-change",
+    "reset-filters",
+]);
 
 const search = ref(props.searchValue || "");
-
 const statusFilter = ref("All");
+const filters = ref({
+    faculty_id: props.activeFilters?.faculty_id || "",
+    discipline_id: props.activeFilters?.discipline_id || "",
+    class_id: props.activeFilters?.class_id || "",
+    session_id: props.activeFilters?.session_id || "",
+});
 
 watch(
     () => props.searchValue,
     (value) => {
         search.value = value || "";
     }
+);
+
+watch(
+    () => props.activeFilters,
+    (value) => {
+        filters.value = {
+            faculty_id: value?.faculty_id || "",
+            discipline_id: value?.discipline_id || "",
+            class_id: value?.class_id || "",
+            session_id: value?.session_id || "",
+        };
+    },
+    { deep: true }
 );
 
 const studentList = computed(() => {
@@ -49,8 +77,23 @@ const filteredStudents = computed(() => {
     });
 });
 
+const hasActiveFilters = computed(() => {
+    return Object.values(filters.value).some((value) => Boolean(value));
+});
+
 function setFilter(value) {
     statusFilter.value = value;
+}
+
+function applyFilter(key, value) {
+    const nextFilters = {
+        ...filters.value,
+        [key]: value,
+    };
+
+    filters.value = nextFilters;
+
+    emit("filter-change", nextFilters);
 }
 
 const searchStudent = debounce(() => {
@@ -59,10 +102,16 @@ const searchStudent = debounce(() => {
 
 function resetSearch() {
     search.value = "";
-
     statusFilter.value = "All";
+    filters.value = {
+        faculty_id: "",
+        discipline_id: "",
+        class_id: "",
+        session_id: "",
+    };
 
     emit("search", "");
+    emit("reset-filters");
 }
 </script>
 
@@ -130,7 +179,7 @@ function resetSearch() {
 
                 <!-- Search -->
 
-                <div class="flex gap-2">
+                <div class="flex flex-wrap gap-2">
                     <input
                         v-model="search"
                         @input="searchStudent"
@@ -140,7 +189,7 @@ function resetSearch() {
                     />
 
                     <button
-                        v-if="search || statusFilter !== 'All'"
+                        v-if="search || statusFilter !== 'All' || hasActiveFilters"
                         @click="resetSearch"
                         class="h-11 rounded-lg bg-gray-200 px-4 text-gray-700 dark:bg-gray-700 dark:text-white"
                     >
@@ -148,6 +197,54 @@ function resetSearch() {
                     </button>
                 </div>
             </div>
+        </div>
+
+        <div class="flex flex-wrap gap-3 border-b border-gray-200 px-5 py-4 dark:border-gray-800">
+            <select
+                :value="filters.faculty_id"
+                @change="applyFilter('faculty_id', $event.target.value)"
+                class="h-11 min-w-[180px] rounded-lg border border-gray-300 px-3 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            >
+                <option value="">All Faculties</option>
+                <option v-for="faculty in faculties" :key="faculty.id" :value="faculty.id">
+                    {{ faculty.faculty }}
+                </option>
+            </select>
+
+            <select
+                :value="filters.discipline_id"
+                @change="applyFilter('discipline_id', $event.target.value)"
+                :disabled="!filters.faculty_id"
+                class="h-11 min-w-[180px] rounded-lg border border-gray-300 px-3 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            >
+                <option value="">All Disciplines</option>
+                <option v-for="discipline in disciplines" :key="discipline.id" :value="discipline.id">
+                    {{ discipline.discipline }}
+                </option>
+            </select>
+
+            <select
+                :value="filters.class_id"
+                @change="applyFilter('class_id', $event.target.value)"
+                :disabled="!filters.discipline_id"
+                class="h-11 min-w-[180px] rounded-lg border border-gray-300 px-3 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            >
+                <option value="">All Classes</option>
+                <option v-for="classItem in classes" :key="classItem.id" :value="classItem.id">
+                    {{ classItem.name }}
+                </option>
+            </select>
+
+            <select
+                :value="filters.session_id"
+                @change="applyFilter('session_id', $event.target.value)"
+                class="h-11 min-w-[180px] rounded-lg border border-gray-300 px-3 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            >
+                <option value="">All Sessions</option>
+                <option v-for="session in sessions" :key="session.id" :value="session.id">
+                    {{ session.session_name }}
+                </option>
+            </select>
         </div>
 
         <!-- Table -->
