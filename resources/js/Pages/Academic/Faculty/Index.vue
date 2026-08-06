@@ -29,13 +29,11 @@ const searchValue = ref("");
 const form = reactive({
     id: "",
     name: "",
-    description: "",
     is_active: true,
 });
 
 const errors = reactive({
     name: "",
-    description: "",
 });
 
 const pagination = ref({});
@@ -45,13 +43,11 @@ const sortDirection = ref("desc");
 
 const clearErrors = () => {
     errors.name = "";
-    errors.description = "";
 };
 
 const resetForm = () => {
     form.id = "";
     form.name = "";
-    form.description = "";
     form.is_active = true;
 
     clearErrors();
@@ -75,7 +71,6 @@ const editFaculty = (faculty) => {
 
     form.id = faculty.id;
     form.name = faculty.name;
-    form.description = faculty.description;
     form.is_active = faculty.is_active;
 
     showForm.value = true;

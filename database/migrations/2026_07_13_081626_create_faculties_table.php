@@ -15,9 +15,7 @@ return new class extends Migration
 
             $table->uuid('id')->primary();
 
-            $table->string('faculty')->unique();
-
-            $table->text('description')->nullable();
+            $table->string('faculty')->unique(); 
 
             $table->boolean('is_active')->default(true);
 

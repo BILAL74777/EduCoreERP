@@ -42,12 +42,7 @@ const emit = defineEmits(["edit", "delete", "status", "sort"]);
                         >
                             Faculty
                         </th>
-
-                        <th
-                            class="px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-300"
-                        >
-                            Description
-                        </th>
+ 
 
                         <th
                             class="px-6 py-4 text-center text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-300"
@@ -126,12 +121,7 @@ const emit = defineEmits(["edit", "delete", "status", "sort"]);
                             {{ faculty.name }}
                         </td>
 
-                        <!-- Description -->
-
-                        <td class="px-6 py-4">
-                            {{ faculty.description ?? "-" }}
-                        </td>
-
+                        
                         <!-- Status -->
 
                         <td class="px-6 py-4 text-center">

@@ -64,29 +64,7 @@ const emit = defineEmits(["close", "save"]);
                     </p>
                 </div>
 
-                <!-- Description -->
-
-                <div>
-                    <label
-                        class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
-                    >
-                        Description
-                    </label>
-
-                    <textarea
-                        rows="4"
-                        v-model="form.description"
-                        class="w-full rounded-lg border border-gray-300 px-4 py-3 dark:border-gray-700 dark:bg-gray-900 dark:text-white focus:ring focus:ring-brand-400"
-                        placeholder="Write description..."
-                    ></textarea>
-
-                    <p
-                        v-if="errors.description"
-                        class="mt-1 text-sm text-red-500"
-                    >
-                        {{ errors.description[0] }}
-                    </p>
-                </div>
+                
 
                 <!-- Status -->
 
