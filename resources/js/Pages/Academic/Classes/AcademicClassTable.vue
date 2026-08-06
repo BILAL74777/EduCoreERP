@@ -164,7 +164,7 @@ function resetSearch() {
                         <th
                             class="p-4 text-left text-xs font-medium text-gray-500"
                         >
-                            Code
+                            Year
                         </th>
 
                         <th
@@ -189,6 +189,12 @@ function resetSearch() {
                             class="p-4 text-left text-xs font-medium text-gray-500"
                         >
                             Next Class
+                        </th>
+
+                        <th
+                            class="p-4 text-left text-xs font-medium text-gray-500"
+                        >
+                            Previous Class
                         </th>
 
                         <th
@@ -221,11 +227,7 @@ function resetSearch() {
                         </td>
 
                         <td class="p-4 font-medium">
-                            {{ item.code }}
-                        </td>
-
-                        <td class="p-4">
-                            {{ item.name }}
+                            {{ item.year }}
                         </td>
 
                         <td class="p-4">
@@ -237,7 +239,11 @@ function resetSearch() {
                         </td>
 
                         <td class="p-4">
-                            {{ item.next_class?.name ?? "-" }}
+                            {{ item.next_class ?? "-" }}
+                        </td>
+
+                        <td class="p-4">
+                            {{ item.previous_class ?? "-" }}
                         </td>
 
                         <td class="p-4 text-center">

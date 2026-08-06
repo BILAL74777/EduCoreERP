@@ -29,15 +29,7 @@ class UpdateAcademicClassRequest extends FormRequest
                 'exists:disciplines,id',
             ],
 
-            'code' => [
-                'required',
-                'string',
-                'max:20',
-                Rule::unique('academic_classes', 'code')
-                    ->ignore($academicClass),
-            ],
-
-            'name' => [
+            'year' => [
                 'required',
                 'string',
                 'max:255',
@@ -50,20 +42,21 @@ class UpdateAcademicClassRequest extends FormRequest
                 'max:20',
             ],
 
-            'next_class_id' => [
+            'next_class' => [
                 'nullable',
-                'exists:academic_classes,id',
-                Rule::notIn([$academicClass->id]),
+                'string',
+                'max:32',
+            ],
+
+            'previous_class' => [
+                'nullable',
+                'string',
+                'max:32',
             ],
 
             'is_active' => [
                 'nullable',
                 'boolean',
-            ],
-
-            'description' => [
-                'nullable',
-                'string',
             ],
 
         ];

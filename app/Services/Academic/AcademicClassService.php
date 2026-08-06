@@ -31,9 +31,9 @@ class AcademicClassService
 
             $query->where(function ($q) use ($search) {
 
-                $q->where('code', 'like', "%{$search}%")
-                    ->orWhere('name', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%");
+                $q->where('year', 'like', "%{$search}%")
+                    ->orWhere('next_class', 'like', "%{$search}%")
+                    ->orWhere('previous_class', 'like', "%{$search}%");
 
             });
         }
@@ -184,7 +184,7 @@ class AcademicClassService
             ->where('is_active', true)
             ->select(
                 'id',
-                'name',
+                'year',
                 'level',
                 'discipline_id'
             )

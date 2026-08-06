@@ -39,12 +39,11 @@ const errors = ref({});
 const form = ref({
     id: null,
     discipline_id: "",
-    code: "",
-    name: "",
+    year: "",
     level: 1,
-    next_class_id: "",
+    next_class: "",
+    previous_class: "",
     is_active: true,
-    description: "",
 });
 
 /*
@@ -133,12 +132,11 @@ function openCreateModal() {
     form.value = {
         id: null,
         discipline_id: "",
-        code: "",
-        name: "",
+        year: "",
         level: 1,
-        next_class_id: "",
+        next_class: "",
+        previous_class: "",
         is_active: true,
-        description: "",
     };
 
     showFormModal.value = true;
@@ -158,12 +156,11 @@ function editAcademicClass(item) {
     form.value = {
         id: item.id,
         discipline_id: item.discipline_id,
-        code: item.code,
-        name: item.name,
+        year: item.year ?? item.name ?? "",
         level: item.level,
-        next_class_id: item.next_class_id,
+        next_class: item.next_class ?? "",
+        previous_class: item.previous_class ?? "",
         is_active: item.is_active,
-        description: item.description,
     };
 
     showFormModal.value = true;

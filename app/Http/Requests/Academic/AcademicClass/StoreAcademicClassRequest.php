@@ -26,14 +26,7 @@ class StoreAcademicClassRequest extends FormRequest
                 'exists:disciplines,id',
             ],
 
-            'code' => [
-                'required',
-                'string',
-                'max:20',
-                'unique:academic_classes,code',
-            ],
-
-            'name' => [
+            'year' => [
                 'required',
                 'string',
                 'max:255',
@@ -46,20 +39,21 @@ class StoreAcademicClassRequest extends FormRequest
                 'max:20',
             ],
 
-            'next_class_id' => [
+            'next_class' => [
                 'nullable',
-                'exists:academic_classes,id',
-                'different:id',
+                'string',
+                'max:32',
+            ],
+
+            'previous_class' => [
+                'nullable',
+                'string',
+                'max:32',
             ],
 
             'is_active' => [
                 'nullable',
                 'boolean',
-            ],
-
-            'description' => [
-                'nullable',
-                'string',
             ],
 
         ];

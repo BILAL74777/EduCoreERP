@@ -20,23 +20,15 @@ return new class extends Migration
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
 
-            $table->string('code', 20)->unique(); // BSCS-1
-
-            $table->string('name'); // First Year
+            $table->string('year');
 
             $table->unsignedTinyInteger('level');
 
-            $table->string('next_class_id')->nullable();
+            $table->string('next_class', 32)->nullable();
 
-            $table->foreign('next_class_id')
-                ->references('id')
-                ->on('academic_classes')
-                ->nullOnDelete()
-                ->cascadeOnUpdate();
+            $table->string('previous_class', 32)->nullable();
 
             $table->boolean('is_active')->default(true);
-
-            $table->text('description')->nullable();
 
             $table->softDeletes();
 

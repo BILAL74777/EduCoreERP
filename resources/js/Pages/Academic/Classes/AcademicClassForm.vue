@@ -50,51 +50,27 @@ const emit = defineEmits(["clear-error"]);
             </p>
         </div>
 
-        <!-- Code -->
+        <!-- Year -->
         <div>
             <label
                 class="mb-2 block font-medium text-gray-700 dark:text-gray-300"
             >
-                Code
+                Year
             </label>
 
             <input
-                v-model="form.code"
-                type="text"
-                placeholder="BSCS-1"
-                @input="emit('clear-error', 'code')"
-                class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                :class="{
-                    'border-red-500 bg-red-50 dark:bg-red-900/20': errors.code,
-                }"
-            />
-
-            <p v-if="errors.code" class="mt-1 text-sm text-red-600">
-                {{ errors.code[0] }}
-            </p>
-        </div>
-
-        <!-- Class Name -->
-        <div>
-            <label
-                class="mb-2 block font-medium text-gray-700 dark:text-gray-300"
-            >
-                Class Name
-            </label>
-
-            <input
-                v-model="form.name"
+                v-model="form.year"
                 type="text"
                 placeholder="First Year"
-                @input="emit('clear-error', 'name')"
+                @input="emit('clear-error', 'year')"
                 class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                 :class="{
-                    'border-red-500 bg-red-50 dark:bg-red-900/20': errors.name,
+                    'border-red-500 bg-red-50 dark:bg-red-900/20': errors.year,
                 }"
             />
 
-            <p v-if="errors.name" class="mt-1 text-sm text-red-600">
-                {{ errors.name[0] }}
+            <p v-if="errors.year" class="mt-1 text-sm text-red-600">
+                {{ errors.year[0] }}
             </p>
         </div>
 
@@ -130,29 +106,43 @@ const emit = defineEmits(["clear-error"]);
                 Next Class
             </label>
 
-            <select
-                v-model="form.next_class_id"
-                @change="emit('clear-error', 'next_class_id')"
+            <input
+                v-model="form.next_class"
+                type="text"
+                placeholder="Second Year"
+                @input="emit('clear-error', 'next_class')"
                 class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                 :class="{
-                    'border-red-500 bg-red-50 dark:bg-red-900/20':
-                        errors.next_class_id,
+                    'border-red-500 bg-red-50 dark:bg-red-900/20': errors.next_class,
                 }"
+            />
+
+            <p v-if="errors.next_class" class="mt-1 text-sm text-red-600">
+                {{ errors.next_class[0] }}
+            </p>
+        </div>
+
+        <!-- Previous Class -->
+        <div>
+            <label
+                class="mb-2 block font-medium text-gray-700 dark:text-gray-300"
             >
-                <option value="">None</option>
+                Previous Class
+            </label>
 
-                <option
-                    v-for="item in nextClasses"
-                    :key="item.id"
-                    :value="item.id"
-                    :disabled="item.id === form.id"
-                >
-                    {{ item.name }}
-                </option>
-            </select>
+            <input
+                v-model="form.previous_class"
+                type="text"
+                placeholder="First Year"
+                @input="emit('clear-error', 'previous_class')"
+                class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                :class="{
+                    'border-red-500 bg-red-50 dark:bg-red-900/20': errors.previous_class,
+                }"
+            />
 
-            <p v-if="errors.next_class_id" class="mt-1 text-sm text-red-600">
-                {{ errors.next_class_id[0] }}
+            <p v-if="errors.previous_class" class="mt-1 text-sm text-red-600">
+                {{ errors.previous_class[0] }}
             </p>
         </div>
 
@@ -178,29 +168,5 @@ const emit = defineEmits(["clear-error"]);
             </p>
         </div>
 
-        <!-- Description -->
-        <div class="md:col-span-2">
-            <label
-                class="mb-2 block font-medium text-gray-700 dark:text-gray-300"
-            >
-                Description
-            </label>
-
-            <textarea
-                v-model="form.description"
-                rows="4"
-                placeholder="Enter class description..."
-                @input="emit('clear-error', 'description')"
-                class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                :class="{
-                    'border-red-500 bg-red-50 dark:bg-red-900/20':
-                        errors.description,
-                }"
-            ></textarea>
-
-            <p v-if="errors.description" class="mt-1 text-sm text-red-600">
-                {{ errors.description[0] }}
-            </p>
-        </div>
     </div>
 </template>
