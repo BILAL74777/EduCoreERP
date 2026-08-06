@@ -1,4 +1,6 @@
 <script setup>
+import DatePicker from "@/Components/DatePicker.vue";
+
 const props = defineProps({
     form: Object,
 
@@ -76,10 +78,11 @@ const props = defineProps({
                     Payment Date
                 </label>
 
-                <input
+                <DatePicker
                     v-model="form.payment_date"
-                    type="date"
-                    class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                    placeholder="Payment Date"
+                    :has-error="Boolean(errors.payment_date)"
+                    :input-class="errors.payment_date ? 'w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white' : 'w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white'"
                 />
             </div> -->
 

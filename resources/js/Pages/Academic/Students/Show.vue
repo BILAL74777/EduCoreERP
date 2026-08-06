@@ -1,5 +1,5 @@
 <script setup>
-import { Head, router } from "@inertiajs/vue3";
+import { Head, router, Link } from "@inertiajs/vue3";
 
 import Master from "@/Layouts/Master.vue";
 
@@ -10,7 +10,7 @@ import EnrollmentCard from "./Details/EnrollmentCard.vue";
 import FeeCard from "./Details/FeeCard.vue";
 import DocumentsCard from "./Details/DocumentsCard.vue";
 import RemarksCard from "./Details/RemarksCard.vue";
-
+import { ArrowLeftIcon, PencilIcon } from "@heroicons/vue/24/outline";
 const props = defineProps({
     student: {
         type: Object,
@@ -20,10 +20,6 @@ const props = defineProps({
 
 function goBack() {
     router.visit("/academic/students");
-}
-
-function editStudent() {
-    router.visit(`/academic/students/${props.student.id}/edit`);
 }
 </script>
 
@@ -49,56 +45,45 @@ function editStudent() {
                     </p>
                 </div>
 
-                <div class="flex gap-3">
+                <div class="flex items-center gap-3">
+                    <!-- Back -->
                     <button
                         type="button"
                         @click="goBack"
-                        class="rounded-lg border border-gray-300 px-5 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+                        class="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-5 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
                     >
-                        Back
+                        <ArrowLeftIcon class="h-5 w-5" />
                     </button>
 
-                    <button
-                        type="button"
-                        @click="editStudent"
-                        class="rounded-lg bg-blue-600 px-5 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                    <!-- Edit -->
+                    <Link
+                        :href="route('academic.student.edit', student.id)"
+                        class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
                     >
-                        Edit Student
-                    </button>
+                        <PencilIcon class="h-5 w-5" />
+                    </Link>
                 </div>
             </div>
 
             <!-- Profile Header -->
 
             <ProfileHeader :student="student" />
-            
 
-            <!-- Grid --> 
+            <!-- Grid -->
             <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
-                <AdmissionInformationCard
-                    :student="student"
-                />
+                <AdmissionInformationCard :student="student" />
 
-                <EnrollmentCard
-                    :student="student"
-                />
+                <EnrollmentCard :student="student" />
 
-                <PersonalInformationCard
-                    :student="student"
-                />
+                <PersonalInformationCard :student="student" />
 
-                <FeeCard
-                    :student="student"
-                />
+                <FeeCard :student="student" />
 
                 <!-- <DocumentsCard
                     :student="student"
                 /> -->
-
             </div>
-            <RemarksCard
-                :student="student"
-            />
+            <RemarksCard :student="student" />
         </div>
     </Master>
 </template>

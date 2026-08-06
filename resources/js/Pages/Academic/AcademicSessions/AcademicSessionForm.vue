@@ -1,4 +1,6 @@
 <script setup>
+import DatePicker from "@/Components/DatePicker.vue";
+
 const props = defineProps({
     form: Object,
     errors: Object,
@@ -43,15 +45,11 @@ const emit = defineEmits(["clear-error"]);
                 Start Date
             </label>
 
-            <input
+            <DatePicker
                 v-model="form.start_date"
-                type="date"
-                @input="emit('clear-error', 'start_date')"
-                class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                :class="{
-                    'border-red-500 bg-red-50 dark:bg-red-900/20':
-                        errors.start_date,
-                }"
+                placeholder="Start Date"
+                :has-error="Boolean(errors.start_date)"
+                :input-class="errors.start_date ? 'w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white' : 'w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white'"
             />
 
             <p v-if="errors.start_date" class="mt-1 text-sm text-red-600">
@@ -67,15 +65,11 @@ const emit = defineEmits(["clear-error"]);
                 End Date
             </label>
 
-            <input
+            <DatePicker
                 v-model="form.end_date"
-                type="date"
-                @input="emit('clear-error', 'end_date')"
-                class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                :class="{
-                    'border-red-500 bg-red-50 dark:bg-red-900/20':
-                        errors.end_date,
-                }"
+                placeholder="End Date"
+                :has-error="Boolean(errors.end_date)"
+                :input-class="errors.end_date ? 'w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white' : 'w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white'"
             />
 
             <p v-if="errors.end_date" class="mt-1 text-sm text-red-600">

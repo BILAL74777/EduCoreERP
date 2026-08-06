@@ -34,20 +34,20 @@ function setBooleanValue(field, value) {
                 <div class="flex gap-4">
                     <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                         <input
-                            :checked="form.is_orphan === true"
+                            :checked="form.is_orphan === 1"
                             type="radio"
                             name="is_orphan"
-                            @change="setBooleanValue('is_orphan', true)"
+                            @change="setBooleanValue('is_orphan', 1)"
                         />
                         Yes
                     </label>
 
                     <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                         <input
-                            :checked="form.is_orphan === false"
+                            :checked="form.is_orphan === 0"
                             type="radio"
                             name="is_orphan"
-                            @change="setBooleanValue('is_orphan', false)"
+                            @change="setBooleanValue('is_orphan', 0)"
                         />
                         No
                     </label>
@@ -66,20 +66,20 @@ function setBooleanValue(field, value) {
                 <div class="flex gap-4">
                     <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                         <input
-                            :checked="form.is_father_shaheed === true"
+                            :checked="form.is_father_shaheed === 1"
                             type="radio"
                             name="is_father_shaheed"
-                            @change="setBooleanValue('is_father_shaheed', true)"
+                            @change="setBooleanValue('is_father_shaheed', 1)"
                         />
                         Yes
                     </label>
 
                     <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                         <input
-                            :checked="form.is_father_shaheed === false"
+                            :checked="form.is_father_shaheed === 0"
                             type="radio"
                             name="is_father_shaheed"
-                            @change="setBooleanValue('is_father_shaheed', false)"
+                            @change="setBooleanValue('is_father_shaheed', 0)"
                         />
                         No
                     </label>

@@ -6,7 +6,7 @@ import { toast } from "vue3-toastify";
 
 import Master from "@/Layouts/Master.vue";
 import Form from "./Form.vue";
-
+import { ArrowLeftIcon } from "@heroicons/vue/24/outline";
 const props = defineProps({
     student: Object,
 });
@@ -74,7 +74,6 @@ const form = useForm({
     annual_fee: 0,
     paid_fee: 0,
     payment_date: "",
- 
 
     /*
     |--------------------------------------------------------------------------
@@ -91,8 +90,8 @@ const form = useForm({
     |--------------------------------------------------------------------------
     */
 
-    is_orphan: false,
-    is_father_shaheed: false,
+    is_orphan: 0,
+    is_father_shaheed: 0,
 
     /*
     |--------------------------------------------------------------------------
@@ -288,15 +287,11 @@ const submit = async () => {
 
         data.append("_method", "PUT");
 
-        await axios.post(
-            `/api/academic/students/${props.student.id}`,
-            data,
-            {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            }
-        );
+        await axios.post(`/api/academic/students/${props.student.id}`, data, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
 
         toast.success("Student updated successfully.");
 
@@ -333,27 +328,28 @@ onMounted(async () => {
 <template>
     <Master>
         <div class="space-y-6">
-             <div
+            <div
                 class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
             >
-            <div>
-                <h1 class="text-xl font-semibold text-gray-800 dark:text-white">
-                    Edit Student
-                </h1>
+                <div>
+                    <h1
+                        class="text-xl font-semibold text-gray-800 dark:text-white"
+                    >
+                        Edit Student
+                    </h1>
 
-                <p class="text-sm text-gray-500">Update student information</p>
-            </div>
+                    <p class="text-sm text-gray-500">
+                        Update student information
+                    </p>
+                </div>
 
-
-            
-                
-                <div class="flex gap-3">
+                <div>
                     <button
                         type="button"
                         @click="goBack"
-                        class="rounded-lg border border-gray-30 px-5 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+                        class="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-5 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
                     >
-                        Back
+                        <ArrowLeftIcon class="h-5 w-5" />
                     </button>
                 </div>
             </div>

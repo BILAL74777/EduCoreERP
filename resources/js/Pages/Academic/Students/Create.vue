@@ -6,6 +6,7 @@ import { toast } from "vue3-toastify";
 
 import Master from "@/Layouts/Master.vue";
 import Form from "./Form.vue";
+import { ArrowLeftIcon } from "@heroicons/vue/24/outline";
 
 const sessions = ref([]);
 const disciplines = ref([]);
@@ -60,8 +61,8 @@ const form = useForm({
     form_b: null,
 
     // Flags
-    is_orphan: false,
-    is_father_shaheed: false,
+    is_orphan: 0,
+    is_father_shaheed: 0,
 
     // Remarks
     remarks: "",
@@ -166,15 +167,11 @@ const submit = async () => {
             }
         });
 
-        await axios.post(
-            "/api/academic/students",
-            data,
-            {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            }
-        );
+        await axios.post("/api/academic/students", data, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
 
         toast.success("Student created successfully.");
 
@@ -182,7 +179,6 @@ const submit = async () => {
         setTimeout(() => {
             router.visit("/academic/students");
         }, 1000);
-
     } catch (error) {
         if (error.response?.status === 422) {
             form.errors = error.response.data.errors || {};
@@ -228,9 +224,9 @@ onMounted(() => {
                     <button
                         type="button"
                         @click="goBack"
-                        class="rounded-lg border border-gray-30 px-5 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+                        class="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-5 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
                     >
-                        Back
+                        <ArrowLeftIcon class="h-5 w-5" />
                     </button>
                 </div>
             </div>
