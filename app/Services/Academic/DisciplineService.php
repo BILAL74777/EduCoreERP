@@ -28,8 +28,7 @@ class DisciplineService
 
             $query->where(function ($q) use ($search) {
 
-                $q->where('discipline', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%");
+                $q->where('discipline', 'like', "%{$search}%");
 
             });
         }

@@ -39,8 +39,7 @@ const form = ref({
     id: null,
     faculty_id: "",
     discipline: "",
-    is_active: true,
-    description: "",
+    is_active: true, 
 });
 
 /*
@@ -113,8 +112,7 @@ function openCreateModal() {
         id: null,
         faculty_id: "",
         discipline: "",
-        is_active: true,
-        description: "",
+        is_active: true, 
     };
 
     showFormModal.value = true;
@@ -135,8 +133,7 @@ function editDiscipline(discipline) {
         id: discipline.id,
         faculty_id: discipline.faculty_id,
         discipline: discipline.discipline ?? discipline.name ?? "",
-        is_active: discipline.is_active,
-        description: discipline.description,
+        is_active: discipline.is_active, 
     };
 
     showFormModal.value = true;

@@ -32,11 +32,7 @@ class UpdateDisciplineRequest extends FormRequest
                 'nullable',
                 'boolean',
             ],
-
-            'description' => [
-                'nullable',
-                'string',
-            ],
+ 
         ];
     }
 }

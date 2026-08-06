@@ -161,11 +161,11 @@ function resetSearch() {
                             #
                         </th>
 
-                        <th
+                        <!-- <th
                             class="p-4 text-left text-xs font-medium text-gray-500"
                         >
                             Year
-                        </th>
+                        </th> -->
 
                         <th
                             class="p-4 text-left text-xs font-medium text-gray-500"
@@ -227,11 +227,11 @@ function resetSearch() {
                         </td>
 
                         <td class="p-4 font-medium">
-                            {{ item.year }}
+                            {{ item.name }}
                         </td>
 
                         <td class="p-4">
-                            {{ item.discipline?.name }}
+                            {{ item.discipline?.discipline }}
                         </td>
 
                         <td class="p-4 text-center">

@@ -39,7 +39,7 @@ const errors = ref({});
 const form = ref({
     id: null,
     discipline_id: "",
-    year: "",
+    name: "",
     level: 1,
     next_class: "",
     previous_class: "",
@@ -132,7 +132,7 @@ function openCreateModal() {
     form.value = {
         id: null,
         discipline_id: "",
-        year: "",
+        name: "",
         level: 1,
         next_class: "",
         previous_class: "",
@@ -156,7 +156,7 @@ function editAcademicClass(item) {
     form.value = {
         id: item.id,
         discipline_id: item.discipline_id,
-        year: item.year ?? item.name ?? "",
+        name: item.name ?? item.name ?? "",
         level: item.level,
         next_class: item.next_class ?? "",
         previous_class: item.previous_class ?? "",

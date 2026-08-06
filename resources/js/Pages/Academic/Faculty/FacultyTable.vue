@@ -118,7 +118,7 @@ const emit = defineEmits(["edit", "delete", "status", "sort"]);
                         <!-- Name -->
 
                         <td class="whitespace-nowrap px-6 py-4 font-medium">
-                            {{ faculty.name }}
+                            {{ faculty.faculty }}
                         </td>
 
                         

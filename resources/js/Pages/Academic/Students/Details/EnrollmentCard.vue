@@ -24,14 +24,14 @@ const session = computed(() => enrollment.value.academic_session ?? {});
             <div>
                 <p class="text-sm text-gray-500">Faculty</p>
                 <p class="font-medium dark:text-white">
-                    {{ faculty.name ?? "-" }}
+                    {{ faculty.faculty ?? "-" }}
                 </p>
             </div>
 
             <div>
                 <p class="text-sm text-gray-500">Discipline</p>
                 <p class="font-medium dark:text-white">
-                    {{ discipline.name ?? "-" }}
+                    {{ discipline.discipline ?? "-" }}
                 </p>
             </div>
 
@@ -49,12 +49,12 @@ const session = computed(() => enrollment.value.academic_session ?? {});
                 </p>
             </div>
 
-            <div>
+            <!-- <div>
                 <p class="text-sm text-gray-500">Roll No</p>
                 <p class="font-medium dark:text-white">
                     {{ enrollment.roll_no ?? "-" }}
                 </p>
-            </div>
+            </div> -->
 
             <div>
                 <p class="text-sm text-gray-500">Enrollment Date</p>

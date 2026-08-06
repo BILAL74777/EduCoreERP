@@ -15,9 +15,12 @@ class AcademicClassService
     public function index(array $filters): LengthAwarePaginator
     {
         $query = AcademicClass::with([
-            'discipline',
-            'nextClass',
+            'discipline'
         ]);
+        // $query = AcademicClass::with([
+        //     'discipline',
+        //     'nextClass',
+        // ]);
 
         /*
         |--------------------------------------------------------------------------
@@ -31,7 +34,7 @@ class AcademicClassService
 
             $query->where(function ($q) use ($search) {
 
-                $q->where('year', 'like', "%{$search}%")
+                $q->where('name', 'like', "%{$search}%")
                     ->orWhere('next_class', 'like', "%{$search}%")
                     ->orWhere('previous_class', 'like', "%{$search}%");
 
@@ -116,8 +119,7 @@ class AcademicClassService
             $academicClass->update($data);
 
             return $academicClass->fresh([
-                'discipline',
-                'nextClass',
+                'discipline'
             ]);
 
         });
@@ -184,7 +186,7 @@ class AcademicClassService
             ->where('is_active', true)
             ->select(
                 'id',
-                'year',
+                'name',
                 'level',
                 'discipline_id'
             )

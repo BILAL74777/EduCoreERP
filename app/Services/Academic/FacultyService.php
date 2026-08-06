@@ -25,8 +25,7 @@ class FacultyService
             $search = $filters['search'];
 
             $query->where(function ($q) use ($search) {
-                $q->where('faculty', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%");
+                $q->where('faculty', 'like', "%{$search}%");
             });
         }
 

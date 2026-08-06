@@ -11,7 +11,7 @@ class AcademicClass extends BaseModel
 
     protected $fillable = [
         'discipline_id',
-        'year',
+        'name',
         'level',
         'next_class',
         'previous_class',

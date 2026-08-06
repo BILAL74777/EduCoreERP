@@ -26,8 +26,7 @@ return new class extends Migration
         $table->string('discipline');
 
         $table->boolean('is_active')->default(true);
-
-        $table->text('description')->nullable();
+ 
 
         $table->softDeletes();
         $table->timestamps();

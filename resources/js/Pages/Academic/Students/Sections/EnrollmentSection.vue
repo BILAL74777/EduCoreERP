@@ -46,7 +46,7 @@ const props = defineProps({
                         :key="faculty.id"
                         :value="faculty.id"
                     >
-                        {{ faculty.name }}
+                        {{ faculty.faculty }}
                     </option>
                 </select>
 
@@ -76,7 +76,7 @@ const props = defineProps({
                         :key="discipline.id"
                         :value="discipline.id"
                     >
-                        {{ discipline.name }}
+                        {{ discipline.discipline }}
                     </option>
                 </select>
 

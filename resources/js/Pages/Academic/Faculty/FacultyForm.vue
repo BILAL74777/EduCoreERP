@@ -53,14 +53,14 @@ const emit = defineEmits(["close", "save"]);
                     </label>
 
                     <input
-                        v-model="form.name"
+                        v-model="form.faculty"
                         type="text"
                         class="w-full rounded-lg border border-gray-300 px-4 py-3 dark:border-gray-700 dark:bg-gray-900 dark:text-white focus:ring focus:ring-brand-400"
                         placeholder="Faculty of Science"
                     />
 
-                    <p v-if="errors.name" class="mt-1 text-sm text-red-500">
-                        {{ errors.name[0] }}
+                    <p v-if="errors.faculty" class="mt-1 text-sm text-red-500">
+                        {{ errors.faculty[0] }}
                     </p>
                 </div>
 

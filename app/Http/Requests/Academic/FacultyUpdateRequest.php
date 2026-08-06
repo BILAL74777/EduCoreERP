@@ -34,11 +34,7 @@ class FacultyUpdateRequest extends FormRequest
                     ->ignore($this->route('faculty')->id),
 
             ],
-
-            'description' => [
-                'nullable',
-                'string',
-            ],
+ 
 
             'is_active' => [
                 'required',

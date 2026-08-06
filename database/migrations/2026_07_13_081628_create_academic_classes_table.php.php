@@ -20,7 +20,7 @@ return new class extends Migration
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
 
-            $table->string('year');
+            $table->string('name');
 
             $table->unsignedTinyInteger('level');
 

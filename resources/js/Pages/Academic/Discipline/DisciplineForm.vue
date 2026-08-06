@@ -37,7 +37,8 @@ const emit = defineEmits(["clear-error"]);
                     :key="faculty.id"
                     :value="faculty.id"
                 >
-                    {{ faculty.name }}
+                    {{ faculty.faculty }}
+                    <!-- eg. Faculty of Arts || Facutly Of Science -->
                 </option>
             </select>
 
@@ -46,29 +47,7 @@ const emit = defineEmits(["clear-error"]);
             </p>
         </div>
 
-        <!-- Code -->
-        <div>
-            <label
-                class="mb-2 block font-medium text-gray-700 dark:text-gray-300"
-            >
-                Code
-            </label>
-
-            <input
-                v-model="form.code"
-                type="text"
-                placeholder="BSCS"
-                @input="emit('clear-error', 'code')"
-                class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                :class="{
-                    'border-red-500 bg-red-50 dark:bg-red-900/20': errors.code,
-                }"
-            />
-
-            <p v-if="errors.code" class="mt-1 text-sm text-red-600">
-                {{ errors.code[0] }}
-            </p>
-        </div>
+         
 
         <!-- Discipline -->
         <div>
@@ -81,7 +60,7 @@ const emit = defineEmits(["clear-error"]);
             <input
                 v-model="form.discipline"
                 type="text"
-                placeholder="Bachelor of Computer Science"
+                placeholder="Pre-Medical"
                 @input="emit('clear-error', 'discipline')"
                 class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                 :class="{
@@ -116,29 +95,6 @@ const emit = defineEmits(["clear-error"]);
             </p>
         </div>
 
-        <!-- Description -->
-        <div class="md:col-span-2">
-            <label
-                class="mb-2 block font-medium text-gray-700 dark:text-gray-300"
-            >
-                Description
-            </label>
-
-            <textarea
-                v-model="form.description"
-                rows="4"
-                placeholder="Enter discipline description..."
-                @input="emit('clear-error', 'description')"
-                class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                :class="{
-                    'border-red-500 bg-red-50 dark:bg-red-900/20':
-                        errors.description,
-                }"
-            ></textarea>
-
-            <p v-if="errors.description" class="mt-1 text-sm text-red-600">
-                {{ errors.description[0] }}
-            </p>
-        </div>
+        
     </div>
 </template>

@@ -105,29 +105,6 @@ const emit = defineEmits(["clear-error"]);
             </p>
         </div>
 
-        <!-- Remarks -->
-        <div class="md:col-span-2">
-            <label
-                class="mb-2 block font-medium text-gray-700 dark:text-gray-300"
-            >
-                Remarks
-            </label>
-
-            <textarea
-                v-model="form.remarks"
-                rows="4"
-                placeholder="Enter remarks..."
-                @input="emit('clear-error', 'remarks')"
-                class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                :class="{
-                    'border-red-500 bg-red-50 dark:bg-red-900/20':
-                        errors.remarks,
-                }"
-            ></textarea>
-
-            <p v-if="errors.remarks" class="mt-1 text-sm text-red-600">
-                {{ errors.remarks[0] }}
-            </p>
-        </div>
+         
     </div>
 </template>

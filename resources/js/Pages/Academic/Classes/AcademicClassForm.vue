@@ -55,22 +55,22 @@ const emit = defineEmits(["clear-error"]);
             <label
                 class="mb-2 block font-medium text-gray-700 dark:text-gray-300"
             >
-                Year
+                Name
             </label>
 
             <input
-                v-model="form.year"
+                v-model="form.name"
                 type="text"
                 placeholder="First Year"
-                @input="emit('clear-error', 'year')"
+                @input="emit('clear-error', 'name')"
                 class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                 :class="{
-                    'border-red-500 bg-red-50 dark:bg-red-900/20': errors.year,
+                    'border-red-500 bg-red-50 dark:bg-red-900/20': errors.name,
                 }"
             />
 
-            <p v-if="errors.year" class="mt-1 text-sm text-red-600">
-                {{ errors.year[0] }}
+            <p v-if="errors.name" class="mt-1 text-sm text-red-600">
+                {{ errors.name[0] }}
             </p>
         </div>
 

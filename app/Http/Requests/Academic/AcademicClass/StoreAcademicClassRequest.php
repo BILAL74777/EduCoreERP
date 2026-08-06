@@ -26,7 +26,7 @@ class StoreAcademicClassRequest extends FormRequest
                 'exists:disciplines,id',
             ],
 
-            'year' => [
+            'name' => [
                 'required',
                 'string',
                 'max:255',

@@ -7,8 +7,7 @@ class Faculty extends BaseModel
     protected $table = 'faculties';
 
     protected $fillable = [
-        'name',
-        'description',
+        'faculty', 
         'is_active',
     ];
 

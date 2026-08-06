@@ -211,7 +211,7 @@ function resetSearch() {
                         </td>
 
                         <td class="p-4">
-                            {{ discipline.faculty?.name ?? "-" }}
+                            {{ discipline.faculty?.faculty ?? "-" }}
                         </td>
 
                         <td class="p-4 text-center">

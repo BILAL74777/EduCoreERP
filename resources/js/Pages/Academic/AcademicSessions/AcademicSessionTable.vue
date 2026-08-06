@@ -185,11 +185,7 @@ function resetSearch() {
                             Status
                         </th>
 
-                        <th
-                            class="p-4 text-left text-xs font-medium text-gray-500"
-                        >
-                            Remarks
-                        </th>
+                         
 
                         <th
                             class="p-4 text-center text-xs font-medium text-gray-500"
@@ -239,10 +235,7 @@ function resetSearch() {
                             </span>
                         </td>
 
-                        <td class="p-4">
-                            {{ session.remarks || "-" }}
-                        </td>
-
+                         
                         <td class="p-4">
                             <div class="flex justify-center gap-3">
                                 <button

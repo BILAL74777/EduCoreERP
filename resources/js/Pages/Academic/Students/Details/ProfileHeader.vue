@@ -44,13 +44,13 @@ const session = computed(() => enrollment.value.academic_session ?? {});
                             <span
                                 class="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700"
                             >
-                                {{ faculty.name }}
+                                {{ faculty.faculty }}
                             </span>
 
                             <span
                                 class="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700"
                             >
-                                {{ discipline.name }}
+                                {{ discipline.discipline }}
                             </span>
 
                             <span
@@ -86,8 +86,15 @@ const session = computed(() => enrollment.value.academic_session ?? {});
                             {{ session.session_name }}
                         </p>
                     </div>
-
                     <div>
+                        <p class="text-gray-500">Section</p>
+
+                        <p class="font-semibold dark:text-white">
+                           ({{ student.section }})
+                        </p>
+                    </div>
+
+                    <!-- <div>
                         <p class="text-gray-500">Status</p>
 
                         <span
@@ -95,7 +102,7 @@ const session = computed(() => enrollment.value.academic_session ?? {});
                         >
                             Active
                         </span>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>

@@ -27,12 +27,7 @@ class FacultyStoreRequest extends FormRequest
                 'max:255',
                 'unique:faculties,faculty',
             ],
-
-            'description' => [
-                'nullable',
-                'string',
-            ],
-
+ 
             'is_active' => [
                 'required',
                 'boolean',

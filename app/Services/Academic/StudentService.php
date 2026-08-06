@@ -386,8 +386,7 @@ class StudentService
         return Student::with([
 
             'photo',
-
-            'formB',
+ 
 
             'feeStructure',
 
@@ -434,8 +433,8 @@ public function getDisciplines(string $facultyId)
 {
     return Discipline::where('faculty_id', $facultyId)
         ->where('is_active', true)
-        ->select('id', 'name')
-        ->orderBy('name')
+        ->select('id', 'discipline')
+        ->orderBy('discipline')
         ->get();
 }
 

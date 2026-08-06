@@ -80,9 +80,15 @@ defineProps({
             </div>
 
             <div>
-                <p class="text-sm text-gray-500">Contact Number</p>
+                <p class="text-sm text-gray-500">Personal Contact Number</p>
                 <p class="font-semibold text-gray-900 dark:text-white">
                     {{ student.contact_number || "-" }}
+                </p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-500">Guardian Contact Number</p>
+                <p class="font-semibold text-gray-900 dark:text-white">
+                    {{ student.guardian_contact_number || "-" }}
                 </p>
             </div>
 

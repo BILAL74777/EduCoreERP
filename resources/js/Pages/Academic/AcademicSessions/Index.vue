@@ -40,8 +40,7 @@ const form = ref({
     session_name: "",
     start_date: "",
     end_date: "",
-    is_active: false,
-    remarks: "",
+    is_active: false, 
 });
 
 /*
@@ -97,8 +96,7 @@ function openCreateModal() {
         session_name: "",
         start_date: "",
         end_date: "",
-        is_active: false,
-        remarks: "",
+        is_active: false, 
     };
 
     showFormModal.value = true;
@@ -120,8 +118,7 @@ function editSession(session) {
         session_name: session.session_name,
         start_date: session.start_date,
         end_date: session.end_date,
-        is_active: session.is_active,
-        remarks: session.remarks,
+        is_active: session.is_active, 
     };
 
     showFormModal.value = true;

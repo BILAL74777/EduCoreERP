@@ -91,14 +91,14 @@ function editStudent() {
                     :student="student"
                 />
 
-                <DocumentsCard
+                <!-- <DocumentsCard
                     :student="student"
-                />
+                /> -->
 
-                <RemarksCard
-                    :student="student"
-                />
             </div>
+            <RemarksCard
+                :student="student"
+            />
         </div>
     </Master>
 </template>

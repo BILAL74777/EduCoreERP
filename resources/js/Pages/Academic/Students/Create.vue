@@ -54,7 +54,6 @@ const form = useForm({
     annual_fee: 0,
     paid_fee: 0,
     payment_date: "",
-    
 
     // Documents
     photo: null,
@@ -74,7 +73,7 @@ async function loadDropdowns() {
             axios.get("/api/academic/faculties/dropdown"),
             axios.get("/api/academic/sessions/dropdown"),
         ]);
- 
+
         faculties.value = facultyResponse.data.faculties;
 
         sessions.value = sessionResponse.data;
@@ -178,6 +177,9 @@ function submit() {
 function cancel() {
     router.visit("/academic/students");
 }
+function goBack() {
+    router.visit("/academic/students");
+}
 
 onMounted(() => {
     loadDropdowns();
@@ -187,14 +189,29 @@ onMounted(() => {
 <template>
     <Master>
         <div class="space-y-6">
-            <div>
-                <h1 class="text-xl font-semibold text-gray-800 dark:text-white">
-                    Add Student
-                </h1>
+            <div
+                class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
+            >
+                <div>
+                    <h1
+                        class="text-xl font-semibold text-gray-800 dark:text-white"
+                    >
+                        Add Student
+                    </h1>
 
-                <p class="text-sm text-gray-500">
-                    Register new student admission
-                </p>
+                    <p class="text-sm text-gray-500">
+                        Register new student admission
+                    </p>
+                </div>
+                <div class="flex gap-3">
+                    <button
+                        type="button"
+                        @click="goBack"
+                        class="rounded-lg border border-gray-30 px-5 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+                    >
+                        Back
+                    </button>
+                </div>
             </div>
 
             <Form
