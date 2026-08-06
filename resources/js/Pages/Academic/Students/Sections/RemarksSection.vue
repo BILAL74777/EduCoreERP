@@ -4,6 +4,14 @@ const props = defineProps({
 
     errors: Object,
 });
+
+function setBooleanValue(field, value) {
+    props.form[field] = value;
+
+    if (field === 'is_orphan' && value === false) {
+        props.form.is_father_shaheed = false;
+    }
+}
 </script>
 
 <template>
@@ -18,38 +26,65 @@ const props = defineProps({
 
         <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
             <!-- Orphan -->
-            <label
-                class="flex items-center gap-3 rounded-lg border p-4 dark:border-gray-700"
-            >
-                <input
-                    v-model="form.is_orphan"
-                    type="checkbox"
-                    :true-value="1"
-                    :false-value="0"
-                    class="h-4 w-4"
-                />
-
-                <span class="text-sm text-gray-700 dark:text-gray-300">
+            <div class="rounded-lg border p-4 dark:border-gray-700">
+                <p class="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">
                     Orphan Student
-                </span>
-            </label>
+                </p>
+
+                <div class="flex gap-4">
+                    <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                        <input
+                            :checked="form.is_orphan === true"
+                            type="radio"
+                            name="is_orphan"
+                            @change="setBooleanValue('is_orphan', true)"
+                        />
+                        Yes
+                    </label>
+
+                    <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                        <input
+                            :checked="form.is_orphan === false"
+                            type="radio"
+                            name="is_orphan"
+                            @change="setBooleanValue('is_orphan', false)"
+                        />
+                        No
+                    </label>
+                </div>
+            </div>
 
             <!-- Father Shaheed -->
-            <label
-                class="flex items-center gap-3 rounded-lg border p-4 dark:border-gray-700"
+            <div
+                v-if="form.is_orphan"
+                class="rounded-lg border p-4 dark:border-gray-700"
             >
-                <input
-                    v-model="form.is_father_shaheed"
-                    type="checkbox"
-                    :true-value="1"
-                    :false-value="0"
-                    class="h-4 w-4"
-                />
-
-                <span class="text-sm text-gray-700 dark:text-gray-300">
+                <p class="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">
                     Father Shaheed
-                </span>
-            </label>
+                </p>
+
+                <div class="flex gap-4">
+                    <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                        <input
+                            :checked="form.is_father_shaheed === true"
+                            type="radio"
+                            name="is_father_shaheed"
+                            @change="setBooleanValue('is_father_shaheed', true)"
+                        />
+                        Yes
+                    </label>
+
+                    <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                        <input
+                            :checked="form.is_father_shaheed === false"
+                            type="radio"
+                            name="is_father_shaheed"
+                            @change="setBooleanValue('is_father_shaheed', false)"
+                        />
+                        No
+                    </label>
+                </div>
+            </div>
         </div>
 
         <div>
