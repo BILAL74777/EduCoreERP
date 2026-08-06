@@ -83,6 +83,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
             Route::get('/', [StudentController::class,'index']);
             Route::post('/', [StudentController::class,'store']);
+            Route::put('/', [StudentController::class,'update']);
              // Student Admission Dropdowns
             Route::get('/dropdowns', [StudentController::class, 'getDropdowns']);
             Route::get('/disciplines/{faculty}', [StudentController::class, 'getDisciplines']);

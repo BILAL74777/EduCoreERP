@@ -55,8 +55,13 @@ class StudentController extends BaseController
                 $request
             );
 
-            return 'Student created successfully';
+          
              
+            return $this->success(
+                $student,
+                'Faculty created successfully.',
+                201
+            );
 
         } catch (Throwable $e) {
 
@@ -80,6 +85,15 @@ public function show(Student $student): Response
         ]
     );
 }
+public function edit(Student $student): Response
+{ 
+    return Inertia::render(
+        'Academic/Students/Edit',
+        [
+            'student' => $this->service->find($student->id),
+        ]
+    );
+}
 
     /**
      * Update
@@ -88,6 +102,8 @@ public function show(Student $student): Response
         UpdateStudentRequest $request,
         Student $student
     ) {
+        
+        // dd($student,$request);
         try {
 
             $student = $this->service->update(
@@ -96,6 +112,7 @@ public function show(Student $student): Response
                 $request
             );
 
+            return 'success';
             return $this->success(
                 $student,
                 'Student updated successfully.'

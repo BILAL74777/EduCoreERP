@@ -212,6 +212,7 @@ async function setStudent() {
     form.father_name = student.father_name;
     form.father_cnic = student.father_cnic;
     form.father_occupation = student.father_occupation;
+    form.form_b = student.form_b;
 
     form.gender = student.gender;
     form.date_of_birth = student.date_of_birth;
@@ -271,27 +272,49 @@ async function setStudent() {
 |--------------------------------------------------------------------------
 */
 
-function submit() {
+const submit = async () => {
     loading.value = true;
 
-    form.put(`/api/academic/students/${props.student.id}`, {
-        preserveScroll: true,
+    try {
+        const data = new FormData();
 
-        onSuccess() {
-            toast.success("Student updated successfully.");
+        const payload = form.data ? form.data() : form;
 
+        Object.keys(payload).forEach((key) => {
+            if (payload[key] !== null && payload[key] !== undefined) {
+                data.append(key, payload[key]);
+            }
+        });
+
+        data.append("_method", "PUT");
+
+        await axios.post(
+            `/api/academic/students/${props.student.id}`,
+            data,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            }
+        );
+
+        toast.success("Student updated successfully.");
+
+        setTimeout(() => {
             router.visit("/academic/students");
-        },
+        }, 2000);
+    } catch (error) {
+        console.log(error.response);
 
-        onError() {
-            toast.error("Please check the form.");
-        },
+        if (error.response?.status === 422) {
+            form.errors = error.response.data.errors;
+        }
 
-        onFinish() {
-            loading.value = false;
-        },
-    });
-}
+        toast.error("Please check the form.");
+    } finally {
+        loading.value = false;
+    }
+};
 
 function cancel() {
     router.visit("/academic/students");

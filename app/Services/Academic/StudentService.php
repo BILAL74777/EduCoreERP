@@ -16,6 +16,9 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
  
 use Illuminate\Support\Str;
 
+use Illuminate\Support\Facades\Storage;
+ 
+ 
 class StudentService
 {
 
@@ -238,129 +241,190 @@ class StudentService
 }
 
     /**
-        * Update Student
-    */
-    public function update(
-        Student $student,
-        array $data,
+ * Update Student
+ */
+public function update(
+    Student $student,
+    array $data,
+    $request
+): Student {
+
+    return DB::transaction(function () use (
+        $student,
+        $data,
         $request
-    ): Student {
+    ) {
 
-        return DB::transaction(function () use (
-            $student,
-            $data
-        ) {
+        /*
+        |--------------------------------------------------------------------------
+        | Validate Faculty -> Discipline -> Class
+        |--------------------------------------------------------------------------
+        */
 
-            /*
-            |--------------------------------------------------------------------------
-            | Validate Faculty -> Discipline -> Class
-            |--------------------------------------------------------------------------
-            */
+        $class = AcademicClass::with('discipline')->findOrFail($data['class_id']);
 
-            $class = AcademicClass::with('discipline')->findOrFail($data['class_id']);
+        if ($class->discipline_id != $data['discipline_id']) {
+            throw new \Exception(
+                'Selected class does not belong to the selected discipline.'
+            );
+        }
 
-            if ($class->discipline_id != $data['discipline_id']) {
-                throw new \Exception(
-                    'Selected class does not belong to the selected discipline.'
-                );
+        if ($class->discipline->faculty_id != $data['faculty_id']) {
+            throw new \Exception(
+                'Selected discipline does not belong to the selected faculty.'
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Upload New Photo (if provided)
+        |--------------------------------------------------------------------------
+        */
+
+        $photoId = $student->photo;
+
+        if ($request->hasFile('photo')) {
+
+            // Delete old photo
+            if ($student->photo) {
+
+                $oldUpload = Upload::find($student->photo);
+
+                if ($oldUpload) {
+
+                    Storage::disk($oldUpload->disk)->delete(
+                        $oldUpload->folder . '/' . $oldUpload->file_name
+                    );
+
+                    $oldUpload->delete();
+                }
             }
 
-            if ($class->discipline->faculty_id != $data['faculty_id']) {
-                throw new \Exception(
-                    'Selected discipline does not belong to the selected faculty.'
-                );
-            }
+            // Upload new photo
+            $file = $request->file('photo');
 
-            /*
-            |--------------------------------------------------------------------------
-            | Student
-            |--------------------------------------------------------------------------
-            */
+            $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
 
-            $student->update([
+            $folder = 'students/photos';
 
-                'admission_no' => $data['admission_no'],
+            $file->storeAs($folder, $fileName, 'public');
 
-                'registration_no' => $data['registration_no'] ?? null,
-
-                'section' => $data['section'] ?? null,
-
-                'date_of_admission' => $data['date_of_admission'],
-
-                'name' => $data['name'],
-
-                'father_name' => $data['father_name'],
-
-                'father_cnic' => $data['father_cnic'] ?? null,
-
-                'father_occupation' => $data['father_occupation'] ?? null,
-
-                'gender' => $data['gender'],
-
-                'date_of_birth' => $data['date_of_birth'] ?? null,
-
-                'religion' => $data['religion'] ?? null,
-
-                'tribe_cast' => $data['tribe_cast'] ?? null,
-
-                'contact_number' => $data['contact_number'] ?? null,
-
-                'guardian_contact_number' => $data['guardian_contact_number'] ?? null,
-
-                'address' => $data['address'] ?? null,
-
-                'is_orphan' => $data['is_orphan'] ?? false,
-
-                'is_father_shaheed' => $data['is_father_shaheed'] ?? false,
-
-                'remarks' => $data['remarks'] ?? null,
-
+            $upload = Upload::create([
+                'file_original_name' => $file->getClientOriginalName(),
+                'file_name'          => $fileName,
+                'file_size'          => $file->getSize(),
+                'extension'          => $file->getClientOriginalExtension(),
+                'mime_type'          => $file->getMimeType(),
+                'disk'               => 'public',
+                'folder'             => $folder,
             ]);
 
-            /*
-            |--------------------------------------------------------------------------
-            | Enrollment
-            |--------------------------------------------------------------------------
-            */
+            $photoId = $upload->id;
+        }
 
-            $student->currentEnrollment()->update([
+        /*
+        |--------------------------------------------------------------------------
+        | Student
+        |--------------------------------------------------------------------------
+        */
 
-                'faculty_id' => $data['faculty_id'],
+        $student->update([
 
-                'discipline_id' => $data['discipline_id'],
+            'photo' => $photoId,
 
-                'session_id' => $data['session_id'],
+            'form_b' => $data['form_b'] ?? null,
 
-                'class_id' => $data['class_id'],
+            'admission_no' => $data['admission_no'],
 
-                'roll_no' => $data['roll_no'],
+            'registration_no' => $data['registration_no'] ?? null,
 
-            ]);
+            'section' => $data['section'] ?? null,
 
-            /*
-            |--------------------------------------------------------------------------
-            | Fee Structure
-            |--------------------------------------------------------------------------
-            */
+            'date_of_admission' => $data['date_of_admission'],
 
-            $student->feeStructure()->update([
+            'name' => $data['name'],
 
-                'session_id' => $data['session_id'],
+            'father_name' => $data['father_name'],
 
-                'class_id' => $data['class_id'],
+            'father_cnic' => $data['father_cnic'] ?? null,
 
-                'annual_fee' => $data['annual_fee'],
+            'father_occupation' => $data['father_occupation'] ?? null,
 
-                'paid_fee' => $data['paid_fee'] ?? 0,
+            'gender' => $data['gender'],
 
-                'net_fee' => $data['annual_fee'] - ($data['paid_fee'] ?? 0),
+            'date_of_birth' => $data['date_of_birth'] ?? null,
 
-            ]);
+            'religion' => $data['religion'] ?? null,
 
-            return $this->find($student->id);
+            'tribe_cast' => $data['tribe_cast'] ?? null,
 
-        });
-    }
+            'contact_number' => $data['contact_number'] ?? null,
+
+            'guardian_contact_number' => $data['guardian_contact_number'] ?? null,
+
+            'address' => $data['address'] ?? null,
+
+            'is_orphan' => $data['is_orphan'] ?? false,
+
+            'is_father_shaheed' => $data['is_father_shaheed'] ?? false,
+
+            'remarks' => $data['remarks'] ?? null,
+
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Enrollment
+        |--------------------------------------------------------------------------
+        */
+
+        $student->currentEnrollment()->update([
+
+            'faculty_id' => $data['faculty_id'],
+
+            'discipline_id' => $data['discipline_id'],
+
+            'session_id' => $data['session_id'],
+
+            'class_id' => $data['class_id'],
+
+            'roll_no' => $data['roll_no'],
+
+            'remarks' => $data['remarks'] ?? null,
+
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Fee Structure
+        |--------------------------------------------------------------------------
+        */
+
+        $student->feeStructure()->update([
+
+            'session_id' => $data['session_id'],
+
+            'class_id' => $data['class_id'],
+
+            'annual_fee' => $data['annual_fee'],
+
+            'paid_fee' => $data['paid_fee'] ?? 0,
+
+            'net_fee' => $data['annual_fee'] - ($data['paid_fee'] ?? 0),
+
+            'remarks' => $data['remarks'] ?? null,
+
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Return Updated Student
+        |--------------------------------------------------------------------------
+        */
+
+        return $this->find($student->id);
+    });
+}
 
 
 
@@ -385,8 +449,7 @@ class StudentService
     {
         return Student::with([
 
-            'photo',
- 
+            'photo', 
 
             'feeStructure',
 
@@ -418,8 +481,8 @@ class StudentService
 {
     return [
         'faculties' => Faculty::where('is_active', true)
-            ->select('id', 'name')
-            ->orderBy('name')
+            ->select('id', 'faculty')
+            ->orderBy('faculty')
             ->get(),
 
         'sessions' => AcademicSession::where('is_active', true)

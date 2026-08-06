@@ -137,6 +137,8 @@ Route::middleware('auth')->group(function () {
  
              Route::get('/students/{student}', [StudentController::class, 'show'])
         ->name('students.show');
+             Route::get('/student/{student}', [StudentController::class, 'edit'])
+        ->name('student.edit');
 
 
         });

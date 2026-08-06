@@ -18,13 +18,14 @@ const props = defineProps({
 
         <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
             <!-- Orphan -->
-
             <label
                 class="flex items-center gap-3 rounded-lg border p-4 dark:border-gray-700"
             >
                 <input
                     v-model="form.is_orphan"
                     type="checkbox"
+                    :true-value="1"
+                    :false-value="0"
                     class="h-4 w-4"
                 />
 
@@ -34,13 +35,14 @@ const props = defineProps({
             </label>
 
             <!-- Father Shaheed -->
-
             <label
                 class="flex items-center gap-3 rounded-lg border p-4 dark:border-gray-700"
             >
                 <input
                     v-model="form.is_father_shaheed"
                     type="checkbox"
+                    :true-value="1"
+                    :false-value="0"
                     class="h-4 w-4"
                 />
 
