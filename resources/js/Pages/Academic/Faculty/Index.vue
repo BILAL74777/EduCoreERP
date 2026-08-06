@@ -28,14 +28,12 @@ const searchValue = ref("");
 
 const form = reactive({
     id: "",
-    code: "",
     name: "",
     description: "",
     is_active: true,
 });
 
 const errors = reactive({
-    code: "",
     name: "",
     description: "",
 });
@@ -46,14 +44,12 @@ const sortField = ref("created_at");
 const sortDirection = ref("desc");
 
 const clearErrors = () => {
-    errors.code = "";
     errors.name = "";
     errors.description = "";
 };
 
 const resetForm = () => {
     form.id = "";
-    form.code = "";
     form.name = "";
     form.description = "";
     form.is_active = true;
@@ -78,7 +74,6 @@ const editFaculty = (faculty) => {
     editMode.value = true;
 
     form.id = faculty.id;
-    form.code = faculty.code;
     form.name = faculty.name;
     form.description = faculty.description;
     form.is_active = faculty.is_active;

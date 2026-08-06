@@ -43,27 +43,6 @@ const emit = defineEmits(["close", "save"]);
             <!-- Form -->
 
             <div class="space-y-5">
-                <!-- Code -->
-
-                <div>
-                    <label
-                        class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
-                    >
-                        Code
-                    </label>
-
-                    <input
-                        v-model="form.code"
-                        type="text"
-                        class="w-full rounded-lg border border-gray-300 px-4 py-3 dark:border-gray-700 dark:bg-gray-900 dark:text-white focus:ring focus:ring-brand-400"
-                        placeholder="SCI"
-                    />
-
-                    <p v-if="errors.code" class="mt-1 text-sm text-red-500">
-                        {{ errors.code[0] }}
-                    </p>
-                </div>
-
                 <!-- Name -->
 
                 <div>

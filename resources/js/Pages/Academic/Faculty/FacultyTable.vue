@@ -37,13 +37,6 @@ const emit = defineEmits(["edit", "delete", "status", "sort"]);
                 <thead class="bg-gray-50 dark:bg-gray-900">
                     <tr>
                         <th
-                            @click="emit('sort', 'code')"
-                            class="cursor-pointer whitespace-nowrap px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-300"
-                        >
-                            Code
-                        </th>
-
-                        <th
                             @click="emit('sort', 'name')"
                             class="cursor-pointer whitespace-nowrap px-6 py-4 text-left text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-300"
                         >
@@ -127,12 +120,6 @@ const emit = defineEmits(["edit", "delete", "status", "sort"]);
                         :key="faculty.id"
                         class="hover:bg-gray-50 dark:hover:bg-gray-700"
                     >
-                        <!-- Code -->
-
-                        <td class="whitespace-nowrap px-6 py-4">
-                            {{ faculty.code }}
-                        </td>
-
                         <!-- Name -->
 
                         <td class="whitespace-nowrap px-6 py-4 font-medium">

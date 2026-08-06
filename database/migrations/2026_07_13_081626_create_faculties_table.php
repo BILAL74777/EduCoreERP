@@ -15,8 +15,6 @@ return new class extends Migration
 
             $table->uuid('id')->primary();
 
-            $table->string('code', 20)->unique();  
-
             $table->string('name')->unique();
 
             $table->text('description')->nullable();
