@@ -50,7 +50,8 @@ class StudentService
                     ->orWhere('father_name', 'like', "%{$search}%")
                     ->orWhere('admission_no', 'like', "%{$search}%")
                     ->orWhere('registration_no', 'like', "%{$search}%")
-                    ->orWhere('contact_number', 'like', "%{$search}%");
+                    ->orWhere('contact_number', 'like', "%{$search}%")
+                    ->orWhere('section', 'like', "%{$search}%");
 
             });
 
