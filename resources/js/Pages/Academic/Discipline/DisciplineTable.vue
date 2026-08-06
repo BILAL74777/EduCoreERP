@@ -180,12 +180,6 @@ function resetSearch() {
                         <th
                             class="p-4 text-center text-xs font-medium text-gray-500"
                         >
-                            Duration
-                        </th>
-
-                        <th
-                            class="p-4 text-center text-xs font-medium text-gray-500"
-                        >
                             Status
                         </th>
 
@@ -212,20 +206,12 @@ function resetSearch() {
                             }}
                         </td>
 
-                        <td class="p-4 font-medium">
-                            {{ discipline.code }}
-                        </td>
-
                         <td class="p-4">
-                            {{ discipline.name }}
+                            {{ discipline.discipline ?? discipline.name ?? "-" }}
                         </td>
 
                         <td class="p-4">
                             {{ discipline.faculty?.name ?? "-" }}
-                        </td>
-
-                        <td class="p-4 text-center">
-                            {{ discipline.duration_years }} Years
                         </td>
 
                         <td class="p-4 text-center">
@@ -263,7 +249,7 @@ function resetSearch() {
                     </tr>
 
                     <tr v-if="filteredDisciplines.length === 0">
-                        <td colspan="7" class="p-6 text-center text-gray-500">
+                        <td colspan="6" class="p-6 text-center text-gray-500">
                             No disciplines found.
                         </td>
                     </tr>

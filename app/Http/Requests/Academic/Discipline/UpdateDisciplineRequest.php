@@ -22,25 +22,10 @@ class UpdateDisciplineRequest extends FormRequest
                 'exists:faculties,id',
             ],
 
-            'code' => [
-                'required',
-                'string',
-                'max:20',
-                Rule::unique('disciplines', 'code')
-                    ->ignore($discipline->id),
-            ],
-
-            'name' => [
+            'discipline' => [
                 'required',
                 'string',
                 'max:255',
-            ],
-
-            'duration_years' => [
-                'required',
-                'integer',
-                'min:1',
-                'max:10',
             ],
 
             'is_active' => [

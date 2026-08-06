@@ -23,11 +23,7 @@ return new class extends Migration
             ->cascadeOnUpdate()
             ->restrictOnDelete();
 
-        $table->string('code', 20)->unique();
-
-        $table->string('name');
-
-        $table->unsignedTinyInteger('duration_years')->default(4);
+        $table->string('discipline');
 
         $table->boolean('is_active')->default(true);
 

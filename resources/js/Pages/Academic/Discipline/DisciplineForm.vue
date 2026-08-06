@@ -70,53 +70,27 @@ const emit = defineEmits(["clear-error"]);
             </p>
         </div>
 
-        <!-- Discipline Name -->
+        <!-- Discipline -->
         <div>
             <label
                 class="mb-2 block font-medium text-gray-700 dark:text-gray-300"
             >
-                Discipline Name
+                Discipline
             </label>
 
             <input
-                v-model="form.name"
+                v-model="form.discipline"
                 type="text"
                 placeholder="Bachelor of Computer Science"
-                @input="emit('clear-error', 'name')"
+                @input="emit('clear-error', 'discipline')"
                 class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                 :class="{
-                    'border-red-500 bg-red-50 dark:bg-red-900/20': errors.name,
+                    'border-red-500 bg-red-50 dark:bg-red-900/20': errors.discipline,
                 }"
             />
 
-            <p v-if="errors.name" class="mt-1 text-sm text-red-600">
-                {{ errors.name[0] }}
-            </p>
-        </div>
-
-        <!-- Duration -->
-        <div>
-            <label
-                class="mb-2 block font-medium text-gray-700 dark:text-gray-300"
-            >
-                Duration (Years)
-            </label>
-
-            <input
-                v-model="form.duration_years"
-                type="number"
-                min="1"
-                max="10"
-                @input="emit('clear-error', 'duration_years')"
-                class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                :class="{
-                    'border-red-500 bg-red-50 dark:bg-red-900/20':
-                        errors.duration_years,
-                }"
-            />
-
-            <p v-if="errors.duration_years" class="mt-1 text-sm text-red-600">
-                {{ errors.duration_years[0] }}
+            <p v-if="errors.discipline" class="mt-1 text-sm text-red-600">
+                {{ errors.discipline[0] }}
             </p>
         </div>
 

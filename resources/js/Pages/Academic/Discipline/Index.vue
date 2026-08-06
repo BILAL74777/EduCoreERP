@@ -38,9 +38,7 @@ const errors = ref({});
 const form = ref({
     id: null,
     faculty_id: "",
-    code: "",
-    name: "",
-    duration_years: 4,
+    discipline: "",
     is_active: true,
     description: "",
 });
@@ -114,9 +112,7 @@ function openCreateModal() {
     form.value = {
         id: null,
         faculty_id: "",
-        code: "",
-        name: "",
-        duration_years: 4,
+        discipline: "",
         is_active: true,
         description: "",
     };
@@ -138,9 +134,7 @@ function editDiscipline(discipline) {
     form.value = {
         id: discipline.id,
         faculty_id: discipline.faculty_id,
-        code: discipline.code,
-        name: discipline.name,
-        duration_years: discipline.duration_years,
+        discipline: discipline.discipline ?? discipline.name ?? "",
         is_active: discipline.is_active,
         description: discipline.description,
     };

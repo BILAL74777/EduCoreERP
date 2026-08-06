@@ -28,8 +28,7 @@ class DisciplineService
 
             $query->where(function ($q) use ($search) {
 
-                $q->where('code', 'like', "%{$search}%")
-                    ->orWhere('name', 'like', "%{$search}%")
+                $q->where('discipline', 'like', "%{$search}%")
                     ->orWhere('description', 'like', "%{$search}%");
 
             });
@@ -147,8 +146,8 @@ class DisciplineService
     {
         return Discipline::query()
             ->where('is_active', true)
-            ->select('id', 'name')
-            ->orderBy('name')
+            ->select('id', 'discipline as name')
+            ->orderBy('discipline')
             ->get();
     }
 }
