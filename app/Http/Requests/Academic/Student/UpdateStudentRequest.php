@@ -174,7 +174,7 @@ class UpdateStudentRequest extends FormRequest
             'annual_fee' => [
                 'required',
                 'numeric',
-                'min:0',
+                'min:1000',
             ],
 
             'paid_fee' => [
