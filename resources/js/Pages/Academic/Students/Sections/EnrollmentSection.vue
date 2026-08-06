@@ -167,6 +167,29 @@ const props = defineProps({
                     {{ errors.roll_no[0] }}
                 </p>
             </div>
+
+            <!-- Section -->
+
+            <div>
+                <label
+                    class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                    Section
+                </label>
+
+                <select
+                    v-model="form.section"
+                    class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                >
+                    <option value="">Select Section</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                    <option value="E">E</option>
+                    <option value="F">F</option>
+                </select>
+            </div>
         </div>
     </div>
 </template>

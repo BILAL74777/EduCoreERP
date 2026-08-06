@@ -18,6 +18,7 @@ const form = useForm({
     // Admission
     admission_no: "",
     registration_no: "",
+    section: "",
     date_of_admission: "",
 
     // Personal
@@ -35,6 +36,7 @@ const form = useForm({
 
     // Contact
     contact_number: "",
+    guardian_contact_number: "",
     address: "",
 
     // Enrollment
@@ -50,7 +52,9 @@ const form = useForm({
 
     // Fee
     annual_fee: 0,
-    discount: 0,
+    paid_fee: 0,
+    payment_date: "",
+    
 
     // Documents
     photo: null,

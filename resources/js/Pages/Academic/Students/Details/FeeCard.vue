@@ -26,10 +26,10 @@ const fee = computed(() => props.student.fee_structure ?? {});
             </div>
 
             <div>
-                <p class="text-sm text-gray-500">Discount</p>
+                <p class="text-sm text-gray-500">Paid Fee</p>
 
                 <p class="text-lg font-semibold text-green-600">
-                    Rs. {{ fee.discount ?? 0 }}
+                    Rs. {{ fee.paid_fee ?? 0 }}
                 </p>
             </div>
 
@@ -40,7 +40,7 @@ const fee = computed(() => props.student.fee_structure ?? {});
                     Rs.
                     {{
                         (fee.annual_fee ?? 0) -
-                        (fee.discount ?? 0)
+                        (fee.paid_fee ?? 0)
                     }}
                 </p>
             </div>

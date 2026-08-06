@@ -16,31 +16,7 @@ const props = defineProps({
             <p class="text-sm text-gray-500">Basic admission details</p>
         </div>
 
-        <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
-            <!-- Admission No -->
-
-            <div>
-                <label
-                    class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
-                >
-                    Admission No
-                </label>
-
-                <input
-                    v-model="form.admission_no"
-                    type="text"
-                    placeholder="ADM-0001"
-                    class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                    :class="{
-                        'border-red-500': errors.admission_no,
-                    }"
-                />
-
-                <p v-if="errors.admission_no" class="mt-1 text-sm text-red-600">
-                    {{ errors.admission_no[0] }}
-                </p>
-            </div>
-
+        <div class="grid grid-cols-1 gap-5 md:grid-cols-4">
             <!-- Registration No -->
 
             <div>
@@ -62,6 +38,30 @@ const props = defineProps({
                     class="mt-1 text-sm text-red-600"
                 >
                     {{ errors.registration_no[0] }}
+                </p>
+            </div>
+
+            <!-- Admission No -->
+
+            <div>
+                <label
+                    class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                    Admission No
+                </label>
+
+                <input
+                    v-model="form.admission_no"
+                    type="text"
+                    placeholder="ADM-0001"
+                    class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                    :class="{
+                        'border-red-500': errors.admission_no,
+                    }"
+                />
+
+                <p v-if="errors.admission_no" class="mt-1 text-sm text-red-600">
+                    {{ errors.admission_no[0] }}
                 </p>
             </div>
 

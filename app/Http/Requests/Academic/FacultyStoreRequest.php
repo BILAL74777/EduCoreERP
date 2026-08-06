@@ -21,11 +21,11 @@ class FacultyStoreRequest extends FormRequest
     {
         return [
 
-            'name' => [
+            'faculty' => [
                 'required',
                 'string',
                 'max:255',
-                'unique:faculties,name',
+                'unique:faculties,faculty',
             ],
 
             'description' => [
@@ -48,9 +48,9 @@ class FacultyStoreRequest extends FormRequest
     {
         return [
 
-            'name.required' => 'Faculty name is required.',
+            'faculty.required' => 'Faculty faculty is required.',
 
-            'name.unique' => 'Faculty name already exists.',
+            'faculty.unique' => 'Faculty faculty already exists.',
 
         ];
     }

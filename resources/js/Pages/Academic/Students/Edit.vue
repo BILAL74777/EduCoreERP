@@ -27,6 +27,7 @@ const form = useForm({
 
     admission_no: "",
     registration_no: "",
+    section: "",
     date_of_admission: "",
 
     /*
@@ -48,6 +49,7 @@ const form = useForm({
     tribe_cast: "",
 
     contact_number: "",
+    guardian_contact_number: "",
     address: "",
 
     /*
@@ -70,7 +72,9 @@ const form = useForm({
     */
 
     annual_fee: 0,
-    discount: 0,
+    paid_fee: 0,
+    payment_date: "",
+ 
 
     /*
     |--------------------------------------------------------------------------
@@ -201,6 +205,7 @@ async function setStudent() {
 
     form.admission_no = student.admission_no;
     form.registration_no = student.registration_no;
+    form.section = student.section;
     form.date_of_admission = student.date_of_admission;
 
     form.name = student.name;
@@ -215,6 +220,7 @@ async function setStudent() {
     form.tribe_cast = student.tribe_cast;
 
     form.contact_number = student.contact_number;
+    form.guardian_contact_number = student.guardian_contact_number;
     form.address = student.address;
 
     form.is_orphan = student.is_orphan;
@@ -230,7 +236,7 @@ async function setStudent() {
 
     if (student.fee_structure) {
         form.annual_fee = student.fee_structure.annual_fee;
-        form.discount = student.fee_structure.discount;
+        form.paid_fee = student.fee_structure.paid_fee;
     }
 
     /*

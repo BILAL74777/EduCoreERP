@@ -15,7 +15,7 @@ class StudentFeeStructure extends BaseModel
         'session_id', 
         'class_id', 
         'annual_fee', 
-        'discount', 
+        'paid_fee', 
         'net_fee', 
         'remarks',
 
@@ -25,7 +25,7 @@ class StudentFeeStructure extends BaseModel
     {
         return [
             'annual_fee' => 'decimal:2',
-            'discount' => 'decimal:2',
+            'paid_fee' => 'decimal:2',
             'net_fee' => 'decimal:2',
         ];
     }
@@ -41,5 +41,10 @@ class StudentFeeStructure extends BaseModel
             StudentEnrollment::class,
             'enrollment_id'
         );
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(StudentFeePayment::class, 'fee_structure_id');
     }
 }

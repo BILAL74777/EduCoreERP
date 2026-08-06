@@ -33,6 +33,23 @@ const props = defineProps({
                 />
             </div>
 
+            <!-- Form B -->
+
+            <div>
+                <label
+                    class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                    Form B
+                </label>
+
+                <input
+                    v-model="form.form_b"
+                    type="text"
+                    placeholder="Form B number"
+                    class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                />
+            </div>
+
             <!-- Father Name -->
 
             <div>
@@ -161,6 +178,20 @@ const props = defineProps({
 
                 <input
                     v-model="form.contact_number"
+                    type="text"
+                    class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                />
+            </div>
+
+            <div>
+                <label
+                    class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                    Guardian Contact #
+                </label>
+
+                <input
+                    v-model="form.guardian_contact_number"
                     type="text"
                     class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                 />

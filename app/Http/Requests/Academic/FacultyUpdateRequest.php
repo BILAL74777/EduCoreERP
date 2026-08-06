@@ -22,7 +22,7 @@ class FacultyUpdateRequest extends FormRequest
     {
         return [
 
-            'name' => [
+            'faculty' => [
 
                 'required',
 
@@ -30,7 +30,7 @@ class FacultyUpdateRequest extends FormRequest
 
                 'max:255',
 
-                Rule::unique('faculties', 'name')
+                Rule::unique('faculties', 'faculty')
                     ->ignore($this->route('faculty')->id),
 
             ],
@@ -55,9 +55,9 @@ class FacultyUpdateRequest extends FormRequest
     {
         return [
 
-            'name.required' => 'Faculty name is required.',
+            'faculty.required' => 'Faculty faculty is required.',
 
-            'name.unique' => 'Faculty name already exists.',
+            'faculty.unique' => 'Faculty faculty already exists.',
 
         ];
     }

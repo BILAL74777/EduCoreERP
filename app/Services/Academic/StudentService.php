@@ -10,6 +10,7 @@ use App\Models\AcademicSession;
 use App\Models\Discipline;
 use App\Models\Upload;
 use App\Models\AcademicClass;
+use App\Models\StudentFeePayment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
  
@@ -118,34 +119,11 @@ class StudentService
 
         /*
         |--------------------------------------------------------------------------
-        | Upload Form-B
+        | Form B value
         |--------------------------------------------------------------------------
         */
 
-        $formBId = null;
-
-        if ($request->hasFile('form_b')) {
-
-            $file = $request->file('form_b');
-
-            $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
-
-            $folder = 'students/form-b';
-
-            $file->storeAs($folder, $fileName, 'public');
-
-            $upload = Upload::create([
-                'file_original_name' => $file->getClientOriginalName(),
-                'file_name'          => $fileName,
-                'file_size'          => $file->getSize(),
-                'extension'          => $file->getClientOriginalExtension(),
-                'mime_type'          => $file->getMimeType(),
-                'disk'               => 'public',
-                'folder'             => $folder,
-            ]);
-
-            $formBId = $upload->id;
-        }
+        $formBValue = $data['form_b'] ?? null;
 
         /*
         |--------------------------------------------------------------------------
@@ -156,10 +134,11 @@ class StudentService
         $student = Student::create([
 
             'photo'               => $photoId,
-            'form_b'              => $formBId,
+            'form_b'              => $formBValue,
 
             'admission_no'        => $data['admission_no'],
             'registration_no'     => $data['registration_no'] ?? null,
+            'section'             => $data['section'] ?? null,
             'date_of_admission'   => $data['date_of_admission'],
 
             'name'                => $data['name'],
@@ -173,6 +152,7 @@ class StudentService
             'tribe_cast'          => $data['tribe_cast'] ?? null,
 
             'contact_number'      => $data['contact_number'] ?? null,
+            'guardian_contact_number' => $data['guardian_contact_number'] ?? null,
             'address'             => $data['address'] ?? null,
 
             'is_orphan'           => $data['is_orphan'] ?? false,
@@ -211,7 +191,7 @@ class StudentService
         |--------------------------------------------------------------------------
         */
 
-        StudentFeeStructure::create([
+        $feeStructure = StudentFeeStructure::create([
 
             'student_id'      => $student->id,
 
@@ -225,12 +205,23 @@ class StudentService
 
             'annual_fee'      => $data['annual_fee'],
 
-            'discount'        => $data['discount'] ?? 0,
+            'paid_fee'        => $data['paid_fee'] ?? 0,
 
-            'net_fee'         => $data['annual_fee'] - ($data['discount'] ?? 0),
+            'net_fee'         => $data['annual_fee'] - ($data['paid_fee'] ?? 0),
 
             'remarks'         => $data['remarks'] ?? null,
         ]);
+
+        if (!empty($data['paid_fee']) && (float) $data['paid_fee'] > 0) {
+            StudentFeePayment::create([
+                'student_id' => $student->id,
+                'enrollment_id' => $enrollment->id,
+                'fee_structure_id' => $feeStructure->id,
+                'amount' => $data['paid_fee'],
+                'payment_date' => $data['payment_date'] ?? now()->toDateString(),
+                 
+            ]);
+        }
 
         /*
         |--------------------------------------------------------------------------
@@ -240,7 +231,6 @@ class StudentService
 
         return $student->load([
             'photo',
-            'formB',
             'currentEnrollment.academicClass.discipline.faculty',
             'feeStructure',
         ]);
@@ -293,6 +283,8 @@ class StudentService
 
                 'registration_no' => $data['registration_no'] ?? null,
 
+                'section' => $data['section'] ?? null,
+
                 'date_of_admission' => $data['date_of_admission'],
 
                 'name' => $data['name'],
@@ -312,6 +304,8 @@ class StudentService
                 'tribe_cast' => $data['tribe_cast'] ?? null,
 
                 'contact_number' => $data['contact_number'] ?? null,
+
+                'guardian_contact_number' => $data['guardian_contact_number'] ?? null,
 
                 'address' => $data['address'] ?? null,
 
@@ -351,19 +345,15 @@ class StudentService
 
             $student->feeStructure()->update([
 
-                'faculty_id' => $data['faculty_id'],
-
-                'discipline_id' => $data['discipline_id'],
-
                 'session_id' => $data['session_id'],
 
                 'class_id' => $data['class_id'],
 
                 'annual_fee' => $data['annual_fee'],
 
-                'discount_amount' => $data['discount'] ?? 0,
+                'paid_fee' => $data['paid_fee'] ?? 0,
 
-                'net_fee' => $data['annual_fee'] - ($data['discount'] ?? 0),
+                'net_fee' => $data['annual_fee'] - ($data['paid_fee'] ?? 0),
 
             ]);
 

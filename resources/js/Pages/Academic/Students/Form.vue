@@ -50,7 +50,7 @@ const emit = defineEmits(["submit", "cancel"]);
             <!-- Fee -->
             <hr />
             <FeeSection :form="form" :errors="errors" />
-
+            <hr />
             <!-- Documents -->
 
             <DocumentsSection

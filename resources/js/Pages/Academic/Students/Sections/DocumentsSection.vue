@@ -13,8 +13,6 @@ const props = defineProps({
 
 const photoPreview = ref(props.student?.photo?.url ?? null);
 
-const formBPreview = ref(props.student?.form_b?.url ?? null);
-
 /*
 |--------------------------------------------------------------------------
 | Photo
@@ -22,30 +20,9 @@ const formBPreview = ref(props.student?.form_b?.url ?? null);
 */
 
 function removePhoto() {
-    form.photo = null;
+    props.form.photo = null;
 
     photoPreview.value = null;
-}
-
-/*
-|--------------------------------------------------------------------------
-| Form B Upload
-|--------------------------------------------------------------------------
-*/
-
-function selectFormB(event) {
-    const file = event.target.files[0];
-
-    if (!file) return;
-
-    form.form_b = file;
-
-    formBName.value = file.name;
-}
-
-function removeFormB() {
-    props.form.form_b = null;
-    formBPreview.value = null;
 }
 
 </script>
@@ -73,7 +50,7 @@ function removeFormB() {
                 </label>
  
                 <ImageCropper
-    v-model="form.photo"
+    v-model="props.form.photo"
     :preview-image="photoPreview"
     title="Student Photo"
     :aspect-ratio="3 / 4"
@@ -88,41 +65,6 @@ function removeFormB() {
                 </p>
             </div>
 
-            <!-- FORM B -->
-
-            <div>
-                <label
-                    class="mb-3 block text-sm font-medium text-gray-700 dark:text-gray-300"
-                >
-                    Form B
-                </label>
-
-                <div
-                    class="rounded-lg border border-dashed p-5 dark:border-gray-700"
-                >
-                    <ImageCropper
-    v-model="form.form_b"
-    :preview-image="formBPreview"
-    title="Crop Form B"
-    :aspect-ratio="1 / Math.sqrt(2)"
-    :canvas-width="1240"
-    :canvas-height="1754"
-    @cropped="formBPreview = URL.createObjectURL($event)"
-    @remove="removeFormB"
-/>
-
-                    <div
-                        v-if="formBName"
-                        class="mt-3 rounded-lg bg-gray-100 p-3 text-sm dark:bg-gray-800"
-                    >
-                        {{ formBName }}
-                    </div>
-                </div>
-
-                <p v-if="errors.form_b" class="mt-2 text-sm text-red-600">
-                    {{ errors.form_b[0] }}
-                </p>
-            </div>
         </div>
     </div>
 </template>

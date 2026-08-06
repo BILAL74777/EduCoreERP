@@ -50,7 +50,7 @@ return new class extends Migration
 
             $table->decimal('annual_fee', 12, 2);
 
-            $table->decimal('discount', 12, 2)->default(0);
+            $table->decimal('paid_fee', 12, 2)->default(0);
 
             $table->decimal('net_fee', 12, 2);
 

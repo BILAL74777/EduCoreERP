@@ -25,7 +25,7 @@ class FacultyService
             $search = $filters['search'];
 
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
+                $q->where('faculty', 'like', "%{$search}%")
                     ->orWhere('description', 'like', "%{$search}%");
             });
         }
@@ -125,8 +125,8 @@ class FacultyService
     {
         return Faculty::query()
             ->where('is_active', true)
-            ->select('id', 'name')
-            ->orderBy('name')
+            ->select('id', 'faculty')
+            ->orderBy('faculty')
             ->get();
     }
 }

@@ -38,22 +38,40 @@ const props = defineProps({
                 </p>
             </div>
 
-            <!-- Discount -->
+            <!-- Paid Fee -->
 
             <div>
                 <label
                     class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
-                    Discount
+                    Paid Fee
                 </label>
 
                 <input
-                    v-model="form.discount"
+                    v-model="form.paid_fee"
                     type="number"
                     min="0"
                     class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                 />
             </div>
+
+            <!-- Payment Date -->
+
+            <!-- <div>
+                <label
+                    class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                    Payment Date
+                </label>
+
+                <input
+                    v-model="form.payment_date"
+                    type="date"
+                    class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                />
+            </div> -->
+
+            
         </div>
     </div>
 </template>

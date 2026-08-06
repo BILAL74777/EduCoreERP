@@ -22,7 +22,14 @@ defineProps({
                     {{ student.name || "-" }}
                 </p>
             </div>
+            <div>
+                <p class="text-sm text-gray-500">Form-B</p>
+                <p class="font-semibold text-gray-900 dark:text-white">
+                    {{ student.form_b || "-" }}
+                </p>
+            </div>
 
+            
             <div>
                 <p class="text-sm text-gray-500">Father Name</p>
                 <p class="font-semibold text-gray-900 dark:text-white">

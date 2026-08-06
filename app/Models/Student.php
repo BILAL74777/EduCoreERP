@@ -13,6 +13,7 @@ class Student extends BaseModel
         'form_b',
         'admission_no',
         'registration_no',
+        'section',
         'date_of_admission',
         'name',
         'father_name',
@@ -23,6 +24,7 @@ class Student extends BaseModel
         'religion',
         'tribe_cast',
         'contact_number',
+        'guardian_contact_number',
         'address',
         'is_orphan',
         'is_father_shaheed',
@@ -32,11 +34,6 @@ class Student extends BaseModel
     public function photo(): BelongsTo
     {
         return $this->belongsTo(Upload::class, 'photo');
-    }
-
-    public function formB(): BelongsTo
-    {
-        return $this->belongsTo(Upload::class, 'form_b');
     }
 
     public function enrollments(): HasMany

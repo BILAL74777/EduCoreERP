@@ -13,11 +13,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
 
             // Documents
-            $table->foreignId('form_b')
-                ->nullable()
-                ->constrained('uploads')
-                ->nullOnDelete()
-                ->cascadeOnUpdate();
+            $table->string('form_b')->nullable();
 
             $table->foreignId('photo')
                 ->nullable()
@@ -29,6 +25,8 @@ return new class extends Migration
             $table->string('admission_no')->unique();
 
             $table->string('registration_no')->nullable()->unique();
+
+            $table->string('section')->nullable();
 
             $table->date('date_of_admission');
 
@@ -54,6 +52,8 @@ return new class extends Migration
 
             // Contact
             $table->string('contact_number', 20)->nullable();
+
+            $table->string('guardian_contact_number', 20)->nullable();
 
             $table->text('address')->nullable();
 

@@ -43,6 +43,12 @@ class StoreStudentRequest extends FormRequest
                 'unique:students,registration_no',
             ],
 
+            'section' => [
+                'nullable',
+                'string',
+                'max:100',
+            ],
+
             'date_of_admission' => [
                 'required',
                 'date',
@@ -113,6 +119,12 @@ class StoreStudentRequest extends FormRequest
                 'max:20',
             ],
 
+            'guardian_contact_number' => [
+                'nullable',
+                'string',
+                'max:20',
+            ],
+
             'address' => [
                 'nullable',
                 'string',
@@ -162,7 +174,7 @@ class StoreStudentRequest extends FormRequest
                 'min:0',
             ],
 
-            'discount' => [
+            'paid_fee' => [
                 'nullable',
                 'numeric',
                 'min:0',
@@ -183,9 +195,8 @@ class StoreStudentRequest extends FormRequest
 
             'form_b' => [
                 'nullable',
-                'file',
-                'mimes:pdf,jpg,jpeg,png',
-                'max:5120',
+                'string',
+                'max:255',
             ],
 
             /*
@@ -249,12 +260,12 @@ class StoreStudentRequest extends FormRequest
             }
 
             if (
-                $this->filled('discount') &&
-                $this->discount > $this->annual_fee
+                $this->filled('paid_fee') &&
+                $this->paid_fee > $this->annual_fee
             ) {
                 $validator->errors()->add(
-                    'discount',
-                    'Discount cannot exceed annual fee.'
+                    'paid_fee',
+                    'Paid fee cannot exceed annual fee.'
                 );
             }
         });

@@ -45,25 +45,7 @@ function closeImage() {
                 </div>
             </div>
 
-            <div>
-                <p class="mb-2 text-sm text-gray-500">
-                    Form B
-                </p>
-
-                <img
-                    v-if="student.form_b"
-                    :src="student.form_b.url"
-                    class="h-40 w-32 cursor-pointer rounded-lg border object-cover transition hover:scale-105"
-                    @click="openImage(student.form_b.url)"
-                />
-
-                <div
-                    v-else
-                    class="flex h-40 w-32 items-center justify-center rounded-lg border bg-gray-100 text-gray-500"
-                >
-                    No Image
-                </div>
-            </div>
+           
         </div>
 
         <div
