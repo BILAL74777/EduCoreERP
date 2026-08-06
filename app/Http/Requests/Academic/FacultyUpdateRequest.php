@@ -55,7 +55,7 @@ class FacultyUpdateRequest extends FormRequest
     {
         return [
 
-            'name.required' => 'Faculty name is required.'
+            'name.required' => 'Faculty name is required.',
 
             'name.unique' => 'Faculty name already exists.',
 
