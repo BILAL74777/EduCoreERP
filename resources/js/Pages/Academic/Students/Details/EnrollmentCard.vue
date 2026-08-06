@@ -59,7 +59,7 @@ const session = computed(() => enrollment.value.academic_session ?? {});
             <div>
                 <p class="text-sm text-gray-500">Enrollment Date</p>
                 <p class="font-medium dark:text-white">
-                    {{ enrollment.created_at ?? "-" }}
+                    {{ $formatDate(enrollment.created_at) }}
                 </p>
             </div>
         </div>

@@ -1,36 +1,39 @@
-import '../css/app.css'; 
-import './bootstrap';
+import "../css/app.css";
+import "./bootstrap";
 
-import { createInertiaApp } from '@inertiajs/vue3';
-import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import { createApp, h } from 'vue';
-import { ZiggyVue } from '../../vendor/tightenco/ziggy';
-  
+import { createInertiaApp } from "@inertiajs/vue3";
+import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
+import { createApp, h } from "vue";
+import { ZiggyVue } from "../../vendor/tightenco/ziggy";
+
 import Toast from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
-import '@vuepic/vue-datepicker/dist/main.css';
-// import VueDatePicker from "@vuepic/vue-datepicker";
-const appName = import.meta.env.VITE_APP_NAME || 'EduCoreERP';
+import "@vuepic/vue-datepicker/dist/main.css";
+import { formatDate } from "@/Helpers/date";
+import { formatAmount } from "@/Helpers/amount";
+const appName = import.meta.env.VITE_APP_NAME || "EduCoreERP";
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) =>
         resolvePageComponent(
             `./Pages/${name}.vue`,
-            import.meta.glob('./Pages/**/*.vue'),
+            import.meta.glob("./Pages/**/*.vue")
         ),
     setup({ el, App, props, plugin }) {
-        return createApp({ render: () => h(App, props) })
-            .use(plugin)
-            .use(ZiggyVue)
-            .use(Toast, {
-                autoClose: 3000,
-                position: "bottom-right",
-                theme: "light",
-            })
-            .mount(el);
+        const vueApp = createApp({ render: () => h(App, props) });
+        vueApp.use(plugin).use(ZiggyVue).use(Toast, {
+            autoClose: 3000,
+            position: "bottom-right",
+            theme: "light",
+        });
+        // Global helper
+        vueApp.config.globalProperties.$formatDate = formatDate;
+        vueApp.config.globalProperties.$formatAmount = formatAmount;
+        vueApp.mount(el);
+        return vueApp;
     },
     progress: {
-        color: '#4B5563',
+        color: "#4B5563",
     },
 });

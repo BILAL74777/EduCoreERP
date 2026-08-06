@@ -6,6 +6,10 @@ const props = defineProps({
 });
 
 const fee = computed(() => props.student.fee_structure ?? {});
+
+const netPayable = computed(() => {
+    return (Number(fee.value.annual_fee) || 0) - (Number(fee.value.paid_fee) || 0);
+});
 </script>
 
 <template>
@@ -21,7 +25,7 @@ const fee = computed(() => props.student.fee_structure ?? {});
                 <p class="text-sm text-gray-500">Annual Fee</p>
 
                 <p class="text-lg font-semibold text-blue-600">
-                    Rs. {{ fee.annual_fee ?? 0 }}
+                    Rs. {{ $formatAmount(fee.annual_fee ?? 0) }}
                 </p>
             </div>
 
@@ -29,7 +33,7 @@ const fee = computed(() => props.student.fee_structure ?? {});
                 <p class="text-sm text-gray-500">Paid Fee</p>
 
                 <p class="text-lg font-semibold text-green-600">
-                    Rs. {{ fee.paid_fee ?? 0 }}
+                    Rs. {{ $formatAmount(fee.paid_fee ?? 0) }}
                 </p>
             </div>
 
@@ -37,11 +41,7 @@ const fee = computed(() => props.student.fee_structure ?? {});
                 <p class="text-sm text-gray-500">Net Payable</p>
 
                 <p class="text-2xl font-bold text-gray-900 dark:text-white">
-                    Rs.
-                    {{
-                        (fee.annual_fee ?? 0) -
-                        (fee.paid_fee ?? 0)
-                    }}
+                    Rs. {{ $formatAmount(netPayable) }}
                 </p>
             </div>
         </div>

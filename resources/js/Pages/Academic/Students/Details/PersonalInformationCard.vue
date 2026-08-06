@@ -61,7 +61,7 @@ defineProps({
             <div>
                 <p class="text-sm text-gray-500">Date of Birth</p>
                 <p class="font-semibold text-gray-900 dark:text-white">
-                    {{ student.date_of_birth || "-" }}
+                    {{ $formatDate(student.date_of_birth) }}
                 </p>
             </div>
 
