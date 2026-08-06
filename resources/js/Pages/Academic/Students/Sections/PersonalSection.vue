@@ -31,6 +31,12 @@ const props = defineProps({
                     type="text"
                     class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                 />
+                <p
+                    v-if="errors.name"
+                    class="mt-1 text-sm text-red-600"
+                >
+                    {{ errors.name[0] }}
+                </p>
             </div>
 
             <!-- Form B -->
@@ -48,6 +54,12 @@ const props = defineProps({
                     placeholder="Form B number"
                     class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                 />
+                <p
+                    v-if="errors.form_b"
+                    class="mt-1 text-sm text-red-600"
+                >
+                    {{ errors.form_b[0] }}
+                </p>
             </div>
 
             <!-- Father Name -->
@@ -64,6 +76,12 @@ const props = defineProps({
                     type="text"
                     class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                 />
+                <p
+                    v-if="errors.father_name"
+                    class="mt-1 text-sm text-red-600"
+                >
+                    {{ errors.father_name[0] }}
+                </p>
             </div>
 
             <!-- Father CNIC -->
@@ -81,6 +99,12 @@ const props = defineProps({
                     placeholder="xxxxx-xxxxxxx-x"
                     class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                 />
+                <p
+                    v-if="errors.father_cnic"
+                    class="mt-1 text-sm text-red-600"
+                >
+                    {{ errors.father_cnic[0] }}
+                </p>
             </div>
 
             <!-- Occupation -->
@@ -97,6 +121,12 @@ const props = defineProps({
                     type="text"
                     class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                 />
+                <p
+                    v-if="errors.father_occupation"
+                    class="mt-1 text-sm text-red-600"
+                >
+                    {{ errors.father_occupation[0] }}
+                </p>
             </div>
 
             <!-- Gender -->
@@ -118,6 +148,13 @@ const props = defineProps({
 
                     <option value="Other">Other</option>
                 </select>
+
+                 <p
+                    v-if="errors.gender"
+                    class="mt-1 text-sm text-red-600"
+                >
+                    {{ errors.gender[0] }}
+                </p>
             </div>
 
             <!-- DOB -->
@@ -134,6 +171,12 @@ const props = defineProps({
                     type="date"
                     class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                 />
+                  <p
+                    v-if="errors.date_of_birth"
+                    class="mt-1 text-sm text-red-600"
+                >
+                    {{ errors.date_of_birth[0] }}
+                </p>
             </div>
         </div>
 
@@ -152,6 +195,12 @@ const props = defineProps({
                     type="text"
                     class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                 />
+                <p
+                    v-if="errors.religion"
+                    class="mt-1 text-sm text-red-600"
+                >
+                    {{ errors.religion[0] }}
+                </p>
             </div>
 
             <!-- Tribe -->
@@ -168,6 +217,12 @@ const props = defineProps({
                     type="text"
                     class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                 />
+                <p
+                    v-if="errors.tribe_cast"
+                    class="mt-1 text-sm text-red-600"
+                >
+                    {{ errors.tribe_cast[0] }}
+                </p>
             </div>
             <div>
                 <label
@@ -181,6 +236,12 @@ const props = defineProps({
                     type="text"
                     class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                 />
+                <p
+                    v-if="errors.contact_number"
+                    class="mt-1 text-sm text-red-600"
+                >
+                    {{ errors.contact_number[0] }}
+                </p>
             </div>
 
             <div>
@@ -195,6 +256,12 @@ const props = defineProps({
                     type="text"
                     class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                 />
+                <p
+                    v-if="errors.guardian_contact_number"
+                    class="mt-1 text-sm text-red-600"
+                >
+                    {{ errors.guardian_contact_number[0] }}
+                </p>
             </div>
             <div>
             <label
@@ -209,6 +276,12 @@ const props = defineProps({
                 class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                 placeholder="Address..."
             ></textarea>
+            <p
+                    v-if="errors.address"
+                    class="mt-1 text-sm text-red-600"
+                >
+                    {{ errors.address[0] }}
+                </p>
         </div>
         </div>
     </div>

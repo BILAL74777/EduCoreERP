@@ -77,7 +77,7 @@ class UpdateStudentRequest extends FormRequest
             ],
 
             'father_cnic' => [
-                'nullable',
+                'required',
                 'regex:/^\d{5}-\d{7}-\d$/',
             ],
 
@@ -93,7 +93,7 @@ class UpdateStudentRequest extends FormRequest
             ],
 
             'date_of_birth' => [
-                'nullable',
+                'required',
                 'date',
                 'before:today',
             ],
@@ -123,13 +123,13 @@ class UpdateStudentRequest extends FormRequest
             ],
 
             'guardian_contact_number' => [
-                'nullable',
+                'required',
                 'string',
                 'max:20',
             ],
 
             'address' => [
-                'nullable',
+                'required',
                 'string',
             ],
 
@@ -160,7 +160,7 @@ class UpdateStudentRequest extends FormRequest
             ],
 
             'roll_no' => [
-                'nullable',
+                'required',
                 'string',
                 'max:30',
             ],
@@ -190,14 +190,14 @@ class UpdateStudentRequest extends FormRequest
             */
 
             'photo' => [
-                'nullable',
+                'required',
                 'image',
                 'mimes:jpg,jpeg,png,webp',
                 'max:2048',
             ],
 
             'form_b' => [
-                'nullable',
+                'required',
                 'string',
                 'max:255',
             ],

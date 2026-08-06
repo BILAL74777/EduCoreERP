@@ -74,7 +74,7 @@ class StoreStudentRequest extends FormRequest
             ],
 
             'father_cnic' => [
-                'nullable',
+                'required',
                 'regex:/^\d{5}-\d{7}-\d$/',
             ],
 
@@ -90,7 +90,7 @@ class StoreStudentRequest extends FormRequest
             ],
 
             'date_of_birth' => [
-                'nullable',
+                'required',
                 'date',
                 'before:today',
             ],
@@ -120,13 +120,13 @@ class StoreStudentRequest extends FormRequest
             ],
 
             'guardian_contact_number' => [
-                'nullable',
+                'required',
                 'string',
                 'max:20',
             ],
 
             'address' => [
-                'nullable',
+                'required',
                 'string',
             ],
 
@@ -157,7 +157,7 @@ class StoreStudentRequest extends FormRequest
             ],
 
             'roll_no' => [
-                'nullable',
+                'required',
                 'string',
                 'max:30',
             ],
@@ -187,14 +187,14 @@ class StoreStudentRequest extends FormRequest
             */
 
             'photo' => [
-                'nullable',
+                'required',
                 'image',
                 'mimes:jpg,jpeg,png,webp',
                 'max:2048',
             ],
 
             'form_b' => [
-                'nullable',
+                'required',
                 'string',
                 'max:255',
             ],
