@@ -152,27 +152,48 @@ watch(
     }
 );
 
-function submit() {
+const submit = async () => {
     loading.value = true;
 
-    form.post("/api/academic/students", {
-        preserveScroll: true,
+    try {
+        const data = new FormData();
 
-        onSuccess() {
-            toast.success("Student created successfully");
+        const payload = form.data ? form.data() : form;
 
+        Object.keys(payload).forEach((key) => {
+            if (payload[key] !== null && payload[key] !== undefined) {
+                data.append(key, payload[key]);
+            }
+        });
+
+        await axios.post(
+            "/api/academic/students",
+            data,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            }
+        );
+
+        toast.success("Student created successfully.");
+
+        // Wait 2 seconds before redirecting
+        setTimeout(() => {
             router.visit("/academic/students");
-        },
+        }, 1000);
 
-        onError() {
-            toast.error("Please check form errors");
-        },
+    } catch (error) {
+        if (error.response?.status === 422) {
+            form.errors = error.response.data.errors || {};
+        }
 
-        onFinish() {
-            loading.value = false;
-        },
-    });
-}
+        toast.error("Please check the form.");
+        console.error(error);
+    } finally {
+        loading.value = false;
+    }
+};
 
 function cancel() {
     router.visit("/academic/students");

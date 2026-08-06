@@ -302,7 +302,7 @@ const submit = async () => {
 
         setTimeout(() => {
             router.visit("/academic/students");
-        }, 2000);
+        }, 1000);
     } catch (error) {
         console.log(error.response);
 
@@ -320,6 +320,9 @@ function cancel() {
     router.visit("/academic/students");
 }
 
+function goBack() {
+    router.visit("/academic/students");
+}
 onMounted(async () => {
     await loadDropdowns();
 
@@ -330,12 +333,29 @@ onMounted(async () => {
 <template>
     <Master>
         <div class="space-y-6">
+             <div
+                class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
+            >
             <div>
                 <h1 class="text-xl font-semibold text-gray-800 dark:text-white">
                     Edit Student
                 </h1>
 
                 <p class="text-sm text-gray-500">Update student information</p>
+            </div>
+
+
+            
+                
+                <div class="flex gap-3">
+                    <button
+                        type="button"
+                        @click="goBack"
+                        class="rounded-lg border border-gray-30 px-5 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+                    >
+                        Back
+                    </button>
+                </div>
             </div>
 
             <Form
