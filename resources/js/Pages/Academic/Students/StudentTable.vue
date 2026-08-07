@@ -10,9 +10,10 @@ import {
 } from "@heroicons/vue/24/outline";
 
 import Pagination from "@/Components/Pagination/Pagination.vue";
-import { useStudentPhoto } from "@/composables/useDefaultStudentPhoto";
 
+import { useStudentPhoto } from "@/composables/useDefaultStudentPhoto"; 
 const { getPhotoUrl, handlePhotoError } = useStudentPhoto();
+
 const props = defineProps({
     students: Object,
     searchValue: String,

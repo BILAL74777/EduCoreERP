@@ -24,7 +24,6 @@ function removePhoto() {
 
     photoPreview.value = null;
 }
-
 </script>
 
 <template>
@@ -48,23 +47,22 @@ function removePhoto() {
                 >
                     Student Photo
                 </label>
- 
+
                 <ImageCropper
-    v-model="props.form.photo"
-    :preview-image="photoPreview"
-    title="Student Photo"
-    :aspect-ratio="3 / 4"
-    :canvas-width="1200"
-    :canvas-height="1600"
-    @cropped="photoPreview = URL.createObjectURL($event)"
-    @remove="removePhoto"
-/>
+                    v-model="props.form.photo"
+                    :preview-image="photoPreview"
+                    title="Student Photo"
+                    :aspect-ratio="3 / 4"
+                    :canvas-width="1200"
+                    :canvas-height="1600"
+                    @cropped="photoPreview = URL.createObjectURL($event)"
+                    @remove="removePhoto"
+                />
 
                 <p v-if="errors.photo" class="mt-2 text-sm text-red-600">
                     {{ errors.photo[0] }}
                 </p>
             </div>
-
         </div>
     </div>
 </template>
