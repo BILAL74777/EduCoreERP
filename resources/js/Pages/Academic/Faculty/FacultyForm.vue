@@ -55,8 +55,12 @@ const emit = defineEmits(["close", "save"]);
                     <input
                         v-model="form.faculty"
                         type="text"
-                        class="w-full rounded-lg border border-gray-300 px-4 py-3 dark:border-gray-700 dark:bg-gray-900 dark:text-white focus:ring focus:ring-brand-400"
+                class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
                         placeholder="Faculty of Science"
+                                        @input="emit('clear-error', 'faculty')"
+:class="{
+                    'border-red-500 bg-red-50 dark:bg-red-900/20': errors.faculty,
+                }"
                     />
 
                     <p v-if="errors.faculty" class="mt-1 text-sm text-red-500">

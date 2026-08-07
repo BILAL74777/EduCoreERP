@@ -159,11 +159,7 @@ function resetSearch() {
                             #
                         </th>
 
-                        <th
-                            class="p-4 text-left text-xs font-medium text-gray-500"
-                        >
-                            Code
-                        </th>
+                      
 
                         <th
                             class="p-4 text-left text-xs font-medium text-gray-500"
@@ -233,14 +229,14 @@ function resetSearch() {
                             <div class="flex justify-center gap-3">
                                 <button
                                     @click="emit('edit', discipline)"
-                                    class="rounded-lg p-2 text-blue-600 hover:bg-blue-50"
+                                   class="rounded-lg bg-blue-100 p-2 text-blue-600 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-300"
                                 >
                                     <PencilSquareIcon class="h-5 w-5" />
                                 </button>
 
                                 <button
                                     @click="emit('delete', discipline.id)"
-                                    class="rounded-lg p-2 text-red-600 hover:bg-red-50"
+                                    class="rounded-lg bg-red-100 p-2 text-red-600 hover:bg-red-200 dark:bg-red-900 dark:text-red-300"
                                 >
                                     <TrashIcon class="h-5 w-5" />
                                 </button>

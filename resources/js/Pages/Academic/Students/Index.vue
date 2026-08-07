@@ -6,7 +6,7 @@ import { toast } from "vue3-toastify";
 
 import Master from "@/Layouts/Master.vue";
 import StudentTable from "./StudentTable.vue";
-
+import DeleteConfirmModal from "@/Components/Modal/DeleteConfirmModal.vue";
 const students = ref({});
 const searchValue = ref("");
 const loading = ref(false);
@@ -168,13 +168,18 @@ function editStudent(student) {
 |--------------------------------------------------------------------------
 */
 
-async function deleteStudent(id) {
-    if (!confirm("Are you sure you want to delete this student?")) {
-        return;
-    }
+const showDeleteModal = ref(false);
+const selectedStudent = ref(null);
+function askDelete(id) {
+    selectedStudent.value = id;
 
+    showDeleteModal.value = true;
+}
+
+async function deleteStudent(id) {
+     
     try {
-        await axios.delete(`/api/academic/students/${id}`);
+        await axios.delete(`/api/academic/students/${selectedStudent.value}`);
 
         toast.success("Student deleted successfully");
 
@@ -266,10 +271,20 @@ onMounted(() => {
                 @search="searchStudents"
                 @page-change="changePage"
                 @edit="editStudent"
-                @delete="deleteStudent"
                 @filter-change="applyFilters"
                 @reset-filters="resetFilters"
+                @delete="askDelete"
+                :show-delete-modal="showDeleteModal"
+                @confirm-delete="deleteAcademicClass"
+                @close-delete="showDeleteModal = false"
             />
+            <!-- Delete Modal -->
+        <DeleteConfirmModal
+            :show="showDeleteModal"
+            :loading="deleting"
+            @close="showDeleteModal = false"
+            @confirm="deleteStudent"
+        />
         </div>
     </Master>
 </template>

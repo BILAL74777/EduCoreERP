@@ -13,9 +13,7 @@ use App\Models\AcademicClass;
 use App\Models\StudentFeePayment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
- 
 use Illuminate\Support\Str;
-
 use Illuminate\Support\Facades\Storage;
  
  
@@ -459,8 +457,32 @@ public function update(
     {
         return DB::transaction(function () use ($student) {
 
-            return $student->delete();
+            /*
+            |--------------------------------------------------------------------------
+            | Delete Student Photo
+            |--------------------------------------------------------------------------
+            */
 
+            if ($student->photo) {
+
+                $upload = $student->photo;
+
+                $filePath = $upload->folder . '/' . $upload->file_name;
+
+                if (Storage::disk($upload->disk)->exists($filePath)) {
+                    Storage::disk($upload->disk)->delete($filePath);
+                }
+
+                $upload->delete();
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Delete Student
+            |--------------------------------------------------------------------------
+            */
+
+            return $student->delete();
         });
     }
 

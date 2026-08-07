@@ -10,7 +10,7 @@ import Toast from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { formatDate } from "@/Helpers/date";
-import { formatAmount } from "@/Helpers/amount";
+import { formatAmount } from "@/Helpers/amout";
 const appName = import.meta.env.VITE_APP_NAME || "EduCoreERP";
 
 createInertiaApp({

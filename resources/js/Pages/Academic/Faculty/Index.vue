@@ -28,12 +28,12 @@ const searchValue = ref("");
 
 const form = reactive({
     id: "",
-    name: "",
+    faculty: "",
     is_active: true,
 });
 
 const errors = reactive({
-    name: "",
+    faculty: "",
 });
 
 const pagination = ref({});
@@ -42,12 +42,12 @@ const sortField = ref("created_at");
 const sortDirection = ref("desc");
 
 const clearErrors = () => {
-    errors.name = "";
+    errors.faculty = "";
 };
 
 const resetForm = () => {
     form.id = "";
-    form.name = "";
+    form.faculty = "";
     form.is_active = true;
 
     clearErrors();
@@ -55,6 +55,7 @@ const resetForm = () => {
 
 const openCreateModal = () => {
     resetForm();
+    clearErrors();
     editMode.value = false;
     showForm.value = true;
 };
@@ -62,15 +63,17 @@ const openCreateModal = () => {
 const closeModal = () => {
     showForm.value = false;
     resetForm();
+    clearErrors();
 };
 
 const editFaculty = (faculty) => {
     resetForm();
 
+    clearErrors();
     editMode.value = true;
 
     form.id = faculty.id;
-    form.name = faculty.name;
+    form.faculty = faculty.faculty;
     form.is_active = faculty.is_active;
 
     showForm.value = true;
@@ -216,7 +219,7 @@ onMounted(() => {
                 </div>
 
                 <button
-                    @click="openCreateModal"
+                    @click="openCreateModal();clearErrors()"
                     class="rounded-lg bg-brand-500 hover:bg-brand-600 px-5 py-3 text-white font-medium transition"
                 >
                     + Add Faculty

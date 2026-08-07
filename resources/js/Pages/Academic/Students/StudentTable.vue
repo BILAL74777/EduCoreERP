@@ -2,6 +2,7 @@
 import { ref, computed, watch } from "vue";
 import debounce from "lodash/debounce";
 import { Link } from "@inertiajs/vue3";
+
 import {
     PencilSquareIcon,
     TrashIcon,
@@ -9,7 +10,9 @@ import {
 } from "@heroicons/vue/24/outline";
 
 import Pagination from "@/Components/Pagination/Pagination.vue";
+import { useStudentPhoto } from "@/composables/useDefaultStudentPhoto";
 
+const { getPhotoUrl, handlePhotoError } = useStudentPhoto();
 const props = defineProps({
     students: Object,
     searchValue: String,
@@ -113,6 +116,7 @@ function resetSearch() {
     emit("search", "");
     emit("reset-filters");
 }
+ 
 </script>
 
 <template>
@@ -189,7 +193,9 @@ function resetSearch() {
                     />
 
                     <button
-                        v-if="search || statusFilter !== 'All' || hasActiveFilters"
+                        v-if="
+                            search || statusFilter !== 'All' || hasActiveFilters
+                        "
                         @click="resetSearch"
                         class="h-11 rounded-lg bg-gray-200 px-4 text-gray-700 dark:bg-gray-700 dark:text-white"
                     >
@@ -199,14 +205,20 @@ function resetSearch() {
             </div>
         </div>
 
-        <div class="flex flex-wrap gap-3 border-b border-gray-200 px-5 py-4 dark:border-gray-800">
+        <div
+            class="flex flex-wrap gap-3 border-b border-gray-200 px-5 py-4 dark:border-gray-800"
+        >
             <select
                 :value="filters.faculty_id"
                 @change="applyFilter('faculty_id', $event.target.value)"
                 class="h-11 min-w-[180px] rounded-lg border border-gray-300 px-3 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white"
             >
                 <option value="">All Faculties</option>
-                <option v-for="faculty in faculties" :key="faculty.id" :value="faculty.id">
+                <option
+                    v-for="faculty in faculties"
+                    :key="faculty.id"
+                    :value="faculty.id"
+                >
                     {{ faculty.faculty }}
                 </option>
             </select>
@@ -218,7 +230,11 @@ function resetSearch() {
                 class="h-11 min-w-[180px] rounded-lg border border-gray-300 px-3 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
             >
                 <option value="">All Disciplines</option>
-                <option v-for="discipline in disciplines" :key="discipline.id" :value="discipline.id">
+                <option
+                    v-for="discipline in disciplines"
+                    :key="discipline.id"
+                    :value="discipline.id"
+                >
                     {{ discipline.discipline }}
                 </option>
             </select>
@@ -230,7 +246,11 @@ function resetSearch() {
                 class="h-11 min-w-[180px] rounded-lg border border-gray-300 px-3 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
             >
                 <option value="">All Classes</option>
-                <option v-for="classItem in classes" :key="classItem.id" :value="classItem.id">
+                <option
+                    v-for="classItem in classes"
+                    :key="classItem.id"
+                    :value="classItem.id"
+                >
                     {{ classItem.name }}
                 </option>
             </select>
@@ -241,7 +261,11 @@ function resetSearch() {
                 class="h-11 min-w-[180px] rounded-lg border border-gray-300 px-3 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white"
             >
                 <option value="">All Sessions</option>
-                <option v-for="session in sessions" :key="session.id" :value="session.id">
+                <option
+                    v-for="session in sessions"
+                    :key="session.id"
+                    :value="session.id"
+                >
                     {{ session.session_name }}
                 </option>
             </select>
@@ -272,6 +296,10 @@ function resetSearch() {
                         </th>
 
                         <th class="p-4 text-left text-xs text-gray-500">
+                            Gender
+                        </th>
+
+                        <th class="p-4 text-left text-xs text-gray-500">
                             Class
                         </th>
 
@@ -279,9 +307,9 @@ function resetSearch() {
                             Contact
                         </th>
 
-                        <th class="p-4 text-left text-xs text-gray-500">
+                        <!-- <th class="p-4 text-left text-xs text-gray-500">
                             Status
-                        </th>
+                        </th> -->
 
                         <th class="p-4 text-center text-xs text-gray-500">
                             Actions
@@ -304,20 +332,14 @@ function resetSearch() {
                             }}
                         </td>
 
-                        <td class="p-4">
-                            <img
-                                v-if="student.photo"
-                                :src="student.photo.url"
-                                class="h-10 w-10 rounded-full object-cover"
-                            />
-
-                            <div
-                                v-else
-                                class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-xs"
-                            >
-                                N/A
-                            </div>
-                        </td>
+                       <td class="p-4">
+    <img
+        :src="getPhotoUrl(student)"
+        :alt="student.name"
+        @error="handlePhotoError($event, student.gender)"
+        class="h-10 w-10 rounded-full object-cover"
+    />
+</td>
 
                         <td class="p-4">
                             {{ student.admission_no }}
@@ -330,6 +352,9 @@ function resetSearch() {
                         <td class="p-4">
                             {{ student.father_name }}
                         </td>
+                        <td class="p-4">
+                            {{ student.gender }}
+                        </td>
 
                         <td class="p-4">
                             {{
@@ -339,10 +364,31 @@ function resetSearch() {
                         </td>
 
                         <td class="p-4">
-                            {{ student.contact_number ?? "-" }}
+                            <template
+                                v-if="
+                                    student.contact_number ||
+                                    student.guardian_contact_number
+                                "
+                            >
+                                <div v-if="student.contact_number">
+                                    <span class="font-medium text-gray-500"
+                                        >S:</span
+                                    >
+                                    {{ student.contact_number }}
+                                </div>
+
+                                <div v-if="student.guardian_contact_number">
+                                    <span class="font-medium text-gray-500"
+                                        >G:</span
+                                    >
+                                    {{ student.guardian_contact_number }}
+                                </div>
+                            </template>
+
+                            <span v-else>-</span>
                         </td>
 
-                        <td class="p-4">
+                        <!-- <td class="p-4">
                             <span
                                 :class="[
                                     'rounded-full px-3 py-1 text-xs',
@@ -357,7 +403,7 @@ function resetSearch() {
                                     "Inactive"
                                 }}
                             </span>
-                        </td>
+                        </td> -->
 
                         <td class="p-4">
                             <div class="flex justify-center gap-3">
@@ -368,7 +414,7 @@ function resetSearch() {
                                             student.id
                                         )
                                     "
-                                    class="rounded-lg p-2 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
+                                    class="rounded-lg bg-emerald-100 p-2 text-emerald-600 hover:bg-emerald-200 dark:bg-emerald-900 dark:text-emerald-300"
                                     title="View Profile"
                                 >
                                     <EyeIcon class="h-5 w-5" />
@@ -381,19 +427,19 @@ function resetSearch() {
                                             student.id
                                         )
                                     "
-                                    class="rounded-lg p-2 text-blue-600 hover:bg-blue-50"
+                                    class="rounded-lg bg-blue-100 p-2 text-blue-600 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-300"
                                     title="View Profile"
                                 >
                                     <PencilSquareIcon class="h-5 w-5" />
                                 </Link>
 
-                                <button
+                                <!-- <button
                                     @click="emit('delete', student.id)"
-                                    class="rounded-lg p-2 text-red-600 hover:bg-red-50"
+                                    class="rounded-lg bg-red-100 p-2 text-red-600 hover:bg-red-200 dark:bg-red-900 dark:text-red-300"
                                     title="Delete"
                                 >
                                     <TrashIcon class="h-5 w-5" />
-                                </button>
+                                </button> -->
                             </div>
                         </td>
                     </tr>
