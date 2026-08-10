@@ -195,8 +195,8 @@ function resetSearch() {
                     >
                         <td class="p-4">
                             {{
-                                (disciplines.current_page - 1) *
-                                    disciplines.per_page +
+                                (disciplines.pagination.current_page - 1) *
+                                    disciplines.pagination.per_page +
                                 index +
                                 1
                             }}

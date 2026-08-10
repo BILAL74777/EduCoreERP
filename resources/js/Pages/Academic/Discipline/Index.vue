@@ -39,7 +39,7 @@ const form = ref({
     id: null,
     faculty_id: "",
     discipline: "",
-    is_active: true, 
+    is_active: true,
 });
 
 /*
@@ -112,7 +112,7 @@ function openCreateModal() {
         id: null,
         faculty_id: "",
         discipline: "",
-        is_active: true, 
+        is_active: true,
     };
 
     showFormModal.value = true;
@@ -133,7 +133,7 @@ function editDiscipline(discipline) {
         id: discipline.id,
         faculty_id: discipline.faculty_id,
         discipline: discipline.discipline ?? discipline.name ?? "",
-        is_active: discipline.is_active, 
+        is_active: discipline.is_active,
     };
 
     showFormModal.value = true;
@@ -244,59 +244,63 @@ onMounted(async () => {
     <Head title="Disciplines" />
 
     <Master>
+        
         <!-- Header -->
-        <div class="mb-6">
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-                Discipline Management
-            </h1>
+        <div class="space-y-6 flex items-start justify-between">
+            <!-- Left -->
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+                    Discipline Management
+                </h1>
 
-            <nav class="flex" aria-label="Breadcrumb">
-                <ol class="inline-flex items-center space-x-1 md:space-x-3">
-                    <li class="inline-flex items-center">
-                        <a
-                            href="#"
-                            class="text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white"
-                        >
-                            Home
-                        </a>
-                    </li>
-
-                    <li>
-                        <div class="flex items-center">
-                            <svg
-                                class="w-4 h-4 text-gray-400"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
+                <nav class="mt-2 flex" aria-label="Breadcrumb">
+                    <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                        <li class="inline-flex items-center">
+                            <a
+                                href="#"
+                                class="text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white"
                             >
-                                <path
-                                    fill-rule="evenodd"
-                                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                                    clip-rule="evenodd"
-                                />
-                            </svg>
+                                Home
+                            </a>
+                        </li>
 
-                            <span
-                                class="ml-1 text-sm font-medium text-gray-700 dark:text-gray-400"
-                            >
-                                Disciplines
-                            </span>
-                        </div>
-                    </li>
-                </ol>
-            </nav>
+                        <li>
+                            <div class="flex items-center">
+                                <svg
+                                    class="h-4 w-4 text-gray-400"
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                >
+                                    <path
+                                        fill-rule="evenodd"
+                                        d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                        clip-rule="evenodd"
+                                    />
+                                </svg>
+
+                                <span
+                                    class="ml-1 text-sm font-medium text-gray-700 dark:text-gray-400"
+                                >
+                                    Disciplines
+                                </span>
+                            </div>
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+
+            <!-- Right -->
+            <button
+                type="button"
+                @click="openCreateModal"
+                class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+            >
+                Add New
+            </button>
         </div>
 
         <!-- Card -->
-        <div class="mt-10 rounded-lg bg-white p-6 shadow dark:bg-gray-800">
-            <div class="mb-6 flex justify-end">
-                <button
-                    @click="openCreateModal"
-                    class="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-                >
-                    Add New
-                </button>
-            </div>
-
+        <div class="rounded-lg bg-white dark:bg-gray-800">
             <!-- Loading -->
             <div v-if="loading" class="flex justify-center items-center py-12">
                 <svg

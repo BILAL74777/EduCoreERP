@@ -203,8 +203,8 @@ function resetSearch() {
                     >
                         <td class="p-4">
                             {{
-                                (sessions.current_page - 1) *
-                                    sessions.per_page +
+                                (sessions.pagination.current_page - 1) *
+                                    sessions.pagination.per_page +
                                 index +
                                 1
                             }}

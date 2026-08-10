@@ -6,7 +6,7 @@ import { toast } from "vue3-toastify";
 
 import Master from "@/Layouts/Master.vue";
 import StudentTable from "./StudentTable.vue";
-import DeleteConfirmModal from "@/Components/Modal/DeleteConfirmModal.vue";
+// import DeleteConfirmModal from "@/Components/Modal/DeleteConfirmModal.vue";
 const students = ref({});
 const searchValue = ref("");
 const loading = ref(false);
@@ -77,7 +77,11 @@ async function loadClasses(disciplineId) {
     }
 }
 
-async function fetchStudents(page = 1, search = "", activeFilters = filters.value) {
+async function fetchStudents(
+    page = 1,
+    search = "",
+    activeFilters = filters.value
+) {
     try {
         loading.value = true;
 
@@ -177,13 +181,16 @@ function askDelete(id) {
 }
 
 async function deleteStudent(id) {
-     
     try {
         await axios.delete(`/api/academic/students/${selectedStudent.value}`);
 
         toast.success("Student deleted successfully");
 
-        fetchStudents(students.value.current_page, searchValue.value, filters.value);
+        fetchStudents(
+            students.value.current_page,
+            searchValue.value,
+            filters.value
+        );
     } catch (error) {
         toast.error("Delete failed");
     }
@@ -237,26 +244,64 @@ onMounted(() => {
     <Master>
         <div class="space-y-6">
             <!-- Header -->
-
-            <div class="flex items-center justify-between">
+            <div class="flex items-start justify-between">
+                <!-- Left -->
                 <div>
                     <h1
-                        class="text-xl font-semibold text-gray-800 dark:text-white"
+                        class="text-2xl font-bold text-gray-900 dark:text-white"
                     >
-                        Students
+                        Student Management
                     </h1>
 
-                    <p class="text-sm text-gray-500">Manage students</p>
+                    <nav class="mt-2 flex" aria-label="Breadcrumb">
+                        <ol
+                            class="inline-flex items-center space-x-1 md:space-x-3"
+                        >
+                            <!-- Home -->
+                            <li class="inline-flex items-center">
+                                <a
+                                    href="#"
+                                    class="text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white"
+                                >
+                                    Home
+                                </a>
+                            </li>
+
+                            <!-- Students -->
+                            <li>
+                                <div class="flex items-center">
+                                    <svg
+                                        class="h-4 w-4 text-gray-400"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 01-1.414-4a1 1 0 011.414 0z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+
+                                    <span
+                                        class="ml-1 text-sm font-medium text-gray-700 dark:text-gray-400"
+                                    >
+                                        Students
+                                    </span>
+                                </div>
+                            </li>
+                        </ol>
+                    </nav>
                 </div>
 
+                <!-- Right -->
                 <button
+                    type="button"
                     @click="createStudent"
-                    class="rounded-lg bg-blue-600 px-5 py-2 text-white hover:bg-blue-700"
+                    class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
                 >
                     Add Student
                 </button>
             </div>
-
             <!-- Table -->
 
             <StudentTable
@@ -279,12 +324,12 @@ onMounted(() => {
                 @close-delete="showDeleteModal = false"
             />
             <!-- Delete Modal -->
-        <DeleteConfirmModal
+            <!-- <DeleteConfirmModal
             :show="showDeleteModal"
             :loading="deleting"
             @close="showDeleteModal = false"
             @confirm="deleteStudent"
-        />
+        /> -->
         </div>
     </Master>
 </template>

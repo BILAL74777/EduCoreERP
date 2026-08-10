@@ -11,7 +11,7 @@ import {
 
 import Pagination from "@/Components/Pagination/Pagination.vue";
 
-import { useStudentPhoto } from "@/composables/useDefaultStudentPhoto"; 
+import { useStudentPhoto } from "@/composables/useDefaultStudentPhoto";
 const { getPhotoUrl, handlePhotoError } = useStudentPhoto();
 
 const props = defineProps({
@@ -117,7 +117,6 @@ function resetSearch() {
     emit("search", "");
     emit("reset-filters");
 }
- 
 </script>
 
 <template>
@@ -317,7 +316,7 @@ function resetSearch() {
                         </th>
                     </tr>
                 </thead>
-
+                 
                 <tbody>
                     <tr
                         v-for="(student, index) in filteredStudents"
@@ -326,21 +325,23 @@ function resetSearch() {
                     >
                         <td class="p-4">
                             {{
-                                (students.current_page - 1) *
-                                    students.per_page +
+                                (students.pagination.current_page - 1) *
+                                    students.pagination.per_page +
                                 index +
                                 1
                             }}
                         </td>
 
-                       <td class="p-4">
-    <img
-        :src="getPhotoUrl(student)"
-        :alt="student.name"
-        @error="handlePhotoError($event, student.gender)"
-        class="h-10 w-10 rounded-full object-cover"
-    />
-</td>
+                        <td class="p-4">
+                            <img
+                                :src="getPhotoUrl(student)"
+                                :alt="student.name"
+                                @error="
+                                    handlePhotoError($event, student.gender)
+                                "
+                                class="h-10 w-10 rounded-full object-cover"
+                            />
+                        </td>
 
                         <td class="p-4">
                             {{ student.admission_no }}

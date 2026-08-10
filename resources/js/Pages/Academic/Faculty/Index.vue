@@ -1,9 +1,9 @@
 <script setup>
 import Master from "@/Layouts/Master.vue";
 import { Head } from "@inertiajs/vue3";
-import { ref, reactive, onMounted, watch } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import axios from "axios";
-import debounce from "lodash/debounce";
+
 import { toast } from "vue3-toastify";
 
 import FacultyTable from "./FacultyTable.vue";
@@ -186,12 +186,10 @@ const changePage = (page) => {
     fetchFaculties(page);
 };
 
-watch(
-    searchValue,
-    debounce(() => {
-        fetchFaculties();
-    }, 500)
-);
+const searchFaculties = (value) => {
+    searchValue.value = value;
+    fetchFaculties();
+};
 
 onMounted(() => {
     fetchFaculties();
@@ -203,51 +201,116 @@ onMounted(() => {
     <Master>
         <div class="space-y-6">
             <!-- Header -->
-            <div
-                class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
-            >
+            <div class="flex items-start justify-between">
+                <!-- Left -->
                 <div>
                     <h1
                         class="text-2xl font-bold text-gray-900 dark:text-white"
                     >
-                        Faculties
+                        Faculty Management
                     </h1>
 
-                    <p class="text-gray-500 dark:text-gray-400 mt-1">
-                        Manage institution faculties
-                    </p>
+                    <nav class="mt-2 flex" aria-label="Breadcrumb">
+                        <ol
+                            class="inline-flex items-center space-x-1 md:space-x-3"
+                        >
+                            <!-- Home -->
+                            <li class="inline-flex items-center">
+                                <a
+                                    href="#"
+                                    class="text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white"
+                                >
+                                    Home
+                                </a>
+                            </li>
+
+                            <!-- Faculties -->
+                            <li>
+                                <div class="flex items-center">
+                                    <svg
+                                        class="h-4 w-4 text-gray-400"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+
+                                    <span
+                                        class="ml-1 text-sm font-medium text-gray-700 dark:text-gray-400"
+                                    >
+                                        Faculties
+                                    </span>
+                                </div>
+                            </li>
+                        </ol>
+                    </nav>
                 </div>
 
+                <!-- Right -->
                 <button
-                    @click="openCreateModal();clearErrors()"
-                    class="rounded-lg bg-brand-500 hover:bg-brand-600 px-5 py-3 text-white font-medium transition"
+                    type="button"
+                    @click="openCreateModal"
+                    class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
                 >
-                    + Add Faculty
+                    Add New
                 </button>
-            </div>
-
-            <!-- Search -->
-            <div class="rounded-xl bg-white dark:bg-gray-800 shadow p-5">
-                <input
-                    v-model="searchValue"
-                    type="text"
-                    placeholder="Search Faculty..."
-                    class="w-full rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-white px-4 py-3 focus:ring focus:ring-brand-300"
-                />
             </div>
 
             <!-- Table -->
 
-            <FacultyTable
-                :faculties="faculties"
-                :loading="loading"
-                :sort-field="sortField"
-                :sort-direction="sortDirection"
-                @edit="editFaculty"
-                @delete="confirmDelete"
-                @status="toggleStatus"
-                @sort="changeSorting"
-            />
+            <!-- Card -->
+            <div class="rounded-lg bg-white dark:bg-gray-800">
+                <!-- Loading -->
+                <div
+                    v-if="loading"
+                    class="flex justify-center items-center py-12"
+                >
+                    <svg
+                        class="h-10 w-10 animate-spin text-blue-600"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                    >
+                        <circle
+                            class="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            stroke-width="4"
+                        />
+
+                        <path
+                            class="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                        />
+                    </svg>
+                </div>
+
+                <!-- Empty -->
+                <div
+                    v-else-if="!faculties.data || faculties.data.length === 0"
+                    class="py-10 text-center text-gray-500"
+                >
+                    No faculties found.
+                </div>
+
+                <!-- Table -->
+                <FacultyTable
+                    :faculties="faculties"
+                    :search-value="searchValue"
+                    @search="searchFaculties"
+                    @page-change="changePage"
+                    @edit="editFaculty"
+                    @delete="confirmDelete"
+                    @status="toggleStatus"
+                />
+            </div>
 
             <!-- Pagination -->
 
