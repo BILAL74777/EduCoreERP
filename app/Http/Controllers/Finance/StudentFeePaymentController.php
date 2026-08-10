@@ -24,24 +24,46 @@ class StudentFeePaymentController extends Controller
     {
         $payments = StudentFeePayment::query()
             ->with([
-                'student',
+                'student.photo',
                 'enrollment.academicClass.discipline.faculty',
-                'feeStructure',
+                'feeStructure.academicClass.discipline.faculty',
+                'feeStructure.session',
             ])
             ->when(
                 $request->search,
                 function ($query, $search) {
-                    $query->whereHas('student', function ($studentQuery) use ($search) {
-                        $studentQuery
-                            ->where('name', 'like', "%{$search}%")
-                            ->orWhere('admission_no', 'like', "%{$search}%")
-                            ->orWhere('registration_no', 'like', "%{$search}%");
-                    });
+
+                    $query->whereHas(
+                        'student',
+                        function ($studentQuery) use ($search) {
+
+                            $studentQuery->where(function ($q) use ($search) {
+
+                                $q->where(
+                                    'name',
+                                    'like',
+                                    "%{$search}%"
+                                )
+                                ->orWhere(
+                                    'admission_no',
+                                    'like',
+                                    "%{$search}%"
+                                )
+                                ->orWhere(
+                                    'registration_no',
+                                    'like',
+                                    "%{$search}%"
+                                );
+                            });
+                        }
+                    );
                 }
             )
             ->latest('payment_date')
             ->latest('created_at')
-            ->paginate($request->integer('per_page', 10));
+            ->paginate(
+                $request->integer('per_page', 10)
+            );
 
         return response()->json([
             'success' => true,
@@ -50,7 +72,7 @@ class StudentFeePaymentController extends Controller
     }
 
     /**
-     * Student search.
+     * Search active students.
      */
     public function students(Request $request): JsonResponse
     {
@@ -58,20 +80,42 @@ class StudentFeePaymentController extends Controller
 
         $students = Student::query()
             ->with([
+                'photo',
                 'currentEnrollment.academicClass.discipline.faculty',
                 'feeStructure',
             ])
-            ->whereHas('currentEnrollment', function ($query) {
-                $query->where('is_current', true)
-                    ->where('status', 'Active');
-            })
-            ->when($search, function ($query) use ($search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%")
-                        ->orWhere('admission_no', 'like', "%{$search}%")
-                        ->orWhere('registration_no', 'like', "%{$search}%");
-                });
-            })
+            ->whereHas(
+                'currentEnrollment',
+                function ($query) {
+                    $query
+                        ->where('is_current', true)
+                        ->where('status', 'Active');
+                }
+            )
+            ->when(
+                $search,
+                function ($query) use ($search) {
+
+                    $query->where(function ($q) use ($search) {
+
+                        $q->where(
+                            'name',
+                            'like',
+                            "%{$search}%"
+                        )
+                        ->orWhere(
+                            'admission_no',
+                            'like',
+                            "%{$search}%"
+                        )
+                        ->orWhere(
+                            'registration_no',
+                            'like',
+                            "%{$search}%"
+                        );
+                    });
+                }
+            )
             ->orderBy('name')
             ->limit(20)
             ->get();
@@ -83,27 +127,17 @@ class StudentFeePaymentController extends Controller
     }
 
     /**
-     * Get student's current fee information.
+     * Complete student fee profile.
      */
     public function fee(string $student): JsonResponse
     {
-        $fee = $this->service->getStudentFee($student);
-
-        if (!$fee) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No fee structure found for this student.',
-            ], 404);
-        }
-
-        $payments = $this->service->getPaymentHistory($fee->id);
+        $data = $this->service->getStudentFee(
+            $student
+        );
 
         return response()->json([
             'success' => true,
-            'data' => [
-                'fee_structure' => $fee,
-                'payments' => $payments,
-            ],
+            'data' => $data,
         ]);
     }
 
@@ -113,6 +147,7 @@ class StudentFeePaymentController extends Controller
     public function store(
         StoreStudentFeePaymentRequest $request
     ): JsonResponse {
+
         $payment = $this->service->collect(
             $request->validated()
         );
@@ -127,9 +162,13 @@ class StudentFeePaymentController extends Controller
     /**
      * Delete payment.
      */
-    public function destroy(StudentFeePayment $payment): JsonResponse
-    {
-        $this->service->delete($payment);
+    public function destroy(
+        StudentFeePayment $payment
+    ): JsonResponse {
+
+        $this->service->delete(
+            $payment
+        );
 
         return response()->json([
             'success' => true,

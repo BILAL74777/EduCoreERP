@@ -383,22 +383,22 @@ const menuGroups = [
                     |--------------------------------------------------------------------------
                     */
 
-                    {
-                        name: "Student Promotions",
-                        path: "/academic/promotions",
-                    },
-                    {
-                        name: "Student Transfers",
-                        path: "/academic/transfers",
-                    },
-                    {
-                        name: "Student Strike Off",
-                        path: "/academic/strike-off",
-                    },
-                    {
-                        name: "Alumni",
-                        path: "/academic/alumni",
-                    },
+                    // {
+                    //     name: "Student Promotions",
+                    //     path: "/academic/promotions",
+                    // },
+                    // {
+                    //     name: "Student Transfers",
+                    //     path: "/academic/transfers",
+                    // },
+                    // {
+                    //     name: "Student Strike Off",
+                    //     path: "/academic/strike-off",
+                    // },
+                    // {
+                    //     name: "Alumni",
+                    //     path: "/academic/alumni",
+                    // },
                 ],
             },
         ],

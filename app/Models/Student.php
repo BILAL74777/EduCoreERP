@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Student extends BaseModel
 {
-
     protected $fillable = [
         'photo',
         'form_b',
@@ -33,21 +33,30 @@ class Student extends BaseModel
 
     public function photo(): BelongsTo
     {
-        return $this->belongsTo(Upload::class, 'photo');
+        return $this->belongsTo(
+            Upload::class,
+            'photo'
+        );
     }
 
     public function enrollments(): HasMany
     {
-        return $this->hasMany(StudentEnrollment::class);
+        return $this->hasMany(
+            StudentEnrollment::class
+        );
     }
 
-    public function currentEnrollment()
+    public function currentEnrollment(): HasOne
     {
-        return $this->hasOne(StudentEnrollment::class)
-            ->where('is_current', true);
+        return $this->hasOne(
+            StudentEnrollment::class
+        )->where('is_current', true);
     }
-    public function feeStructure()
+
+    public function feeStructure(): HasMany
     {
-        return $this->hasOne(StudentFeeStructure::class);
+        return $this->hasMany(
+            StudentFeeStructure::class
+        );
     }
 }

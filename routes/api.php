@@ -94,15 +94,44 @@ Route::middleware('auth:sanctum')->group(function () {
 
         
         
-    Route::prefix('finance')->group(function () { 
-        Route::prefix('fee-collection')->group(function () { 
-            Route::get('/', [StudentFeePaymentController::class,'index']);
-            Route::get('/students', [StudentFeePaymentController::class,'students']);
-            Route::get('/students/{student}/fee', [StudentFeePaymentController::class,'fee']);
-            Route::post('/', [StudentFeePaymentController::class,'store']);
-            Route::delete('/{payment}', [StudentFeePaymentController::class,'destroy']);
-        });
-    });
+    // Route::prefix('finance')->group(function () { 
+    //     Route::prefix('fee-collection')->group(function () { 
+    //         Route::get('/', [StudentFeePaymentController::class,'index']);
+    //         Route::get('/students', [StudentFeePaymentController::class,'students']);
+    //         Route::get('/students/{student}/fee', [StudentFeePaymentController::class,'fee']);
+    //         Route::post('/', [StudentFeePaymentController::class,'store']);
+    //         Route::delete('/{payment}', [StudentFeePaymentController::class,'destroy']);
+    //     });
+    // });
+ 
+
+Route::prefix('finance/fee-collection')->group(function () {
+
+    Route::get(
+        '/payments',
+        [StudentFeePaymentController::class, 'index']
+    );
+
+    Route::get(
+        '/students',
+        [StudentFeePaymentController::class, 'students']
+    );
+
+    Route::get(
+        '/students/{student}/fee',
+        [StudentFeePaymentController::class, 'fee']
+    );
+
+    Route::post(
+        '/payments',
+        [StudentFeePaymentController::class, 'store']
+    );
+
+    Route::delete(
+        '/payments/{payment}',
+        [StudentFeePaymentController::class, 'destroy']
+    );
+});
 
 
 });

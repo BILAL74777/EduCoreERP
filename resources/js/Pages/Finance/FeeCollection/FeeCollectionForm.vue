@@ -1,6 +1,7 @@
 <script setup>
-import { computed, ref, watch } from "vue";
+import { ref, computed, watch } from "vue";
 import axios from "axios";
+import debounce from "lodash/debounce";
 import { toast } from "vue3-toastify";
 
 const props = defineProps({
@@ -10,8 +11,8 @@ const props = defineProps({
     },
 
     feeStructure: {
-        type: Object,
-        default: null,
+        type: Array,
+        default: () => [],
     },
 
     paymentHistory: {
@@ -26,454 +27,714 @@ const emit = defineEmits([
     "payment-collected",
 ]);
 
+const search = ref("");
 const students = ref([]);
-const studentSearch = ref("");
-const searchingStudents = ref(false);
-const submitting = ref(false);
+const searching = ref(false);
+const collecting = ref(false);
 
-const form = ref({
-    amount: "",
-    payment_date: new Date().toISOString().split("T")[0],
-    note: "",
-});
+const amount = ref("");
+const paymentDate = ref(
+    new Date().toISOString().split("T")[0]
+);
+const note = ref("");
 
 const errors = ref({});
 
-let searchTimeout = null;
+/*
+|--------------------------------------------------------------------------
+| Student search
+|--------------------------------------------------------------------------
+*/
 
-const searchStudents = () => {
-    clearTimeout(searchTimeout);
+const searchStudents = debounce(
+    async () => {
 
-    if (!studentSearch.value.trim()) {
-        students.value = [];
-        return;
-    }
+        if (!search.value.trim()) {
+            students.value = [];
+            return;
+        }
 
-    searchTimeout = setTimeout(async () => {
-        searchingStudents.value = true;
+        searching.value = true;
 
         try {
+
             const response = await axios.get(
                 "/api/finance/fee-collection/students",
                 {
                     params: {
-                        search: studentSearch.value,
+                        search: search.value,
                     },
                 }
             );
 
             if (response.data.success) {
-                students.value = response.data.data;
+                students.value =
+                    response.data.data;
             }
+
         } catch (error) {
+
+            console.error(error);
+
             toast.error(
-                error.response?.data?.message ||
-                    "Failed to search students."
+                "Unable to search students."
             );
+
         } finally {
-            searchingStudents.value = false;
+            searching.value = false;
         }
-    }, 300);
-};
+    },
+    300
+);
+
+watch(search, () => {
+    searchStudents();
+});
+
+/*
+|--------------------------------------------------------------------------
+| Select student
+|--------------------------------------------------------------------------
+*/
 
 const selectStudent = (student) => {
-    emit("student-selected", student);
+    search.value = "";
 
     students.value = [];
-    studentSearch.value = "";
+
+    amount.value = "";
+    note.value = "";
+
+    errors.value = {};
+
+    emit(
+        "student-selected",
+        student
+    );
 };
 
+/*
+|--------------------------------------------------------------------------
+| Clear student
+|--------------------------------------------------------------------------
+*/
+
 const clearStudent = () => {
-    form.value.amount = "";
-    form.value.note = "";
+
+    search.value = "";
+
+    students.value = [];
+
+    amount.value = "";
+
+    note.value = "";
+
     errors.value = {};
 
     emit("clear-student");
 };
 
-const annualFee = computed(() => {
-    return Number(props.feeStructure?.annual_fee || 0);
+/*
+|--------------------------------------------------------------------------
+| Current fee structures with balance
+|--------------------------------------------------------------------------
+*/
+
+const availableStructures = computed(() => {
+    return props.feeStructure.filter(
+        (structure) =>
+            Number(
+                structure.calculated_due
+            ) > 0
+    );
 });
 
-const paidFee = computed(() => {
-    return Number(props.feeStructure?.paid_fee || 0);
+/*
+|--------------------------------------------------------------------------
+| Selected fee structure
+|--------------------------------------------------------------------------
+*/
+
+const selectedStructure = ref(null);
+
+/*
+|--------------------------------------------------------------------------
+| Automatically select first outstanding fee
+|--------------------------------------------------------------------------
+*/
+
+watch(
+    () => props.feeStructure,
+    (structures) => {
+
+        if (
+            structures?.length &&
+            !selectedStructure.value
+        ) {
+
+            selectedStructure.value =
+                structures.find(
+                    (structure) =>
+                        Number(
+                            structure.calculated_due
+                        ) > 0
+                ) || structures[0];
+        }
+    },
+    {
+        immediate: true,
+    }
+);
+
+/*
+|--------------------------------------------------------------------------
+| Remaining amount
+|--------------------------------------------------------------------------
+*/
+
+const remainingAfterPayment = computed(() => {
+
+    if (!selectedStructure.value) {
+        return 0;
+    }
+
+    const due = Number(
+        selectedStructure.value.calculated_due
+    );
+
+    const payment = Number(
+        amount.value || 0
+    );
+
+    return Math.max(
+        0,
+        due - payment
+    );
 });
 
-const outstanding = computed(() => {
-    return Math.max(0, annualFee.value - paidFee.value);
-});
+/*
+|--------------------------------------------------------------------------
+| Collect payment
+|--------------------------------------------------------------------------
+*/
 
-const isPaid = computed(() => {
-    return outstanding.value <= 0;
-});
+const collectPayment = async () => {
 
-const submit = async () => {
     errors.value = {};
 
-    if (!props.selectedStudent) {
-        toast.error("Please select a student.");
+    if (!selectedStructure.value) {
+
+        toast.error(
+            "Please select a fee structure."
+        );
+
         return;
     }
 
-    if (!props.feeStructure) {
-        toast.error("No fee structure found for this student.");
-        return;
-    }
-
-    if (Number(form.value.amount) <= 0) {
-        errors.value.amount = "Payment amount must be greater than zero.";
-        return;
-    }
-
-    if (Number(form.value.amount) > outstanding.value) {
-        errors.value.amount =
-            "Payment amount cannot exceed outstanding fee.";
-        return;
-    }
-
-    submitting.value = true;
+    collecting.value = true;
 
     try {
-        const response = await axios.post(
-            "/api/finance/fee-collection",
-            {
-                student_id: props.selectedStudent.id,
-                enrollment_id: props.feeStructure.enrollment_id,
-                fee_structure_id: props.feeStructure.id,
 
-                amount: Number(form.value.amount),
-                payment_date: form.value.payment_date,
-                note: form.value.note || null,
+        const response = await axios.post(
+            "/api/finance/fee-collection/payments",
+            {
+                student_id:
+                    props.selectedStudent.id,
+
+                enrollment_id:
+                    selectedStructure.value.enrollment_id,
+
+                fee_structure_id:
+                    selectedStructure.value.id,
+
+                amount: amount.value,
+
+                payment_date:
+                    paymentDate.value,
+
+                note:
+                    note.value || null,
             }
         );
 
         if (response.data.success) {
-            toast.success(response.data.message);
 
-            form.value.amount = "";
-            form.value.note = "";
-            errors.value = {};
+            toast.success(
+                response.data.message
+            );
 
-            emit("payment-collected");
-        }
-    } catch (error) {
-        if (error.response?.status === 422) {
-            errors.value =
-                error.response.data.errors || {};
-        } else {
-            toast.error(
-                error.response?.data?.message ||
-                    "Failed to collect fee."
+            const payment =
+                response.data.data;
+
+            amount.value = "";
+            note.value = "";
+
+            emit(
+                "payment-collected",
+                payment
             );
         }
+
+    } catch (error) {
+
+        console.error(error);
+
+        if (
+            error.response?.status === 422
+        ) {
+
+            errors.value =
+                error.response.data.errors ||
+                {};
+
+            toast.error(
+                "Please correct the payment information."
+            );
+
+        } else {
+
+            toast.error(
+                error.response?.data?.message ||
+                "Unable to collect payment."
+            );
+        }
+
     } finally {
-        submitting.value = false;
+
+        collecting.value = false;
     }
 };
 
-watch(
-    () => props.selectedStudent,
-    () => {
-        form.value.amount = "";
-        form.value.note = "";
-        errors.value = {};
-    }
-);
+/*
+|--------------------------------------------------------------------------
+| Format money
+|--------------------------------------------------------------------------
+*/
+
+const money = (value) => {
+
+    return Number(
+        value || 0
+    ).toLocaleString(
+        "en-PK",
+        {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        }
+    );
+};
 </script>
 
 <template>
     <div
-        class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-white/[0.03]"
+        class="rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900"
     >
-        <h2
-            class="mb-6 text-lg font-semibold text-gray-900 dark:text-white"
+
+        <!-- Header -->
+        <div
+            class="border-b border-gray-200 px-6 py-4 dark:border-gray-800"
         >
-            Collect Student Fee
-        </h2>
-
-        <!-- Student Search -->
-        <div v-if="!selectedStudent" class="relative">
-            <label
-                class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            <h2
+                class="text-lg font-semibold text-gray-900 dark:text-white"
             >
-                Search Student
-            </label>
+                Collect Fee
+            </h2>
 
-            <input
-                v-model="studentSearch"
-                @input="searchStudents"
-                type="text"
-                placeholder="Search by name, admission no..."
-                class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
-            />
-
-            <!-- Search Results -->
-            <div
-                v-if="students.length"
-                class="absolute z-20 mt-1 max-h-64 w-full overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-900"
+            <p
+                class="mt-1 text-sm text-gray-500 dark:text-gray-400"
             >
-                <button
-                    v-for="student in students"
-                    :key="student.id"
-                    type="button"
-                    @click="selectStudent(student)"
-                    class="block w-full border-b border-gray-100 px-4 py-3 text-left hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800"
-                >
-                   <div
-    class="font-medium text-gray-900 dark:text-white"
->
-    {{ student.name }}
-    {{ student.gender === "Male" ? "S/o" : "D/o" }}
-    {{ student.father_name }}
-</div>
-<p
-    v-if="student.current_enrollment?.academic_class"
-    class="text-sm text-gray-500 dark:text-gray-400"
->
-    Class:
-    {{ student.current_enrollment.academic_class.name }}
-</p>
-
-<p
-    v-if="
-        student.current_enrollment?.academic_class?.discipline
-    "
-    class="text-sm text-gray-500 dark:text-gray-400"
->
-    Discipline:
-    {{
-        student.current_enrollment.academic_class.discipline.discipline
-    }}
-</p>
-
-                    <div
-                        class="text-xs text-gray-500 dark:text-gray-400"
-                    >
-                        Admission:
-                        {{ student.admission_no }}
-                    </div>
-                </button>
-            </div>
+                Search for a student and collect a payment.
+            </p>
         </div>
 
-        <!-- Selected Student -->
-        <div v-else>
-            <div
-                class="mb-6 flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900"
-            >
-                <div>
-                    <h3
-                        class="font-semibold text-gray-900 dark:text-white"
+        <div class="p-6">
+
+            <!-- Student Search -->
+            <div v-if="!selectedStudent">
+
+                <label
+                    class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                    Search Student
+                </label>
+
+                <div class="relative">
+
+                    <input
+                        v-model="search"
+                        type="text"
+                        placeholder="Search by name, admission no or registration no..."
+                        class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                    />
+
+                    <div
+                        v-if="searching"
+                        class="absolute right-3 top-1/2 -translate-y-1/2"
                     >
-                         
                         <div
-    class="font-medium text-gray-900 dark:text-white"
->
-    {{ selectedStudent.name }}
-    {{ selectedStudent.gender === "Male" ? "S/o" : "D/o" }}
-    {{ selectedStudent.father_name }}
-</div>
-                     
-<p
-    v-if="selectedStudent.current_enrollment?.academic_class"
-    class="text-sm text-gray-500 dark:text-gray-400"
->
-    Class:
-    {{ selectedStudent.current_enrollment.academic_class.name }}
-</p>
+                            class="h-5 w-5 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600"
+                        ></div>
+                    </div>
 
-<p
-    v-if="
-        selectedStudent.current_enrollment?.academic_class?.discipline
-    "
-    class="text-sm text-gray-500 dark:text-gray-400"
->
-    Discipline:
-    {{
-        selectedStudent.current_enrollment.academic_class.discipline.discipline
-    }}
-</p>
-                      
-                    </h3>
-
-                    <p
-                        class="text-sm text-gray-500 dark:text-gray-400"
+                    <!-- Search results -->
+                    <div
+                        v-if="students.length"
+                        class="absolute z-50 mt-2 max-h-80 w-full overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800"
                     >
-                        Admission No:
-                        {{ selectedStudent.admission_no }}
-                    </p>
 
-                    <p
-                        v-if="
-                            selectedStudent.current_enrollment
-                                ?.academic_class
-                        "
-                        class="text-sm text-gray-500 dark:text-gray-400"
-                    >
-                        Class:
-                        {{
-                            selectedStudent.current_enrollment
-                                .academic_class.name
-                        }}
-                    </p>
-                </div>
+                        <button
+                            v-for="student in students"
+                            :key="student.id"
+                            type="button"
+                            class="flex w-full items-center gap-3 border-b border-gray-100 p-3 text-left transition last:border-b-0 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-700"
+                            @click="selectStudent(student)"
+                        >
 
-                <button
-                    type="button"
-                    @click="clearStudent"
-                    class="rounded-lg px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-950"
-                >
-                    Change Student
-                </button>
-            </div>
+                            <img
+                                v-if="student.photo?.url"
+                                :src="student.photo.url"
+                                class="h-10 w-10 rounded-full object-cover"
+                                alt="Student"
+                            />
 
-            <!-- Fee Summary -->
-            <div
-                v-if="feeStructure"
-                class="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3"
-            >
-                <div
-                    class="rounded-lg border border-gray-200 p-4 dark:border-gray-700"
-                >
-                    <p class="text-sm text-gray-500 dark:text-gray-400">
-                        Annual Fee
-                    </p>
+                            <div
+                                v-else
+                                class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-xs font-medium text-gray-600 dark:bg-gray-700 dark:text-gray-300"
+                            >
+                                N/A
+                            </div>
 
-                    <p
-                        class="mt-1 text-xl font-semibold text-gray-900 dark:text-white"
-                    >
-                        {{ annualFee.toLocaleString() }}
-                    </p>
-                </div>
+                            <div class="min-w-0 flex-1">
 
-                <div
-                    class="rounded-lg border border-gray-200 p-4 dark:border-gray-700"
-                >
-                    <p class="text-sm text-gray-500 dark:text-gray-400">
-                        Paid Fee
-                    </p>
+                                <p
+                                    class="truncate text-sm font-semibold text-gray-900 dark:text-white"
+                                >
+                                    {{ student.name }}
+                                </p>
 
-                    <p
-                        class="mt-1 text-xl font-semibold text-green-600"
-                    >
-                        {{ paidFee.toLocaleString() }}
-                    </p>
-                </div>
+                                <p
+                                    class="text-xs text-gray-500 dark:text-gray-400"
+                                >
+                                    Admission:
+                                    {{ student.admission_no }}
+                                </p>
 
-                <div
-                    class="rounded-lg border border-gray-200 p-4 dark:border-gray-700"
-                >
-                    <p class="text-sm text-gray-500 dark:text-gray-400">
-                        Outstanding
-                    </p>
+                            </div>
 
-                    <p
-                        class="mt-1 text-xl font-semibold"
-                        :class="
-                            outstanding > 0
-                                ? 'text-red-600'
-                                : 'text-green-600'
-                        "
-                    >
-                        {{ outstanding.toLocaleString() }}
-                    </p>
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <!-- Payment Form -->
-            <div
-                v-if="feeStructure && !isPaid"
-                class="grid grid-cols-1 gap-4 md:grid-cols-2"
-            >
-                <!-- Amount -->
-                <div>
-                    <label
-                        class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
-                    >
-                        Payment Amount
-                    </label>
+            <!-- Selected Student -->
+            <div v-else>
 
-                    <input
-                        v-model="form.amount"
-                        type="number"
-                        min="0"
-                        :max="outstanding"
-                        step="0.01"
-                        placeholder="Enter amount"
-                        class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
-                        :class="{
-                            'border-red-500':
-                                errors.amount,
-                        }"
+                <div
+                    class="flex flex-col gap-5 rounded-xl border border-gray-200 bg-gray-50 p-5 dark:border-gray-700 dark:bg-gray-800/50 md:flex-row md:items-center"
+                >
+
+                    <img
+                        v-if="selectedStudent.photo?.url"
+                        :src="selectedStudent.photo.url"
+                        class="h-20 w-20 rounded-xl object-cover"
+                        alt="Student"
                     />
 
-                    <p
-                        v-if="errors.amount"
-                        class="mt-1 text-sm text-red-600"
+                    <div
+                        v-else
+                        class="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl bg-gray-200 text-sm font-medium text-gray-600 dark:bg-gray-700 dark:text-gray-300"
                     >
-                        {{ errors.amount }}
-                    </p>
-                </div>
+                        N/A
+                    </div>
 
-                <!-- Payment Date -->
-                <div>
-                    <label
-                        class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
-                    >
-                        Payment Date
-                    </label>
+                    <div class="flex-1">
 
-                    <input
-                        v-model="form.payment_date"
-                        type="date"
-                        class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
-                    />
-                </div>
+                        <h3
+                            class="text-lg font-semibold text-gray-900 dark:text-white"
+                        >
+                            {{ selectedStudent.name }}
+                        </h3>
 
-                <!-- Note -->
-                <div class="md:col-span-2">
-                    <label
-                        class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
-                    >
-                        Note
-                    </label>
+                        <div
+                            class="mt-2 grid grid-cols-1 gap-1 text-sm text-gray-600 dark:text-gray-400 md:grid-cols-3"
+                        >
 
-                    <textarea
-                        v-model="form.note"
-                        rows="2"
-                        placeholder="Optional note"
-                        class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
-                    ></textarea>
-                </div>
+                            <div>
+                                <span class="font-medium">
+                                    Admission:
+                                </span>
 
-                <!-- Submit -->
-                <div class="md:col-span-2 flex justify-end">
+                                {{ selectedStudent.admission_no }}
+                            </div>
+
+                            <div>
+                                <span class="font-medium">
+                                    Registration:
+                                </span>
+
+                                {{ selectedStudent.registration_no || "-" }}
+                            </div>
+
+                            <div>
+                                <span class="font-medium">
+                                    Class:
+                                </span>
+
+                                {{
+                                    selectedStudent.current_enrollment?.academic_class?.name ||
+                                    "-"
+                                }}
+                            </div>
+
+                        </div>
+
+                    </div>
+
                     <button
                         type="button"
-                        @click="submit"
-                        :disabled="submitting"
-                        class="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                        class="rounded-lg border border-red-200 px-4 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50 dark:border-red-900/50 dark:hover:bg-red-950/30"
+                        @click="clearStudent"
                     >
-                        {{
-                            submitting
-                                ? "Collecting..."
-                                : "Collect Fee"
-                        }}
+                        Change Student
                     </button>
+
                 </div>
+
+                <!-- Payment Form -->
+                <div
+                    v-if="availableStructures.length"
+                    class="mt-6"
+                >
+
+                    <div
+                        class="grid grid-cols-1 gap-5 md:grid-cols-2"
+                    >
+
+                        <!-- Fee Structure -->
+                        <div>
+
+                            <label
+                                class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                            >
+                                Fee Structure
+                            </label>
+
+                            <select
+                                v-model="selectedStructure"
+                                class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                            >
+                                <option
+                                    v-for="structure in availableStructures"
+                                    :key="structure.id"
+                                    :value="structure"
+                                >
+                                    {{
+                                        structure.academic_class?.name ||
+                                        "Class"
+                                    }}
+                                    -
+                                    Due Rs.
+                                    {{
+                                        money(
+                                            structure.calculated_due
+                                        )
+                                    }}
+                                </option>
+                            </select>
+
+                        </div>
+
+                        <!-- Amount -->
+                        <div>
+
+                            <label
+                                class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                            >
+                                Payment Amount
+                            </label>
+
+                            <input
+                                v-model="amount"
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                placeholder="Enter amount"
+                                class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                            />
+
+                            <p
+                                v-if="errors.amount"
+                                class="mt-1 text-xs text-red-600"
+                            >
+                                {{ errors.amount[0] }}
+                            </p>
+
+                        </div>
+
+                        <!-- Date -->
+                        <div>
+
+                            <label
+                                class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                            >
+                                Payment Date
+                            </label>
+
+                            <input
+                                v-model="paymentDate"
+                                type="date"
+                                class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                            />
+
+                        </div>
+
+                        <!-- Note -->
+                        <div>
+
+                            <label
+                                class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                            >
+                                Note
+                            </label>
+
+                            <input
+                                v-model="note"
+                                type="text"
+                                placeholder="Optional note"
+                                class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                            />
+
+                        </div>
+
+                    </div>
+
+                    <!-- Payment Summary -->
+                    <div
+                        v-if="selectedStructure"
+                        class="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3"
+                    >
+
+                        <div
+                            class="rounded-lg bg-blue-50 p-4 dark:bg-blue-950/30"
+                        >
+                            <p class="text-xs text-blue-600 dark:text-blue-400">
+                                Annual Fee
+                            </p>
+
+                            <p
+                                class="mt-1 text-lg font-semibold text-blue-700 dark:text-blue-300"
+                            >
+                                Rs.
+                                {{
+                                    money(
+                                        selectedStructure.annual_fee
+                                    )
+                                }}
+                            </p>
+                        </div>
+
+                        <div
+                            class="rounded-lg bg-green-50 p-4 dark:bg-green-950/30"
+                        >
+                            <p class="text-xs text-green-600 dark:text-green-400">
+                                Already Paid
+                            </p>
+
+                            <p
+                                class="mt-1 text-lg font-semibold text-green-700 dark:text-green-300"
+                            >
+                                Rs.
+                                {{
+                                    money(
+                                        selectedStructure.calculated_paid
+                                    )
+                                }}
+                            </p>
+                        </div>
+
+                        <div
+                            class="rounded-lg bg-red-50 p-4 dark:bg-red-950/30"
+                        >
+                            <p class="text-xs text-red-600 dark:text-red-400">
+                                Remaining
+                            </p>
+
+                            <p
+                                class="mt-1 text-lg font-semibold text-red-700 dark:text-red-300"
+                            >
+                                Rs.
+                                {{
+                                    money(
+                                        selectedStructure.calculated_due
+                                    )
+                                }}
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <!-- After Payment -->
+                    <div
+                        v-if="amount && selectedStructure"
+                        class="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800"
+                    >
+                        <div
+                            class="flex items-center justify-between"
+                        >
+                            <span
+                                class="text-sm text-gray-500 dark:text-gray-400"
+                            >
+                                Remaining after payment
+                            </span>
+
+                            <span
+                                class="text-lg font-bold text-gray-900 dark:text-white"
+                            >
+                                Rs.
+                                {{
+                                    money(
+                                        remainingAfterPayment
+                                    )
+                                }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="mt-6 flex justify-end">
+
+                        <button
+                            type="button"
+                            :disabled="collecting"
+                            class="inline-flex items-center rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+                            @click="collectPayment"
+                        >
+                            <span
+                                v-if="collecting"
+                                class="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"
+                            ></span>
+
+                            {{
+                                collecting
+                                    ? "Collecting..."
+                                    : "Collect Payment"
+                            }}
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <!-- No fee -->
+                <div
+                    v-else
+                    class="mt-6 rounded-lg border border-yellow-200 bg-yellow-50 p-5 text-sm text-yellow-800 dark:border-yellow-900/50 dark:bg-yellow-950/30 dark:text-yellow-300"
+                >
+                    No outstanding fee structure was found for this student.
+                </div>
+
             </div>
 
-            <!-- Fully Paid -->
-            <div
-                v-else-if="feeStructure && isPaid"
-                class="rounded-lg border border-green-200 bg-green-50 p-4 text-center dark:border-green-900 dark:bg-green-950"
-            >
-                <p
-                    class="font-medium text-green-700 dark:text-green-400"
-                >
-                    This student's fee has been fully paid.
-                </p>
-            </div>
         </div>
     </div>
 </template>

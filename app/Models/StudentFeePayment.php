@@ -32,11 +32,17 @@ class StudentFeePayment extends BaseModel
 
     public function enrollment(): BelongsTo
     {
-        return $this->belongsTo(StudentEnrollment::class, 'enrollment_id');
+        return $this->belongsTo(
+            StudentEnrollment::class,
+            'enrollment_id'
+        );
     }
 
     public function feeStructure(): BelongsTo
     {
-        return $this->belongsTo(StudentFeeStructure::class, 'fee_structure_id');
+        return $this->belongsTo(
+            StudentFeeStructure::class,
+            'fee_structure_id'
+        );
     }
 }

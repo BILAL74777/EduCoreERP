@@ -16,19 +16,19 @@ class StoreStudentFeePaymentRequest extends FormRequest
         return [
             'student_id' => [
                 'required',
-                'uuid',
+                'string',
                 'exists:students,id',
             ],
 
             'enrollment_id' => [
                 'required',
-                'uuid',
+                'string',
                 'exists:student_enrollments,id',
             ],
 
             'fee_structure_id' => [
                 'required',
-                'uuid',
+                'string',
                 'exists:student_fee_structures,id',
             ],
 
@@ -39,27 +39,29 @@ class StoreStudentFeePaymentRequest extends FormRequest
             ],
 
             'payment_date' => [
-                'required',
+                'nullable',
                 'date',
             ],
 
             'note' => [
                 'nullable',
                 'string',
-                'max:1000',
+                'max:500',
             ],
         ];
     }
-
-    public function messages(): array
-    {
-        return [
-            'student_id.required' => 'Please select a student.',
-            'enrollment_id.required' => 'Student enrollment is required.',
-            'fee_structure_id.required' => 'Student fee structure is required.',
-            'amount.required' => 'Please enter the payment amount.',
-            'amount.min' => 'Payment amount must be greater than zero.',
-            'payment_date.required' => 'Payment date is required.',
-        ];
-    }
 }
+
+// 
+    // public function messages(): array
+    // {
+    //     return [
+    //         'student_id.required' => 'Please select a student.',
+    //         'enrollment_id.required' => 'Student enrollment is required.',
+    //         'fee_structure_id.required' => 'Student fee structure is required.',
+    //         'amount.required' => 'Please enter the payment amount.',
+    //         'amount.min' => 'Payment amount must be greater than zero.',
+    //         'payment_date.required' => 'Payment date is required.',
+    //     ];
+    // }
+ 

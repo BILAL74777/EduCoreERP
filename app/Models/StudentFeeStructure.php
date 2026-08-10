@@ -3,22 +3,21 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class StudentFeeStructure extends BaseModel
 {
     protected $table = 'student_fee_structures';
 
     protected $fillable = [
-
-        'student_id', 
-        'enrollment_id',  
-        'session_id', 
-        'class_id', 
-        'annual_fee', 
-        'paid_fee', 
-        'net_fee', 
+        'student_id',
+        'enrollment_id',
+        'session_id',
+        'class_id',
+        'annual_fee',
+        'paid_fee',
+        'net_fee',
         'remarks',
-
     ];
 
     protected function casts(): array
@@ -43,16 +42,27 @@ class StudentFeeStructure extends BaseModel
         );
     }
 
-     public function session(): BelongsTo
+    public function session(): BelongsTo
     {
         return $this->belongsTo(
             AcademicSession::class,
             'session_id'
         );
     }
-    
-    public function payments()
+
+    public function academicClass(): BelongsTo
     {
-        return $this->hasMany(StudentFeePayment::class, 'fee_structure_id');
+        return $this->belongsTo(
+            AcademicClass::class,
+            'class_id'
+        );
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(
+            StudentFeePayment::class,
+            'fee_structure_id'
+        );
     }
 }

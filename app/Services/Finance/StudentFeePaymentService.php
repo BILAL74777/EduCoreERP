@@ -17,57 +17,90 @@ class StudentFeePaymentService
     {
         return DB::transaction(function () use ($data) {
 
-            /*
-            |--------------------------------------------------------------------------
-            | Fee Structure
-            |--------------------------------------------------------------------------
-            */
-
             $feeStructure = StudentFeeStructure::query()
                 ->lockForUpdate()
                 ->findOrFail($data['fee_structure_id']);
 
             /*
             |--------------------------------------------------------------------------
-            | Validate Student / Enrollment
+            | Validate Student
             |--------------------------------------------------------------------------
             */
 
-            if ($feeStructure->student_id !== $data['student_id']) {
+            if (
+                (string) $feeStructure->student_id !==
+                (string) $data['student_id']
+            ) {
                 throw ValidationException::withMessages([
-                    'student_id' => 'The selected fee structure does not belong to this student.',
-                ]);
-            }
-
-            if ($feeStructure->enrollment_id !== $data['enrollment_id']) {
-                throw ValidationException::withMessages([
-                    'enrollment_id' => 'The selected enrollment does not belong to this fee structure.',
+                    'student_id' =>
+                        'The selected fee structure does not belong to this student.',
                 ]);
             }
 
             /*
             |--------------------------------------------------------------------------
-            | Payment Amount
+            | Validate Enrollment
             |--------------------------------------------------------------------------
             */
 
+            if (
+                (string) $feeStructure->enrollment_id !==
+                (string) $data['enrollment_id']
+            ) {
+                throw ValidationException::withMessages([
+                    'enrollment_id' =>
+                        'The selected enrollment does not belong to this fee structure.',
+                ]);
+            }
+
             $amount = (float) $data['amount'];
+
+            $annualFee = (float) $feeStructure->annual_fee;
+
+            /*
+            |--------------------------------------------------------------------------
+            | Calculate actual paid amount from payment history
+            |--------------------------------------------------------------------------
+            */
+
+            $historicalPaid = (float) $feeStructure
+                ->payments()
+                ->sum('amount');
+
+            /*
+            |--------------------------------------------------------------------------
+            | Use the greater of cached/current paid value and payment history
+            |--------------------------------------------------------------------------
+            */
+
+            $paidFee = max(
+                (float) $feeStructure->paid_fee,
+                $historicalPaid
+            );
 
             $outstanding = max(
                 0,
-                (float) $feeStructure->annual_fee -
-                (float) $feeStructure->paid_fee
+                $annualFee - $paidFee
             );
+
+            /*
+            |--------------------------------------------------------------------------
+            | Validate amount
+            |--------------------------------------------------------------------------
+            */
 
             if ($amount <= 0) {
                 throw ValidationException::withMessages([
-                    'amount' => 'Payment amount must be greater than zero.',
+                    'amount' =>
+                        'Payment amount must be greater than zero.',
                 ]);
             }
 
             if ($amount > $outstanding) {
                 throw ValidationException::withMessages([
-                    'amount' => "Payment amount cannot exceed the outstanding fee of {$outstanding}.",
+                    'amount' =>
+                        'Payment amount cannot exceed the outstanding fee of ' .
+                        number_format($outstanding, 2),
                 ]);
             }
 
@@ -78,12 +111,14 @@ class StudentFeePaymentService
             */
 
             $payment = StudentFeePayment::create([
-                'student_id'       => $feeStructure->student_id,
-                'enrollment_id'    => $feeStructure->enrollment_id,
+                'student_id' => $feeStructure->student_id,
+                'enrollment_id' => $feeStructure->enrollment_id,
                 'fee_structure_id' => $feeStructure->id,
-                'amount'           => $amount,
-                'payment_date'     => $data['payment_date'] ?? now()->toDateString(),
-                'note'             => $data['note'] ?? null,
+                'amount' => $amount,
+                'payment_date' =>
+                    $data['payment_date']
+                    ?? now()->toDateString(),
+                'note' => $data['note'] ?? null,
             ]);
 
             /*
@@ -92,112 +127,197 @@ class StudentFeePaymentService
             |--------------------------------------------------------------------------
             */
 
-            $newPaidFee = (float) $feeStructure->paid_fee + $amount;
+            $newPaidFee = $paidFee + $amount;
 
             $newNetFee = max(
                 0,
-                (float) $feeStructure->annual_fee - $newPaidFee
+                $annualFee - $newPaidFee
             );
 
             $feeStructure->update([
                 'paid_fee' => $newPaidFee,
-                'net_fee'  => $newNetFee,
+                'net_fee' => $newNetFee,
             ]);
 
             /*
             |--------------------------------------------------------------------------
-            | Return
+            | Return complete payment
             |--------------------------------------------------------------------------
             */
 
             return $payment->load([
-                'student',
+                'student.photo',
+                'student.currentEnrollment.academicClass.discipline.faculty',
                 'enrollment.academicClass.discipline.faculty',
-                'feeStructure',
+                'feeStructure.academicClass.discipline.faculty',
+                'feeStructure.session',
             ]);
         });
     }
 
     /**
-     * Get fee information for a student.
+     * Get complete student fee profile.
      */
-    public function getStudentFee(string $studentId): ?StudentFeeStructure
+    public function getStudentFee(string $studentId): array
     {
-        return StudentFeeStructure::query()
+        $student = Student::query()
             ->with([
-                'student',
+                'photo',
+                'currentEnrollment.academicClass.discipline.faculty',
+            ])
+            ->findOrFail($studentId);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Fee Structures
+        |--------------------------------------------------------------------------
+        */
+
+        $feeStructures = StudentFeeStructure::query()
+            ->with([
+                'session',
+                'academicClass.discipline.faculty',
                 'enrollment.academicClass.discipline.faculty',
             ])
             ->where('student_id', $studentId)
-            ->latest()
-            ->first();
-    }
+            ->orderBy('session_id')
+            ->orderBy('class_id')
+            ->get();
 
-    /**
-     * Get payment history for a fee structure.
-     */
-    public function getPaymentHistory(string $feeStructureId)
-    {
-        return StudentFeePayment::query()
+        /*
+        |--------------------------------------------------------------------------
+        | Calculate each structure
+        |--------------------------------------------------------------------------
+        */
+
+        $feeStructures->each(function ($structure) {
+
+            $paid = (float) $structure
+                ->payments()
+                ->sum('amount');
+
+            $annual = (float) $structure->annual_fee;
+
+            $due = max(
+                0,
+                $annual - $paid
+            );
+
+            $structure->setAttribute(
+                'calculated_paid',
+                number_format($paid, 2, '.', '')
+            );
+
+            $structure->setAttribute(
+                'calculated_due',
+                number_format($due, 2, '.', '')
+            );
+        });
+
+        /*
+        |--------------------------------------------------------------------------
+        | Payment History
+        |--------------------------------------------------------------------------
+        */
+
+        $payments = StudentFeePayment::query()
             ->with([
-                'student',
+                'student.photo',
                 'enrollment.academicClass.discipline.faculty',
+                'feeStructure.academicClass.discipline.faculty',
+                'feeStructure.session',
             ])
-            ->where('fee_structure_id', $feeStructureId)
+            ->where('student_id', $studentId)
             ->latest('payment_date')
             ->latest('created_at')
             ->get();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Overall Totals
+        |--------------------------------------------------------------------------
+        */
+
+        $totalFee = $feeStructures->sum(
+            fn ($structure) =>
+                (float) $structure->annual_fee
+        );
+
+        $totalPaid = $payments->sum(
+            fn ($payment) =>
+                (float) $payment->amount
+        );
+
+        $totalDue = max(
+            0,
+            $totalFee - $totalPaid
+        );
+
+        return [
+            'student' => $student,
+
+            'fee_structures' => $feeStructures,
+
+            'payments' => $payments,
+
+            'totals' => [
+                'total_fee' => number_format(
+                    $totalFee,
+                    2,
+                    '.',
+                    ''
+                ),
+
+                'total_paid' => number_format(
+                    $totalPaid,
+                    2,
+                    '.',
+                    ''
+                ),
+
+                'total_due' => number_format(
+                    $totalDue,
+                    2,
+                    '.',
+                    ''
+                ),
+            ],
+        ];
     }
-    public function delete(StudentFeePayment $payment): void
-{
-    DB::transaction(function () use ($payment) {
 
-        /*
-        |--------------------------------------------------------------------------
-        | Lock Fee Structure
-        |--------------------------------------------------------------------------
-        */
+    /**
+     * Delete payment and reverse fee.
+     */
+    public function delete(
+        StudentFeePayment $payment
+    ): void {
 
-        $feeStructure = StudentFeeStructure::query()
-            ->lockForUpdate()
-            ->findOrFail($payment->fee_structure_id);
+        DB::transaction(function () use ($payment) {
 
-        /*
-        |--------------------------------------------------------------------------
-        | Reverse Payment
-        |--------------------------------------------------------------------------
-        */
+            $feeStructure = StudentFeeStructure::query()
+                ->lockForUpdate()
+                ->findOrFail(
+                    $payment->fee_structure_id
+                );
 
-        $newPaidFee = max(
-            0,
-            (float) $feeStructure->paid_fee -
-            (float) $payment->amount
-        );
+            $newPaidFee = max(
+                0,
+                (float) $feeStructure->paid_fee -
+                (float) $payment->amount
+            );
 
-        $newNetFee = max(
-            0,
-            (float) $feeStructure->annual_fee -
-            $newPaidFee
-        );
+            $newNetFee = max(
+                0,
+                (float) $feeStructure->annual_fee -
+                $newPaidFee
+            );
 
-        /*
-        |--------------------------------------------------------------------------
-        | Update Fee Structure
-        |--------------------------------------------------------------------------
-        */
+            $feeStructure->update([
+                'paid_fee' => $newPaidFee,
+                'net_fee' => $newNetFee,
+            ]);
 
-        $feeStructure->update([
-            'paid_fee' => $newPaidFee,
-            'net_fee'  => $newNetFee,
-        ]);
-
-        /*
-        |--------------------------------------------------------------------------
-        | Delete Payment
-        |--------------------------------------------------------------------------
-        */
-
-        $payment->delete();
-    });
-}
+            $payment->delete();
+        });
+    }
 }
