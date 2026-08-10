@@ -8,6 +8,7 @@ use App\Http\Controllers\Academic\AcademicClassController;
 use App\Http\Controllers\Academic\AcademicSessionController;
 use App\Http\Controllers\Academic\StudentController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\Finance\StudentFeePaymentController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -34,8 +35,7 @@ Route::middleware('auth:sanctum')->group(function () {
         |--------------------------------------------------------------------------
         | Faculties
         |--------------------------------------------------------------------------
-        */
-
+        */ 
         Route::prefix('faculties')->group(function () {
             Route::get('/', [FacultyController::class, 'index']);
             Route::post('/', [FacultyController::class, 'store']);
@@ -64,8 +64,6 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('/{academicClass}', [AcademicClassController::class, 'destroy']);
             Route::patch('/{academicClass}/status', [AcademicClassController::class, 'changeStatus']);
         });
-        
-
         Route::prefix('sessions')->group(function () {
 
             Route::get('/', [AcademicSessionController::class, 'index']);
@@ -77,8 +75,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('/{academicSession}', [AcademicSessionController::class, 'destroy']);
             Route::patch('/{academicSession}/status', [AcademicSessionController::class, 'changeStatus']);
 
-        });
-
+        }); 
         Route::prefix('students')->group(function () { 
 
             Route::get('/', [StudentController::class,'index']);
@@ -92,8 +89,20 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/{student}', [StudentController::class,'show']);
             Route::put('/{student}', [StudentController::class,'update']);
             Route::delete('/{student}', [StudentController::class,'destroy']);
-        });
+        }); 
+    });
 
+        
+        
+    Route::prefix('finance')->group(function () { 
+        Route::prefix('fee-collection')->group(function () { 
+            Route::get('/', [StudentFeePaymentController::class,'index']);
+            Route::get('/students', [StudentFeePaymentController::class,'students']);
+            Route::get('/students/{student}/fee', [StudentFeePaymentController::class,'fee']);
+            Route::post('/', [StudentFeePaymentController::class,'store']);
+            Route::delete('/{payment}', [StudentFeePaymentController::class,'destroy']);
         });
+    });
+
 
 });

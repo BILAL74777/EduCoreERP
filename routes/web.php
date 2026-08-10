@@ -140,8 +140,19 @@ Route::middleware('auth')->group(function () {
              Route::get('/student/{student}', [StudentController::class, 'edit'])
         ->name('student.edit');
 
-
-        });
+         /*
+            |--------------------------------------------------------------------------
+            | Finance
+            |--------------------------------------------------------------------------
+            */
+ 
+            
+            
+            });
+            Route::get('/finance/collections', function () {
+              
+                return Inertia::render('Finance/FeeCollection/Index');
+                 })->name('finance.collections');
 
 });
 

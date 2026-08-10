@@ -43,6 +43,14 @@ class StudentFeeStructure extends BaseModel
         );
     }
 
+     public function session(): BelongsTo
+    {
+        return $this->belongsTo(
+            AcademicSession::class,
+            'session_id'
+        );
+    }
+    
     public function payments()
     {
         return $this->hasMany(StudentFeePayment::class, 'fee_structure_id');
