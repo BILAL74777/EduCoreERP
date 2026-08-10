@@ -1,33 +1,35 @@
 <script setup>
 import { ref } from "vue";
-
 import ImageCropper from "@/Components/ImageCropper.vue";
 
 const props = defineProps({
     form: Object,
-
     errors: Object,
-
     student: Object,
 });
 
 const photoPreview = ref(props.student?.photo?.url ?? null);
 
-/*
-|--------------------------------------------------------------------------
-| Photo
-|--------------------------------------------------------------------------
-*/
+const clearError = (field) => {
+    if (props.errors?.[field]) {
+        delete props.errors[field];
+    }
+};
 
-function removePhoto() {
+const handleCropped = (file) => {
+    clearError("photo");
+    photoPreview.value = URL.createObjectURL(file);
+};
+
+const removePhoto = () => {
     props.form.photo = null;
-
     photoPreview.value = null;
-}
+};
 </script>
 
 <template>
     <div class="space-y-6">
+        <!-- Header -->
         <div>
             <h2 class="text-lg font-semibold text-gray-800 dark:text-white">
                 Documents
@@ -38,10 +40,9 @@ function removePhoto() {
             </p>
         </div>
 
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-2" >
-            <!-- PHOTO -->
-
-            <div >
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <!-- Student Photo -->
+            <div>
                 <label
                     class="mb-3 block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
@@ -55,7 +56,7 @@ function removePhoto() {
                     :aspect-ratio="3 / 4"
                     :canvas-width="1200"
                     :canvas-height="1600"
-                    @cropped="photoPreview = URL.createObjectURL($event)"
+                    @cropped="handleCropped"
                     @remove="removePhoto"
                 />
 

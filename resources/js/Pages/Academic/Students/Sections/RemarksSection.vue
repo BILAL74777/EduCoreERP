@@ -8,7 +8,7 @@ const props = defineProps({
 function setBooleanValue(field, value) {
     props.form[field] = value;
 
-    if (field === 'is_orphan' && value === false) {
+    if (field === "is_orphan" && value === false) {
         props.form.is_father_shaheed = false;
     }
 }
@@ -27,12 +27,16 @@ function setBooleanValue(field, value) {
         <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
             <!-- Orphan -->
             <div class="rounded-lg border p-4 dark:border-gray-700">
-                <p class="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">
+                <p
+                    class="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
                     Orphan Student
                 </p>
 
                 <div class="flex gap-4">
-                    <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                    <label
+                        class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"
+                    >
                         <input
                             :checked="form.is_orphan === 1"
                             type="radio"
@@ -42,7 +46,9 @@ function setBooleanValue(field, value) {
                         Yes
                     </label>
 
-                    <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                    <label
+                        class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"
+                    >
                         <input
                             :checked="form.is_orphan === 0"
                             type="radio"
@@ -59,12 +65,16 @@ function setBooleanValue(field, value) {
                 v-if="form.is_orphan"
                 class="rounded-lg border p-4 dark:border-gray-700"
             >
-                <p class="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">
+                <p
+                    class="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
                     Father Shaheed
                 </p>
 
                 <div class="flex gap-4">
-                    <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                    <label
+                        class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"
+                    >
                         <input
                             :checked="form.is_father_shaheed === 1"
                             type="radio"
@@ -74,7 +84,9 @@ function setBooleanValue(field, value) {
                         Yes
                     </label>
 
-                    <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                    <label
+                        class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"
+                    >
                         <input
                             :checked="form.is_father_shaheed === 0"
                             type="radio"

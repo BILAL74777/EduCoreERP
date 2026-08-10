@@ -3,9 +3,14 @@ import DatePicker from "@/Components/DatePicker.vue";
 
 const props = defineProps({
     form: Object,
-
     errors: Object,
 });
+
+const clearError = (field) => {
+    if (props.errors?.[field]) {
+        delete props.errors[field];
+    }
+};
 </script>
 
 <template>
@@ -20,7 +25,6 @@ const props = defineProps({
 
         <div class="grid grid-cols-1 gap-5 md:grid-cols-4">
             <!-- Registration No -->
-
             <div>
                 <label
                     class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
@@ -30,9 +34,15 @@ const props = defineProps({
 
                 <input
                     v-model="form.registration_no"
+                    @input="clearError('registration_no')"
                     type="text"
                     placeholder="REG-0001"
-                    class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                    :class="[
+                        'w-full rounded-lg border px-3 py-2 dark:bg-gray-800 dark:text-white',
+                        errors.registration_no
+                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                            : 'border-gray-300 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500',
+                    ]"
                 />
 
                 <p
@@ -44,7 +54,6 @@ const props = defineProps({
             </div>
 
             <!-- Admission No -->
-
             <div>
                 <label
                     class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
@@ -54,12 +63,15 @@ const props = defineProps({
 
                 <input
                     v-model="form.admission_no"
+                    @input="clearError('admission_no')"
                     type="text"
                     placeholder="ADM-0001"
-                    class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                    :class="{
-                        'border-red-500': errors.admission_no,
-                    }"
+                    :class="[
+                        'w-full rounded-lg border px-3 py-2 dark:bg-gray-800 dark:text-white',
+                        errors.admission_no
+                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                            : 'border-gray-300 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500',
+                    ]"
                 />
 
                 <p v-if="errors.admission_no" class="mt-1 text-sm text-red-600">
@@ -68,7 +80,6 @@ const props = defineProps({
             </div>
 
             <!-- Admission Date -->
-
             <div>
                 <label
                     class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
@@ -80,8 +91,7 @@ const props = defineProps({
                     v-model="form.date_of_admission"
                     placeholder="Admission Date"
                     :has-error="Boolean(errors.date_of_admission)"
-                    :input-class="errors.date_of_admission ? 'w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white' : 'w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white'"
-                    
+                    @update:model-value="clearError('date_of_admission')"
                 />
 
                 <p

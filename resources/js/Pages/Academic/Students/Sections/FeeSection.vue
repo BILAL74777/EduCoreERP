@@ -1,15 +1,19 @@
 <script setup>
-import DatePicker from "@/Components/DatePicker.vue";
-
 const props = defineProps({
     form: Object,
-
     errors: Object,
 });
+
+const clearError = (field) => {
+    if (props.errors?.[field]) {
+        delete props.errors[field];
+    }
+};
 </script>
 
 <template>
     <div class="space-y-5">
+        <!-- Header -->
         <div>
             <h2 class="text-lg font-semibold text-gray-800 dark:text-white">
                 Fee Information
@@ -20,7 +24,6 @@ const props = defineProps({
 
         <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
             <!-- Annual Fee -->
-
             <div>
                 <label
                     class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
@@ -30,24 +33,27 @@ const props = defineProps({
 
                 <input
                     v-model="form.annual_fee"
+                    @input="clearError('annual_fee')"
                     type="number"
                     min="0"
-                    class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                    :class="{
-                        'border-red-500': errors.annual_fee,
-                    }"
+                    :class="[
+                        'w-full rounded-lg border px-3 py-2 dark:bg-gray-800 dark:text-white',
+                        errors.annual_fee
+                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                            : 'border-gray-300 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500',
+                    ]"
                 />
 
                 <p v-if="errors.annual_fee" class="mt-1 text-sm text-red-600">
                     {{ errors.annual_fee[0] }}
                 </p>
+
                 <p class="mt-1 text-xs text-gray-500">
                     This is the agreed annual fee at admission time.
                 </p>
             </div>
 
             <!-- Paid Fee -->
-
             <div>
                 <label
                     class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
@@ -57,34 +63,21 @@ const props = defineProps({
 
                 <input
                     v-model="form.paid_fee"
+                    @input="clearError('paid_fee')"
                     type="number"
                     min="0"
-                    class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                    :class="{
-                        'border-red-500': errors.paid_fee,
-                    }"
+                    :class="[
+                        'w-full rounded-lg border px-3 py-2 dark:bg-gray-800 dark:text-white',
+                        errors.paid_fee
+                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                            : 'border-gray-300 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500',
+                    ]"
                 />
+
                 <p v-if="errors.paid_fee" class="mt-1 text-sm text-red-600">
                     {{ errors.paid_fee[0] }}
                 </p>
             </div>
-
-            <!-- Payment Date -->
-
-            <!-- <div>
-                <label
-                    class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
-                >
-                    Payment Date
-                </label>
-
-                <DatePicker
-                    v-model="form.payment_date"
-                    placeholder="Payment Date"
-                    :has-error="Boolean(errors.payment_date)"
-                    :input-class="errors.payment_date ? 'w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white' : 'w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white'"
-                />
-            </div> -->
         </div>
     </div>
 </template>

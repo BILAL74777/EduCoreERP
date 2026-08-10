@@ -8,6 +8,12 @@ const props = defineProps({
     classes: Array,
     sessions: Array,
 });
+
+const clearError = (field) => {
+    if (props.errors?.[field]) {
+        delete props.errors[field];
+    }
+};
 </script>
 
 <template>
@@ -37,10 +43,13 @@ const props = defineProps({
 
                 <select
                     v-model="form.faculty_id"
-                    class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                    :class="{
-                        'border-red-500': errors.faculty_id,
-                    }"
+                    @change="clearError('faculty_id')"
+                    :class="[
+                        'w-full rounded-lg border px-3 py-2 text-sm dark:bg-gray-800 dark:text-white',
+                        errors.faculty_id
+                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                            : 'border-gray-300 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500',
+                    ]"
                 >
                     <option value="">Select Faculty</option>
 
@@ -69,11 +78,15 @@ const props = defineProps({
 
                 <select
                     v-model="form.discipline_id"
+                    @change="clearError('discipline_id')"
                     :disabled="!form.faculty_id"
-                    class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:disabled:bg-gray-900"
-                    :class="{
-                        'border-red-500': errors.discipline_id,
-                    }"
+                    :class="[
+                        'w-full rounded-lg border px-3 py-2 text-sm dark:bg-gray-800 dark:text-white',
+                        'disabled:cursor-not-allowed disabled:bg-gray-100 dark:disabled:bg-gray-900',
+                        errors.discipline_id
+                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                            : 'border-gray-300 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500',
+                    ]"
                 >
                     <option value="">Select Discipline</option>
 
@@ -105,11 +118,15 @@ const props = defineProps({
 
                 <select
                     v-model="form.class_id"
+                    @change="clearError('class_id')"
                     :disabled="!form.discipline_id"
-                    class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:disabled:bg-gray-900"
-                    :class="{
-                        'border-red-500': errors.class_id,
-                    }"
+                    :class="[
+                        'w-full rounded-lg border px-3 py-2 text-sm dark:bg-gray-800 dark:text-white',
+                        'disabled:cursor-not-allowed disabled:bg-gray-100 dark:disabled:bg-gray-900',
+                        errors.class_id
+                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                            : 'border-gray-300 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500',
+                    ]"
                 >
                     <option value="">Select Class</option>
 
@@ -138,10 +155,13 @@ const props = defineProps({
 
                 <select
                     v-model="form.session_id"
-                    class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                    :class="{
-                        'border-red-500': errors.session_id,
-                    }"
+                    @change="clearError('session_id')"
+                    :class="[
+                        'w-full rounded-lg border px-3 py-2 text-sm dark:bg-gray-800 dark:text-white',
+                        errors.session_id
+                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                            : 'border-gray-300 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500',
+                    ]"
                 >
                     <option value="">Select Session</option>
 
@@ -170,12 +190,15 @@ const props = defineProps({
 
                 <input
                     v-model="form.roll_no"
+                    @input="clearError('roll_no')"
                     type="text"
                     placeholder="Enter Roll Number"
-                    class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                    :class="{
-                        'border-red-500': errors.roll_no,
-                    }"
+                    :class="[
+                        'w-full rounded-lg border px-3 py-2 text-sm dark:bg-gray-800 dark:text-white',
+                        errors.roll_no
+                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                            : 'border-gray-300 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500',
+                    ]"
                 />
 
                 <p v-if="errors.roll_no" class="mt-1 text-sm text-red-600">
@@ -194,10 +217,13 @@ const props = defineProps({
 
                 <select
                     v-model="form.section"
-                    class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                    :class="{
-                        'border-red-500': errors.section,
-                    }"
+                    @change="clearError('section')"
+                    :class="[
+                        'w-full rounded-lg border px-3 py-2 text-sm dark:bg-gray-800 dark:text-white',
+                        errors.section
+                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                            : 'border-gray-300 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500',
+                    ]"
                 >
                     <option value="">Select Section</option>
                     <option value="A">A</option>
@@ -207,6 +233,10 @@ const props = defineProps({
                     <option value="E">E</option>
                     <option value="F">F</option>
                 </select>
+
+                <p v-if="errors.section" class="mt-1 text-sm text-red-600">
+                    {{ errors.section[0] }}
+                </p>
             </div>
         </div>
     </div>
