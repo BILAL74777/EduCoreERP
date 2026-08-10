@@ -38,10 +38,10 @@ function removePhoto() {
             </p>
         </div>
 
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2" >
             <!-- PHOTO -->
 
-            <div>
+            <div >
                 <label
                     class="mb-3 block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >

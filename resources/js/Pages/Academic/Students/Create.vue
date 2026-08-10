@@ -178,7 +178,7 @@ const submit = async () => {
         // Wait 2 seconds before redirecting
         setTimeout(() => {
             router.visit("/academic/students");
-        }, 1000);
+        }, 500);
     } catch (error) {
         if (error.response?.status === 422) {
             form.errors = error.response.data.errors || {};

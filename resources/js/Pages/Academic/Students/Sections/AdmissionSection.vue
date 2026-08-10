@@ -81,6 +81,7 @@ const props = defineProps({
                     placeholder="Admission Date"
                     :has-error="Boolean(errors.date_of_admission)"
                     :input-class="errors.date_of_admission ? 'w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white' : 'w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white'"
+                    
                 />
 
                 <p

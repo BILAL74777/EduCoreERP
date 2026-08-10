@@ -38,6 +38,9 @@ const props = defineProps({
                 <select
                     v-model="form.faculty_id"
                     class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                    :class="{
+                        'border-red-500': errors.faculty_id,
+                    }"
                 >
                     <option value="">Select Faculty</option>
 
@@ -68,6 +71,9 @@ const props = defineProps({
                     v-model="form.discipline_id"
                     :disabled="!form.faculty_id"
                     class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:disabled:bg-gray-900"
+                    :class="{
+                        'border-red-500': errors.discipline_id,
+                    }"
                 >
                     <option value="">Select Discipline</option>
 
@@ -101,6 +107,9 @@ const props = defineProps({
                     v-model="form.class_id"
                     :disabled="!form.discipline_id"
                     class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:disabled:bg-gray-900"
+                    :class="{
+                        'border-red-500': errors.class_id,
+                    }"
                 >
                     <option value="">Select Class</option>
 
@@ -130,6 +139,9 @@ const props = defineProps({
                 <select
                     v-model="form.session_id"
                     class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                    :class="{
+                        'border-red-500': errors.session_id,
+                    }"
                 >
                     <option value="">Select Session</option>
 
@@ -161,6 +173,9 @@ const props = defineProps({
                     type="text"
                     placeholder="Enter Roll Number"
                     class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                    :class="{
+                        'border-red-500': errors.roll_no,
+                    }"
                 />
 
                 <p v-if="errors.roll_no" class="mt-1 text-sm text-red-600">
@@ -180,6 +195,9 @@ const props = defineProps({
                 <select
                     v-model="form.section"
                     class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                    :class="{
+                        'border-red-500': errors.section,
+                    }"
                 >
                     <option value="">Select Section</option>
                     <option value="A">A</option>

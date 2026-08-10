@@ -32,11 +32,11 @@ const props = defineProps({
                     v-model="form.name"
                     type="text"
                     class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                    :class="{
+                        'border-red-500': errors.name,
+                    }"
                 />
-                <p
-                    v-if="errors.name"
-                    class="mt-1 text-sm text-red-600"
-                >
+                <p v-if="errors.name" class="mt-1 text-sm text-red-600">
                     {{ errors.name[0] }}
                 </p>
             </div>
@@ -55,11 +55,11 @@ const props = defineProps({
                     type="text"
                     placeholder="Form B number"
                     class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                    :class="{
+                        'border-red-500': errors.form_b,
+                    }"
                 />
-                <p
-                    v-if="errors.form_b"
-                    class="mt-1 text-sm text-red-600"
-                >
+                <p v-if="errors.form_b" class="mt-1 text-sm text-red-600">
                     {{ errors.form_b[0] }}
                 </p>
             </div>
@@ -77,11 +77,11 @@ const props = defineProps({
                     v-model="form.father_name"
                     type="text"
                     class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                    :class="{
+                        'border-red-500': errors.father_name,
+                    }"
                 />
-                <p
-                    v-if="errors.father_name"
-                    class="mt-1 text-sm text-red-600"
-                >
+                <p v-if="errors.father_name" class="mt-1 text-sm text-red-600">
                     {{ errors.father_name[0] }}
                 </p>
             </div>
@@ -100,11 +100,11 @@ const props = defineProps({
                     type="text"
                     placeholder="xxxxx-xxxxxxx-x"
                     class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                    :class="{
+                        'border-red-500': errors.father_cnic,
+                    }"
                 />
-                <p
-                    v-if="errors.father_cnic"
-                    class="mt-1 text-sm text-red-600"
-                >
+                <p v-if="errors.father_cnic" class="mt-1 text-sm text-red-600">
                     {{ errors.father_cnic[0] }}
                 </p>
             </div>
@@ -122,6 +122,9 @@ const props = defineProps({
                     v-model="form.father_occupation"
                     type="text"
                     class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                    :class="{
+                        'border-red-500': errors.father_occupation,
+                    }"
                 />
                 <p
                     v-if="errors.father_occupation"
@@ -143,6 +146,9 @@ const props = defineProps({
                 <select
                     v-model="form.gender"
                     class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                    :class="{
+                        'border-red-500': errors.gender,
+                    }"
                 >
                     <option value="Male">Male</option>
 
@@ -151,10 +157,7 @@ const props = defineProps({
                     <option value="Other">Other</option>
                 </select>
 
-                 <p
-                    v-if="errors.gender"
-                    class="mt-1 text-sm text-red-600"
-                >
+                <p v-if="errors.gender" class="mt-1 text-sm text-red-600">
                     {{ errors.gender[0] }}
                 </p>
             </div>
@@ -172,9 +175,13 @@ const props = defineProps({
                     v-model="form.date_of_birth"
                     placeholder="Date of Birth"
                     :has-error="Boolean(errors.date_of_birth)"
-                    :input-class="errors.date_of_birth ? 'w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white' : 'w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white'"
+                    :input-class="
+                        errors.date_of_birth
+                            ? 'w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white'
+                            : 'w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white'
+                    "
                 />
-                  <p
+                <p
                     v-if="errors.date_of_birth"
                     class="mt-1 text-sm text-red-600"
                 >
@@ -197,11 +204,11 @@ const props = defineProps({
                     v-model="form.religion"
                     type="text"
                     class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                    :class="{
+                        'border-red-500': errors.religion,
+                    }"
                 />
-                <p
-                    v-if="errors.religion"
-                    class="mt-1 text-sm text-red-600"
-                >
+                <p v-if="errors.religion" class="mt-1 text-sm text-red-600">
                     {{ errors.religion[0] }}
                 </p>
             </div>
@@ -219,11 +226,11 @@ const props = defineProps({
                     v-model="form.tribe_cast"
                     type="text"
                     class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                    :class="{
+                        'border-red-500': errors.tribe_cast,
+                    }"
                 />
-                <p
-                    v-if="errors.tribe_cast"
-                    class="mt-1 text-sm text-red-600"
-                >
+                <p v-if="errors.tribe_cast" class="mt-1 text-sm text-red-600">
                     {{ errors.tribe_cast[0] }}
                 </p>
             </div>
@@ -238,6 +245,9 @@ const props = defineProps({
                     v-model="form.contact_number"
                     type="text"
                     class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                    :class="{
+                        'border-red-500': errors.contact_number,
+                    }"
                 />
                 <p
                     v-if="errors.contact_number"
@@ -258,6 +268,9 @@ const props = defineProps({
                     v-model="form.guardian_contact_number"
                     type="text"
                     class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                    :class="{
+                        'border-red-500': errors.guardian_contact_number,
+                    }"
                 />
                 <p
                     v-if="errors.guardian_contact_number"
@@ -267,25 +280,25 @@ const props = defineProps({
                 </p>
             </div>
             <div>
-            <label
-                class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
-                Address
-            </label>
-
-            <textarea
-                v-model="form.address"
-                rows="4"
-                class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-                placeholder="Address..."
-            ></textarea>
-            <p
-                    v-if="errors.address"
-                    class="mt-1 text-sm text-red-600"
+                <label
+                    class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
+                    Address
+                </label>
+
+                <textarea
+                    v-model="form.address"
+                    rows="4"
+                    class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                    :class="{
+                        'border-red-500': errors.address,
+                    }"
+                    placeholder="Address..."
+                ></textarea>
+                <p v-if="errors.address" class="mt-1 text-sm text-red-600">
                     {{ errors.address[0] }}
                 </p>
-        </div>
+            </div>
         </div>
     </div>
 </template>

@@ -33,12 +33,12 @@ const props = defineProps({
                     type="number"
                     min="0"
                     class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                    :class="{
+                        'border-red-500': errors.annual_fee,
+                    }"
                 />
 
-                <p
-                    v-if="errors.annual_fee"
-                    class="mt-1 text-sm text-red-600"
-                >
+                <p v-if="errors.annual_fee" class="mt-1 text-sm text-red-600">
                     {{ errors.annual_fee[0] }}
                 </p>
                 <p class="mt-1 text-xs text-gray-500">
@@ -60,11 +60,11 @@ const props = defineProps({
                     type="number"
                     min="0"
                     class="w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                    :class="{
+                        'border-red-500': errors.paid_fee,
+                    }"
                 />
-                <p
-                    v-if="errors.paid_fee"
-                    class="mt-1 text-sm text-red-600"
-                >
+                <p v-if="errors.paid_fee" class="mt-1 text-sm text-red-600">
                     {{ errors.paid_fee[0] }}
                 </p>
             </div>
@@ -85,8 +85,6 @@ const props = defineProps({
                     :input-class="errors.payment_date ? 'w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white' : 'w-full rounded-lg border px-3 py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-white'"
                 />
             </div> -->
-
-            
         </div>
     </div>
 </template>

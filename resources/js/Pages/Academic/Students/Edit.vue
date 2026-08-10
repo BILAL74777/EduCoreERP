@@ -297,7 +297,7 @@ const submit = async () => {
 
         setTimeout(() => {
             router.visit("/academic/students");
-        }, 1000);
+        }, 500);
     } catch (error) {
         console.log(error.response);
 
