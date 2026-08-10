@@ -421,7 +421,7 @@ function resetSearch() {
                                     <EyeIcon class="h-5 w-5" />
                                 </Link>
 
-                                <Link
+                                <!-- <Link
                                     :href="
                                         route(
                                             'academic.student.edit',
@@ -432,7 +432,7 @@ function resetSearch() {
                                     title="View Profile"
                                 >
                                     <PencilSquareIcon class="h-5 w-5" />
-                                </Link>
+                                </Link> -->
 
                                 <!-- <button
                                     @click="emit('delete', student.id)"

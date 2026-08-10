@@ -315,9 +315,9 @@ function cancel() {
     router.visit("/academic/students");
 }
 
-function goBack() {
-    router.visit("/academic/students");
-}
+// function goBack() {
+//     router.visit("/academic/students");
+// }
 onMounted(async () => {
     await loadDropdowns();
 
@@ -346,7 +346,7 @@ onMounted(async () => {
                 <div>
                     <button
                         type="button"
-                        @click="goBack"
+                        @click="$goBack"
                         class="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-5 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
                     >
                         <ArrowLeftIcon class="h-5 w-5" />

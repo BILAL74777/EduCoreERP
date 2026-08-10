@@ -11,6 +11,9 @@ import "vue3-toastify/dist/index.css";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { formatDate } from "@/Helpers/date";
 import { formatAmount } from "@/Helpers/amout";
+
+import { useNavigation } from "@/composables/useNavigation";
+const { goBack } = useNavigation();
 const appName = import.meta.env.VITE_APP_NAME || "EduCoreERP";
 
 createInertiaApp({
@@ -30,6 +33,7 @@ createInertiaApp({
         // Global helper
         vueApp.config.globalProperties.$formatDate = formatDate;
         vueApp.config.globalProperties.$formatAmount = formatAmount;
+        vueApp.config.globalProperties.$goBack = goBack;
         vueApp.mount(el);
         return vueApp;
     },
