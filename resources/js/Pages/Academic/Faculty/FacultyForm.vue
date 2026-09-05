@@ -1,4 +1,3 @@
-```vue
 <script setup>
 const props = defineProps({
     form: Object,
@@ -64,5 +63,4 @@ const emit = defineEmits(["clear-error"]);
             </p>
         </div>
     </div>
-</template>
-```
+</template> 

@@ -410,41 +410,41 @@ const menuGroups = [
     |--------------------------------------------------------------------------
     */
 
-    // {
-    //     title: "Teaching",
-    //     items: [
-    //         {
-    //             icon: UserCircleIcon,
-    //             name: "Teaching",
-    //             subItems: [
-    //                 {
-    //                     name: "Teachers",
-    //                     path: "/teachers",
-    //                 },
-    //                 {
-    //                     name: "Subjects",
-    //                     path: "/subjects",
-    //                 },
-    //                 {
-    //                     name: "Subject Groups",
-    //                     path: "/subject-groups",
-    //                 },
-    //                 {
-    //                     name: "Class Allocation",
-    //                     path: "/class-allocation",
-    //                 },
-    //                 {
-    //                     name: "Timetable",
-    //                     path: "/timetable",
-    //                 },
-    //                 {
-    //                     name: "Attendance",
-    //                     path: "/attendance",
-    //                 },
-    //             ],
-    //         },
-    //     ],
-    // },
+    {
+        title: "Teaching",
+        items: [
+            {
+                icon: UserCircleIcon,
+                name: "Teaching",
+                subItems: [
+                    // {
+                    //     name: "Teachers",
+                    //     path: "/teachers",
+                    // },
+                    // {
+                    //     name: "Subjects",
+                    //     path: "/subjects",
+                    // },
+                    // {
+                    //     name: "Subject Groups",
+                    //     path: "/subject-groups",
+                    // },
+                    // {
+                    //     name: "Class Allocation",
+                    //     path: "/class-allocation",
+                    // },
+                    // {
+                    //     name: "Timetable",
+                    //     path: "/timetable",
+                    // },
+                    {
+                        name: "Attendance",
+                        path: "/attendance",
+                    },
+                ],
+            },
+        ],
+    },
         /*
     |--------------------------------------------------------------------------
     | Examination Management

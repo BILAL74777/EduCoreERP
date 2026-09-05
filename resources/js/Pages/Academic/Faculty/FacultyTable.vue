@@ -1,4 +1,3 @@
-```vue
 <script setup>
 import { ref, computed, watch } from "vue";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/vue/24/outline";
@@ -271,5 +270,4 @@ function resetSearch() {
             @page-change="emit('page-change', $event)"
         />
     </div>
-</template>
-```
+</template> 

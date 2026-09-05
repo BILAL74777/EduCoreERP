@@ -9,6 +9,8 @@ use App\Http\Controllers\Academic\AcademicSessionController;
 use App\Http\Controllers\Academic\StudentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Finance\StudentFeePaymentController;
+use App\Http\Controllers\Attendance\AttendanceController;
+use App\Http\Controllers\Attendance\GateAttendanceController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -91,6 +93,9 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('/{student}', [StudentController::class,'destroy']);
         }); 
     });
+
+
+    Route::prefix('attendance')->group(function () { /* |-------------------------------------------------------------------------- | Classroom Attendance |-------------------------------------------------------------------------- */ Route::get('/', [ AttendanceController::class, 'index', ]); Route::get('/students', [ AttendanceController::class, 'students', ]); Route::get('/sheet', [ AttendanceController::class, 'sheet', ]); Route::post('/', [ AttendanceController::class, 'store', ]); Route::get('/history', [ AttendanceController::class, 'history', ]); Route::get('/students/search', [ AttendanceController::class, 'studentSearch', ]); Route::get('/students/{student}/history', [ AttendanceController::class, 'studentHistory', ]); /* |-------------------------------------------------------------------------- | Gate Attendance |-------------------------------------------------------------------------- */ Route::get('/gate/search', [ GateAttendanceController::class, 'search', ]); Route::post('/gate', [ GateAttendanceController::class, 'store', ]); Route::get('/gate/history', [ GateAttendanceController::class, 'history', ]); Route::get('/gate/students/{student}/history', [ GateAttendanceController::class, 'studentHistory', ]); });
 
         
         

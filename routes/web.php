@@ -144,15 +144,17 @@ Route::middleware('auth')->group(function () {
             |--------------------------------------------------------------------------
             | Finance
             |--------------------------------------------------------------------------
-            */
- 
-            
+            */ 
             
             });
             Route::get('/finance/collections', function () {
               
                 return Inertia::render('Finance/FeeCollection/Index');
                  })->name('finance.collections');
+
+                 Route::get('/attendance', function () {
+return Inertia::render('Attendance/Index');
+})->name('attendance.index');
 
 });
 
