@@ -4,10 +4,10 @@ import { Head } from "@inertiajs/vue3";
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import { toast } from "vue3-toastify";
-
-import Modal from "@/Components/Modal.vue";
+ 
+import Modal from "@/Components/Modal/Modal.vue";
 import SuccessButton from "@/Components/SuccessButton.vue";
-import DeleteConfirmModal from "@/Components/DeleteConfirmModal.vue";
+import DeleteConfirmModal from "@/Components/Modal/DeleteConfirmModal.vue";
 
 import UserTable from "./UserTable.vue";
 import UserForm from "./UserForm.vue";

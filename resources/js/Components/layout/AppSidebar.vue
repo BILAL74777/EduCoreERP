@@ -410,78 +410,78 @@ const menuGroups = [
     |--------------------------------------------------------------------------
     */
 
-    {
-        title: "Teaching",
-        items: [
-            {
-                icon: UserCircleIcon,
-                name: "Teaching",
-                subItems: [
-                    {
-                        name: "Teachers",
-                        path: "/teachers",
-                    },
-                    {
-                        name: "Subjects",
-                        path: "/subjects",
-                    },
-                    {
-                        name: "Subject Groups",
-                        path: "/subject-groups",
-                    },
-                    {
-                        name: "Class Allocation",
-                        path: "/class-allocation",
-                    },
-                    {
-                        name: "Timetable",
-                        path: "/timetable",
-                    },
-                    {
-                        name: "Attendance",
-                        path: "/attendance",
-                    },
-                ],
-            },
-        ],
-    },
+    // {
+    //     title: "Teaching",
+    //     items: [
+    //         {
+    //             icon: UserCircleIcon,
+    //             name: "Teaching",
+    //             subItems: [
+    //                 {
+    //                     name: "Teachers",
+    //                     path: "/teachers",
+    //                 },
+    //                 {
+    //                     name: "Subjects",
+    //                     path: "/subjects",
+    //                 },
+    //                 {
+    //                     name: "Subject Groups",
+    //                     path: "/subject-groups",
+    //                 },
+    //                 {
+    //                     name: "Class Allocation",
+    //                     path: "/class-allocation",
+    //                 },
+    //                 {
+    //                     name: "Timetable",
+    //                     path: "/timetable",
+    //                 },
+    //                 {
+    //                     name: "Attendance",
+    //                     path: "/attendance",
+    //                 },
+    //             ],
+    //         },
+    //     ],
+    // },
         /*
     |--------------------------------------------------------------------------
     | Examination Management
     |--------------------------------------------------------------------------
     */
 
-    {
-        title: "Examinations",
-        items: [
-            {
-                icon: PageIcon,
-                name: "Examinations",
-                subItems: [
-                    {
-                        name: "Exams",
-                        path: "/examinations",
-                    },
-                    {
-                        name: "Marks Entry",
-                        path: "/examinations/marks",
-                    },
-                    {
-                        name: "Results",
-                        path: "/results",
-                    },
-                    {
-                        name: "Report Cards",
-                        path: "/report-cards",
-                    },
-                    {
-                        name: "Certificates",
-                        path: "/certificates",
-                    },
-                ],
-            },
-        ],
-    },
+    // {
+    //     title: "Examinations",
+    //     items: [
+    //         {
+    //             icon: PageIcon,
+    //             name: "Examinations",
+    //             subItems: [
+    //                 {
+    //                     name: "Exams",
+    //                     path: "/examinations",
+    //                 },
+    //                 {
+    //                     name: "Marks Entry",
+    //                     path: "/examinations/marks",
+    //                 },
+    //                 {
+    //                     name: "Results",
+    //                     path: "/results",
+    //                 },
+    //                 {
+    //                     name: "Report Cards",
+    //                     path: "/report-cards",
+    //                 },
+    //                 {
+    //                     name: "Certificates",
+    //                     path: "/certificates",
+    //                 },
+    //             ],
+    //         },
+    //     ],
+    // },
 
 
     /*
@@ -497,30 +497,30 @@ const menuGroups = [
                 icon: PieChartIcon,
                 name: "Accounts",
                 subItems: [
-                    {
-                        name: "Fee Structures",
-                        path: "/finance/fee-structures",
-                    },
-                    {
-                        name: "Student Fees",
-                        path: "/finance/student-fees",
-                    },
+                    // {
+                    //     name: "Fee Structures",
+                    //     path: "/finance/fee-structures",
+                    // },
+                    // {
+                    //     name: "Student Fees",
+                    //     path: "/finance/student-fees",
+                    // },
                     {
                         name: "Fee Collection",
                         path: "/finance/collections",
                     },
-                    {
-                        name: "Expenses",
-                        path: "/expenses",
-                    },
-                    {
-                        name: "Income",
-                        path: "/income",
-                    },
-                    {
-                        name: "Cash Book",
-                        path: "/cash-book",
-                    },
+                    // {
+                    //     name: "Expenses",
+                    //     path: "/expenses",
+                    // },
+                    // {
+                    //     name: "Income",
+                    //     path: "/income",
+                    // },
+                    // {
+                    //     name: "Cash Book",
+                    //     path: "/cash-book",
+                    // },
                 ],
             },
         ],
@@ -533,37 +533,37 @@ const menuGroups = [
     |--------------------------------------------------------------------------
     */
 
-    {
-        title: "Inventory",
-        items: [
-            {
-                icon: BoxCubeIcon,
-                name: "Inventory",
-                subItems: [
-                    {
-                        name: "Items",
-                        path: "/inventory/items",
-                    },
-                    {
-                        name: "Categories",
-                        path: "/inventory/categories",
-                    },
-                    {
-                        name: "Suppliers",
-                        path: "/inventory/suppliers",
-                    },
-                    {
-                        name: "Stock Management",
-                        path: "/inventory/stock",
-                    },
-                    {
-                        name: "Assets",
-                        path: "/inventory/assets",
-                    },
-                ],
-            },
-        ],
-    },
+    // {
+    //     title: "Inventory",
+    //     items: [
+    //         {
+    //             icon: BoxCubeIcon,
+    //             name: "Inventory",
+    //             subItems: [
+    //                 {
+    //                     name: "Items",
+    //                     path: "/inventory/items",
+    //                 },
+    //                 {
+    //                     name: "Categories",
+    //                     path: "/inventory/categories",
+    //                 },
+    //                 {
+    //                     name: "Suppliers",
+    //                     path: "/inventory/suppliers",
+    //                 },
+    //                 {
+    //                     name: "Stock Management",
+    //                     path: "/inventory/stock",
+    //                 },
+    //                 {
+    //                     name: "Assets",
+    //                     path: "/inventory/assets",
+    //                 },
+    //             ],
+    //         },
+    //     ],
+    // },
 
 
     /*
@@ -572,33 +572,33 @@ const menuGroups = [
     |--------------------------------------------------------------------------
     */
 
-    {
-        title: "Library",
-        items: [
-            {
-                icon: ListIcon,
-                name: "Library",
-                subItems: [
-                    {
-                        name: "Books",
-                        path: "/library/books",
-                    },
-                    {
-                        name: "Categories",
-                        path: "/library/categories",
-                    },
-                    {
-                        name: "Issue Books",
-                        path: "/library/issues",
-                    },
-                    {
-                        name: "Return Books",
-                        path: "/library/returns",
-                    },
-                ],
-            },
-        ],
-    },
+    // {
+    //     title: "Library",
+    //     items: [
+    //         {
+    //             icon: ListIcon,
+    //             name: "Library",
+    //             subItems: [
+    //                 {
+    //                     name: "Books",
+    //                     path: "/library/books",
+    //                 },
+    //                 {
+    //                     name: "Categories",
+    //                     path: "/library/categories",
+    //                 },
+    //                 {
+    //                     name: "Issue Books",
+    //                     path: "/library/issues",
+    //                 },
+    //                 {
+    //                     name: "Return Books",
+    //                     path: "/library/returns",
+    //                 },
+    //             ],
+    //         },
+    //     ],
+    // },
 
 
     /*
@@ -607,29 +607,29 @@ const menuGroups = [
     |--------------------------------------------------------------------------
     */
 
-    {
-        title: "Hostel",
-        items: [
-            {
-                icon: UserCircleIcon,
-                name: "Hostel",
-                subItems: [
-                    {
-                        name: "Rooms",
-                        path: "/hostel/rooms",
-                    },
-                    {
-                        name: "Hostel Allocation",
-                        path: "/hostel/allocation",
-                    },
-                    {
-                        name: "Hostel Students",
-                        path: "/hostel/students",
-                    },
-                ],
-            },
-        ],
-    },
+    // {
+    //     title: "Hostel",
+    //     items: [
+    //         {
+    //             icon: UserCircleIcon,
+    //             name: "Hostel",
+    //             subItems: [
+    //                 {
+    //                     name: "Rooms",
+    //                     path: "/hostel/rooms",
+    //                 },
+    //                 {
+    //                     name: "Hostel Allocation",
+    //                     path: "/hostel/allocation",
+    //                 },
+    //                 {
+    //                     name: "Hostel Students",
+    //                     path: "/hostel/students",
+    //                 },
+    //             ],
+    //         },
+    //     ],
+    // },
 
 
     /*
@@ -638,29 +638,29 @@ const menuGroups = [
     |--------------------------------------------------------------------------
     */
 
-    {
-        title: "Transport",
-        items: [
-            {
-                icon: BoxCubeIcon,
-                name: "Transport",
-                subItems: [
-                    {
-                        name: "Vehicles",
-                        path: "/transport/vehicles",
-                    },
-                    {
-                        name: "Routes",
-                        path: "/transport/routes",
-                    },
-                    {
-                        name: "Students",
-                        path: "/transport/students",
-                    },
-                ],
-            },
-        ],
-    },
+    // {
+    //     title: "Transport",
+    //     items: [
+    //         {
+    //             icon: BoxCubeIcon,
+    //             name: "Transport",
+    //             subItems: [
+    //                 {
+    //                     name: "Vehicles",
+    //                     path: "/transport/vehicles",
+    //                 },
+    //                 {
+    //                     name: "Routes",
+    //                     path: "/transport/routes",
+    //                 },
+    //                 {
+    //                     name: "Students",
+    //                     path: "/transport/students",
+    //                 },
+    //             ],
+    //         },
+    //     ],
+    // },
         /*
     |--------------------------------------------------------------------------
     | Reports
@@ -710,33 +710,33 @@ const menuGroups = [
     |--------------------------------------------------------------------------
     */
 
-    {
-        title: "Settings",
-        items: [
-            {
-                icon: ListIcon,
-                name: "Settings",
-                subItems: [
-                    {
-                        name: "Company Settings",
-                        path: "/settings/company",
-                    },
-                    {
-                        name: "Academic Settings",
-                        path: "/settings/academic",
-                    },
-                    {
-                        name: "System Settings",
-                        path: "/settings/system",
-                    },
-                    {
-                        name: "Backup",
-                        path: "/settings/backup",
-                    },
-                ],
-            },
-        ],
-    },
+    // {
+    //     title: "Settings",
+    //     items: [
+    //         {
+    //             icon: ListIcon,
+    //             name: "Settings",
+    //             subItems: [
+    //                 {
+    //                     name: "Company Settings",
+    //                     path: "/settings/company",
+    //                 },
+    //                 {
+    //                     name: "Academic Settings",
+    //                     path: "/settings/academic",
+    //                 },
+    //                 {
+    //                     name: "System Settings",
+    //                     path: "/settings/system",
+    //                 },
+    //                 {
+    //                     name: "Backup",
+    //                     path: "/settings/backup",
+    //                 },
+    //             ],
+    //         },
+    //     ],
+    // },
 ];
 
 

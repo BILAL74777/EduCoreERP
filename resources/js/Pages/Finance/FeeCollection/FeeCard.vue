@@ -288,9 +288,9 @@ const formatDate = (date) => {
                         </span>
 
                         {{
-                            student.current_enrollment?.academic_class?.discipline?.faculty?.name ||
-                            "-"
-                        }}
+        student.current_enrollment?.academic_class?.discipline?.faculty?.faculty ||
+        "-"
+    }}
                     </div>
 
                     <div>
@@ -299,9 +299,9 @@ const formatDate = (date) => {
                         </span>
 
                         {{
-                            student.current_enrollment?.academic_class?.discipline?.name ||
-                            "-"
-                        }}
+        student.current_enrollment?.academic_class?.discipline?.discipline ||
+        "-"
+    }}
                     </div>
 
                     <div>
@@ -464,19 +464,16 @@ const formatDate = (date) => {
                                 >
 
                                     <td
-                                        class="border border-gray-300 px-3 py-2"
-                                    >
-                                        {{ index + 1 }}
-                                    </td>
+    class="border border-gray-300 px-3 py-2"
+>
+    {{ index + 1 }}
+</td>
 
-                                    <td
-                                        class="border border-gray-300 px-3 py-2"
-                                    >
-                                        {{
-                                            structure.session?.name ||
-                                            "-"
-                                        }}
-                                    </td>
+<td
+    class="border border-gray-300 px-3 py-2"
+>
+    {{ structure.session?.session_name || "-" }}
+</td>
 
                                     <td
                                         class="border border-gray-300 px-3 py-2 font-medium"
