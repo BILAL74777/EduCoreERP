@@ -203,6 +203,7 @@ class StudentService
                 'class_id'        => $data['class_id'],
 
                 'roll_no'         => $data['roll_no'] ?? null,
+                'card_no'         => $data['card_no'] ?? null,
 
                 'status'          => 'Active',
                 'is_current'      => true,

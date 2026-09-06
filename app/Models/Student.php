@@ -12,7 +12,7 @@ class Student extends BaseModel
         'photo',
         'form_b',
         'admission_no',
-        'card_no',
+        
         'registration_no',
         'section',
         'date_of_admission',

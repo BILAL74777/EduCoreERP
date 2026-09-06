@@ -10,7 +10,11 @@ import EnrollmentCard from "./Details/EnrollmentCard.vue";
 import FeeCard from "./Details/FeeCard.vue";
 import DocumentsCard from "./Details/DocumentsCard.vue";
 import RemarksCard from "./Details/RemarksCard.vue";
-import { ArrowLeftIcon, PencilIcon,TrashIcon } from "@heroicons/vue/24/outline";
+import {
+    ArrowLeftIcon,
+    PencilIcon,
+    TrashIcon,
+} from "@heroicons/vue/24/outline";
 import DeleteConfirmModal from "@/Components/Modal/DeleteConfirmModal.vue";
 const props = defineProps({
     student: {
@@ -39,13 +43,16 @@ function askDelete(id) {
 }
 
 async function deleteStudent(id) {
-     
     try {
         await axios.delete(`/api/academic/students/${selectedStudent.value}`);
 
         toast.success("Student deleted successfully");
 
-        fetchStudents(students.value.current_page, searchValue.value, filters.value);
+        fetchStudents(
+            students.value.current_page,
+            searchValue.value,
+            filters.value
+        );
     } catch (error) {
         toast.error("Delete failed");
     }
@@ -92,13 +99,12 @@ async function deleteStudent(id) {
                         <PencilIcon class="h-5 w-5" />
                     </Link>
                     <button
-                                    @click="askDelete(student.id)"
-                                    class="rounded-lg bg-red-100 p-2 text-red-600 hover:bg-red-200 dark:bg-red-900 dark:text-red-300"
-                                    title="Delete"
-                                >
-                                    <TrashIcon class="h-5 w-5" />
-                                </button>
-
+                        @click="askDelete(student.id)"
+                        class="rounded-lg bg-red-100 p-2 text-red-600 hover:bg-red-200 dark:bg-red-900 dark:text-red-300"
+                        title="Delete"
+                    >
+                        <TrashIcon class="h-5 w-5" />
+                    </button>
                 </div>
             </div>
 
@@ -107,7 +113,7 @@ async function deleteStudent(id) {
             <ProfileHeader :student="student" />
 
             <!-- Grid -->
-            <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
+            <div class="grid grid-cols-1 gap-6 xl:grid-cols-2"> 
                 <AdmissionInformationCard :student="student" />
 
                 <EnrollmentCard :student="student" />
@@ -122,13 +128,13 @@ async function deleteStudent(id) {
             </div>
             <RemarksCard :student="student" />
 
-              <!-- Delete Modal -->
-        <DeleteConfirmModal
-            :show="showDeleteModal"
-            :loading="deleting"
-            @close="showDeleteModal = false"
-            @confirm="deleteStudent"
-        />
+            <!-- Delete Modal -->
+            <DeleteConfirmModal
+                :show="showDeleteModal"
+                :loading="deleting"
+                @close="showDeleteModal = false"
+                @confirm="deleteStudent"
+            />
         </div>
     </Master>
 </template>

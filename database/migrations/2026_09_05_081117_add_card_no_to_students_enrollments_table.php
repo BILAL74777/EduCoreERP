@@ -8,11 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('students', function (Blueprint $table) {
+        Schema::table('student_enrollments', function (Blueprint $table) {
             $table->string('card_no')
                 ->nullable()
                 ->unique()
-                ->after('registration_no');
+                ->after('roll_no');
         });
     }
 

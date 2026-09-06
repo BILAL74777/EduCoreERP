@@ -205,6 +205,32 @@ const clearError = (field) => {
                     {{ errors.roll_no[0] }}
                 </p>
             </div>
+            <!-- Roll Number -->
+
+            <div>
+                <label
+                    class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                    Card Number
+                </label>
+
+                <input
+                    v-model="form.card_no"
+                    @input="clearError('card_no')"
+                    type="text"
+                    placeholder="Enter Card Number"
+                    :class="[
+                        'w-full rounded-lg border px-3 py-2 text-sm dark:bg-gray-800 dark:text-white',
+                        errors.card_no
+                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                            : 'border-gray-300 dark:border-gray-700 focus:border-blue-500 focus:ring-blue-500',
+                    ]"
+                />
+
+                <p v-if="errors.card_no" class="mt-1 text-sm text-red-600">
+                    {{ errors.card_no[0] }}
+                </p>
+            </div>
 
             <!-- Section -->
 

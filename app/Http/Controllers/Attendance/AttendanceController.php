@@ -26,7 +26,7 @@ class AttendanceController extends Controller
             'success' => true,
 
             'sessions' => AcademicSession::query()
-                ->where('is_active', true)
+                // ->where('is_active', true)
                 ->orderByDesc('start_date')
                 ->get(),
 

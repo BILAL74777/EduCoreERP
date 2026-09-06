@@ -14,6 +14,7 @@ class StudentEnrollment extends BaseModel
         'faculty_id',
         'discipline_id',
         'roll_no',
+        'card_no',
         'status',
         'is_current',
         'remarks',

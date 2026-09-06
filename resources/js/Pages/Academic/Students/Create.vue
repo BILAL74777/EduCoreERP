@@ -50,6 +50,7 @@ const form = useForm({
     session_id: "",
 
     roll_no: "",
+    card_no: "",
 
     // Fee
     annual_fee: 0,

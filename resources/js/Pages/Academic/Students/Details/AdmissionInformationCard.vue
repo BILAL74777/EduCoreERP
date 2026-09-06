@@ -45,6 +45,14 @@ defineProps({
             </div>
 
             <div>
+                <p class="text-sm text-gray-500">Card No</p>
+
+                <p class="font-medium dark:text-white">
+                    {{ student.current_enrollment?.card_no }}
+                </p>
+            </div>
+
+            <div>
                 <p class="text-sm text-gray-500">Section</p>
 
                 <p class="font-medium dark:text-white">

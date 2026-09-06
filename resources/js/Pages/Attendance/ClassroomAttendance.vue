@@ -91,7 +91,7 @@ const loadInitialData = async () => {
             sessions.value.find(
                 (session) =>
                     session.is_active
-            );
+            ); 
 
         if (activeSession) {
             selectedSession.value =

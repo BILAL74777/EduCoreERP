@@ -95,7 +95,19 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
 
-    Route::prefix('attendance')->group(function () { /* |-------------------------------------------------------------------------- | Classroom Attendance |-------------------------------------------------------------------------- */ Route::get('/', [ AttendanceController::class, 'index', ]); Route::get('/students', [ AttendanceController::class, 'students', ]); Route::get('/sheet', [ AttendanceController::class, 'sheet', ]); Route::post('/', [ AttendanceController::class, 'store', ]); Route::get('/history', [ AttendanceController::class, 'history', ]); Route::get('/students/search', [ AttendanceController::class, 'studentSearch', ]); Route::get('/students/{student}/history', [ AttendanceController::class, 'studentHistory', ]); /* |-------------------------------------------------------------------------- | Gate Attendance |-------------------------------------------------------------------------- */ Route::get('/gate/search', [ GateAttendanceController::class, 'search', ]); Route::post('/gate', [ GateAttendanceController::class, 'store', ]); Route::get('/gate/history', [ GateAttendanceController::class, 'history', ]); Route::get('/gate/students/{student}/history', [ GateAttendanceController::class, 'studentHistory', ]); });
+    Route::prefix('attendance')->group(function () { 
+        Route::get('/', [AttendanceController::class, 'index', ]); 
+        Route::get('/students', [AttendanceController::class, 'students', ]); 
+        Route::get('/sheet', [AttendanceController::class, 'sheet', ]); 
+        Route::post('/', [AttendanceController::class, 'store', ]); 
+        Route::get('/history', [AttendanceController::class, 'history', ]); 
+        Route::get('/students/search', [AttendanceController::class, 'studentSearch', ]); 
+        Route::get('/students/{student}/history', [AttendanceController::class, 'studentHistory', ]);  
+        Route::get('/gate/search', [GateAttendanceController::class, 'search', ]); 
+        Route::post('/gate', [GateAttendanceController::class, 'store', ]); 
+        Route::get('/gate/history', [GateAttendanceController::class, 'history', ]); 
+        Route::get('/gate/students/{student}/history', [GateAttendanceController::class, 'studentHistory', ]); 
+    });
 
         
         
