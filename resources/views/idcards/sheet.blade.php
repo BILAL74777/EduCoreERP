@@ -74,7 +74,7 @@
         .watermark-logo {
             position: absolute;
             left: 50%;
-            top: 67%;
+            top: 63%;
             transform: translate(-50%, -50%);
             width: 50mm;
             height: 50mm;
