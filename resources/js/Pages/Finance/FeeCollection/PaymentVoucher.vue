@@ -136,7 +136,7 @@ const close = () => {
                 >
 
                     <img
-                        :src="'/images/logo/edcore-erp-logo.PNG'"
+                        :src="'/images/logo/transparent-logo.png'"
                         alt="EduCore ERP"
                         class="mx-auto h-14 object-contain"
                     />

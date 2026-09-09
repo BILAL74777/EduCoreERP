@@ -91,6 +91,8 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/{student}', [StudentController::class,'show']);
             Route::put('/{student}', [StudentController::class,'update']);
             Route::delete('/{student}', [StudentController::class,'destroy']);
+            Route::post('/id-cards/generate', [StudentController::class, 'generateIdCards']);
+            Route::post('/id-cards/preview', [StudentController::class, 'generateIdCardsPreview']);
         }); 
     });
 

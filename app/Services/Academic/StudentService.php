@@ -192,8 +192,25 @@ class StudentService
             |--------------------------------------------------------------------------
             */
 
-            $enrollment = StudentEnrollment::create([
+            // Determine roll number (auto-generate if not provided)
+            $rollNo = $data['roll_no'] ?? null;
 
+            if (!$rollNo) {
+                $rollNo = $this->generateRollNo(
+                    $data['session_id'],
+                    $data['class_id'],
+                    $student->section ?? null
+                );
+            }
+
+            $cardNo = $data['card_no'] ?? $this->generateCardNo(
+                $data['session_id'],
+                $data['class_id'],
+                $rollNo,
+                $student->section ?? null
+            );
+
+            $enrollment = StudentEnrollment::create([
                 'student_id'      => $student->id,
 
                 'faculty_id'      => $data['faculty_id'],
@@ -202,8 +219,8 @@ class StudentService
                 'session_id'      => $data['session_id'],
                 'class_id'        => $data['class_id'],
 
-                'roll_no'         => $data['roll_no'] ?? null,
-                'card_no'         => $data['card_no'] ?? null,
+                'roll_no'         => $rollNo,
+                'card_no'         => $cardNo,
 
                 'status'          => 'Active',
                 'is_current'      => true,
@@ -448,6 +465,91 @@ public function update(
         return $this->find($student->id);
     });
 }
+
+    /**
+     * Generate a unique card number based on session, class, section and roll.
+     */
+    private function generateCardNo(
+        string $sessionId,
+        string $classId,
+        ?string $rollNo,
+        ?string $section
+    ): string {
+        $session = AcademicSession::find($sessionId);
+        $class = AcademicClass::find($classId);
+
+        $sessionCode = $session?->session_name ?? substr($sessionId, 0, 4);
+        $classCode = $class?->name ?? substr($classId, 0, 4);
+
+        // sanitize and shorten codes
+        $sanitize = function ($v) {
+            return preg_replace('/[^A-Z0-9]/', '', strtoupper(substr($v, 0, 8)));
+        };
+
+        $sessionCode = $sanitize($sessionCode);
+        $classCode = $sanitize($classCode);
+
+        $sectionCode = $section ? $sanitize($section) : '';
+
+        if ($rollNo) {
+            $number = (int) $rollNo;
+        } else {
+            $count = StudentEnrollment::query()
+                ->where('session_id', $sessionId)
+                ->where('class_id', $classId)
+                ->when($section, fn($q) => $q->whereHas('student', fn($q2) => $q2->where('section', $section)))
+                ->count();
+
+            $number = $count + 1;
+        }
+
+        $numPadded = str_pad((string) $number, 3, '0', STR_PAD_LEFT);
+
+        $base = $sessionCode . $classCode . $sectionCode . $numPadded;
+
+        $cardNo = $base;
+        $suffix = 1;
+
+        // ensure uniqueness
+        while (
+            StudentEnrollment::query()
+                ->where('card_no', $cardNo)
+                ->exists()
+        ) {
+            $cardNo = $base . sprintf('%02d', $suffix);
+            $suffix++;
+        }
+
+        return $cardNo;
+    }
+
+    /**
+     * Generate the next roll number (3-digit) for a session+class+section.
+     */
+    private function generateRollNo(
+        string $sessionId,
+        string $classId,
+        ?string $section
+    ): string {
+        $query = StudentEnrollment::query()
+            ->where('session_id', $sessionId)
+            ->where('class_id', $classId);
+
+        if ($section !== null && $section !== '') {
+            $query->whereHas('student', function ($q) use ($section) {
+                $q->where('section', $section);
+            });
+        }
+
+        // Find max numeric roll_no in the scope
+        $max = $query->get()->map(function ($e) {
+            return is_numeric($e->roll_no) ? (int) $e->roll_no : null;
+        })->filter()->max();
+
+        $next = ($max ? $max : 0) + 1;
+
+        return str_pad((string) $next, 3, '0', STR_PAD_LEFT);
+    }
 
 
 

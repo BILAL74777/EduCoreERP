@@ -7,33 +7,16 @@ import AttendanceHistory from "./AttendanceHistory.vue";
 import StudentAttendance from "./StudentAttendance.vue";
 import GateAttendance from "./GateAttendance.vue";
 import BarcodeAttendance from "./BarcodeAttendance.vue";
+import StudentIdCards from "./StudentIdCards.vue";
 
 import { ref } from "vue";
 
-const activeTab = ref("classroom");
+const params = new URLSearchParams(window.location.search);
+const requested = params.get('tab');
+const dateParam = params.get('date');
 
-const tabs = [
-    {
-        key: "classroom",
-        label: "Classroom Attendance",
-    },
-    {
-        key: "history",
-        label: "Attendance History",
-    },
-    {
-        key: "student",
-        label: "Student Report",
-    },
-    {
-        key: "gate",
-        label: "Gate Attendance",
-    },
-    {
-        key: "barcode",
-        label: "Barcode Scanner",
-    },
-];
+const activeTab = ref(requested || "classroom");
+const initialDate = ref(dateParam || new Date().toISOString().split('T')[0]);
 </script>
 
 <template>
@@ -57,29 +40,11 @@ const tabs = [
                 </p>
             </div>
 
-            <div
-                class="overflow-x-auto rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]"
-            >
-                <div class="flex min-w-max">
-                    <button
-                        v-for="tab in tabs"
-                        :key="tab.key"
-                        type="button"
-                        @click="activeTab = tab.key"
-                        class="border-b-2 px-5 py-3 text-sm font-medium transition"
-                        :class="
-                            activeTab === tab.key
-                                ? 'border-blue-600 text-blue-600'
-                                : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white'
-                        "
-                    >
-                        {{ tab.label }}
-                    </button>
-                </div>
-            </div>
+            <!-- navigation handled by sidebar; active tab selected via URL `?tab=` -->
 
             <ClassroomAttendance
                 v-if="activeTab === 'classroom'"
+                :initial-date="initialDate"
             />
 
             <AttendanceHistory
@@ -96,6 +61,10 @@ const tabs = [
 
             <BarcodeAttendance
                 v-if="activeTab === 'barcode'"
+            />
+
+            <StudentIdCards
+                v-if="activeTab === 'idcards'"
             />
 
         </div>

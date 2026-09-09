@@ -292,6 +292,9 @@ const currentPath =
 const startTransition = ref();
 const endTransition = ref();
 
+// current date for attendance links
+const currentDate = new Date().toISOString().split('T')[0];
+
 /*
 |--------------------------------------------------------------------------
 | Sidebar Menu
@@ -437,9 +440,36 @@ const menuGroups = [
                     //     name: "Timetable",
                     //     path: "/timetable",
                     // },
+                    // Attendance moved out as a top-level item below
+                ],
+            },
+            {
+                icon: PageIcon,
+                name: "Attendance",
+                subItems: [
                     {
-                        name: "Attendance",
-                        path: "/attendance",
+                        name: "Class attendance",
+                        path: `/attendance?tab=classroom&date=${currentDate}`,
+                    },
+                    {
+                        name: "Attendance History",
+                        path: `/attendance?tab=history&date=${currentDate}`,
+                    },
+                    {
+                        name: "Student Attendance Report",
+                        path: `/attendance?tab=student&date=${currentDate}`,
+                    },
+                    {
+                        name: "Gate Attendance",
+                        path: `/attendance?tab=gate&date=${currentDate}`,
+                    },
+                    {
+                        name: "Barcode Scanner attendance",
+                        path: `/attendance?tab=barcode&date=${currentDate}`,
+                    },
+                    {
+                        name: "ID Cards",
+                        path: `/attendance?tab=idcards&date=${currentDate}`,
                     },
                 ],
             },

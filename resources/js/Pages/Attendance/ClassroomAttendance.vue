@@ -1,5 +1,11 @@
 <script setup>
 import { computed, onMounted, ref } from "vue";
+const props = defineProps({
+    initialDate: {
+        type: String,
+        default: '',
+    },
+});
 import axios from "axios";
 import { toast } from "vue3-toastify";
 
@@ -10,9 +16,7 @@ const students = ref([]);
 const selectedSession = ref("");
 const selectedClass = ref("");
 const section = ref("");
-const attendanceDate = ref(
-    new Date().toISOString().split("T")[0]
-);
+const attendanceDate = ref(props.initialDate || new Date().toISOString().split("T")[0]);
 
 const loading = ref(false);
 const saving = ref(false);
