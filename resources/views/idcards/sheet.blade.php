@@ -74,10 +74,10 @@
         .watermark-logo {
             position: absolute;
             left: 50%;
-            top: 53%;
+            top: 67%;
             transform: translate(-50%, -50%);
-            width: 43mm;
-            height: 43mm;
+            width: 50mm;
+            height: 50mm;
             object-fit: contain;
             opacity: 0.045;
             z-index: 7;
@@ -178,14 +178,14 @@
             top: 20.32mm;
             left: 50%;
             transform: translateX(-50%);
-            width: 20.32mm;
-            height: 20.32mm;
+            width: 25.32mm;
+            height: 25.32mm;
             object-fit: cover;
             border-radius: 50%;
             background: #ffffff;
-            border: 1.143mm solid var(--navy);
+            /* border: 1.143mm solid var(--navy); */
             box-shadow: 0 0 0 .381mm #ffffff, 0 0 0 .686mm var(--navy);
-            padding: 1.35mm;
+            /* padding: 1.35mm; */
         }
 
         .front-logo {
@@ -228,14 +228,14 @@
         .content {
             position: absolute;
             z-index: 12;
-            top: 45.672mm;
+            top: 47.672mm;
             left: 2.54mm;
             width: 50.8mm;
             text-align: center;
         }
 
         .student-name {
-            font-size: 5.715mm;
+            font-size: 4.715mm;
             line-height: 1;
             font-weight: 900;
             letter-spacing: .051mm;
@@ -460,6 +460,17 @@
         $enrollment->class_name ??
         'CLASS';
         };
+        /*
+        * -------------------------------------------------------------
+        * Discipline
+        * -------------------------------------------------------------
+        */
+        $getDisciplineName = function ($enrollment) {
+        return
+        $enrollment->academicDiscipline->name ??
+        $enrollment->discipline ??
+        'DISCIPLINE';
+        };
 
         /*
         * -------------------------------------------------------------
@@ -495,6 +506,7 @@
                     $name = $studentName($student);
                     $father = $fatherName($student);
                     $className = $getClassName($enrollment);
+                    $disciplineName = $getDisciplineName($enrollment);
                     $cardNo = $getCardNo($enrollment);
                 @endphp
 
@@ -578,7 +590,7 @@
                         </div>
 
                         <div class="program">
-                            {{ $className }}
+                            {{ $disciplineName->name }} - {{ $className }}
                         </div>
 
                         {{-- =================================================
