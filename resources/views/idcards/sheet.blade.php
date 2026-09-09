@@ -314,6 +314,30 @@
             padding-left: .889mm;
         }
 
+        /* -------------------------------------------------------------
+   PRINT BUTTON — SCREEN ONLY
+   ------------------------------------------------------------- */
+        .print-button {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 9999;
+            padding: 10px 20px;
+            border: 0;
+            border-radius: 6px;
+            background: #012F6B;
+            color: #ffffff;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, .20);
+        }
+
+        .print-button:hover {
+            background: #023576;
+        }
+
         /* Bottom SVG decoration */
         .bottom-decoration {
             position: absolute;
@@ -358,10 +382,37 @@
         }
         }
 
+        <blade media|%20print%20%7B>.print-button {
+            display: none !important;
+        }
+
+        html,
+        body {
+            width: 210mm;
+            min-height: 297mm;
+            background: #ffffff;
+        }
+
+        body {
+            padding: 7mm 8mm;
+        }
+
+        .sheet {
+            width: 194mm;
+            min-height: 283mm;
+            page-break-after: always;
+        }
+
+        .id-card {
+            box-shadow: none;
+        }
+        }
+
     </style>
 </head>
 
 <body>
+    <button type="button" class="print-button" onclick="window.print();">Print</button>
 
     @php
 
