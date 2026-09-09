@@ -79,7 +79,7 @@
             width: 50mm;
             height: 50mm;
             object-fit: contain;
-            opacity: 0.045;
+            opacity: 0.075;
             z-index: 7;
             pointer-events: none;
         }
@@ -194,14 +194,14 @@
             top: 20.32mm;
             left: 50%;
             transform: translateX(-50%);
-            width: 20.32mm;
-            height: 20.32mm;
+            width: 25.32mm;
+            height: 25.32mm;
             object-fit: contain;
             border-radius: 50%;
             background: #ffffff;
-            border: 1.143mm solid var(--navy);
+            /* border: 1.143mm solid var(--navy); */
             box-shadow: 0 0 0 .381mm #ffffff, 0 0 0 .686mm var(--navy);
-            padding: 1.35mm;
+            /* padding: 1.35mm; */
         }
 
         .no-photo {
