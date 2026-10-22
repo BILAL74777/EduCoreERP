@@ -14,12 +14,8 @@ const emit = defineEmits(["close", "confirm"]);
 </script>
 
 <template>
-    <Modal
-        :show="show"
-        @close="!loading && emit('close')"
-    >
+    <Modal :show="show" @close="!loading && emit('close')">
         <div class="relative p-6 overflow-hidden">
-
             <!-- Background Warning Icon -->
             <div
                 class="absolute inset-0 flex items-center justify-center pointer-events-none"
@@ -57,11 +53,9 @@ const emit = defineEmits(["close", "confirm"]);
                     Delete Record
                 </h2>
 
-                <p
-                    class="mt-3 text-gray-600 dark:text-gray-400"
-                >
-                    Are you sure you want to delete this record?
-                    This action cannot be undone.
+                <p class="mt-3 text-gray-600 dark:text-gray-400">
+                    Are you sure you want to delete this record? This action
+                    cannot be undone.
                 </p>
 
                 <div class="flex justify-center gap-3 mt-8">
