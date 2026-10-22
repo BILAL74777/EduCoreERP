@@ -5,8 +5,8 @@ import Alert from "@/Components/ui/Alert.vue";
 import { ref } from "vue";
 import axios from "axios";
 
-import Modal from "@/Components/Modal.vue";
-import DeleteConfirmModal from "@/Components/DeleteConfirmModal.vue";
+import Modal from "@/Components/Modal/Modal.vue";
+import DeleteConfirmModal from "@/Components/Modal/DeleteConfirmModal.vue";
 import UserTable from "@/Components/Tables/UserTable.vue";
 const showFormModal = ref(false);
 const showDeleteModal = ref(false);

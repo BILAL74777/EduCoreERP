@@ -12,11 +12,11 @@ import StudentIdCards from "./StudentIdCards.vue";
 import { ref } from "vue";
 
 const params = new URLSearchParams(window.location.search);
-const requested = params.get('tab');
-const dateParam = params.get('date');
+const requested = params.get("tab");
+const dateParam = params.get("date");
 
 const activeTab = ref(requested || "classroom");
-const initialDate = ref(dateParam || new Date().toISOString().split('T')[0]);
+const initialDate = ref(dateParam || new Date().toISOString().split("T")[0]);
 </script>
 
 <template>
@@ -24,19 +24,14 @@ const initialDate = ref(dateParam || new Date().toISOString().split('T')[0]);
 
     <Master>
         <div class="space-y-6">
-
             <div>
-                <h1
-                    class="text-2xl font-bold text-gray-900 dark:text-white"
-                >
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
                     Attendance
                 </h1>
 
-                <p
-                    class="mt-1 text-sm text-gray-500 dark:text-gray-400"
-                >
-                    Manage classroom attendance, student history and
-                    gate attendance.
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                    Manage classroom attendance, student history and gate
+                    attendance.
                 </p>
             </div>
 
@@ -47,26 +42,15 @@ const initialDate = ref(dateParam || new Date().toISOString().split('T')[0]);
                 :initial-date="initialDate"
             />
 
-            <AttendanceHistory
-                v-if="activeTab === 'history'"
-            />
+            <AttendanceHistory v-if="activeTab === 'history'" />
 
-            <StudentAttendance
-                v-if="activeTab === 'student'"
-            />
+            <StudentAttendance v-if="activeTab === 'student'" />
 
-            <GateAttendance
-                v-if="activeTab === 'gate'"
-            />
+            <GateAttendance v-if="activeTab === 'gate'" />
 
-            <BarcodeAttendance
-                v-if="activeTab === 'barcode'"
-            />
+            <BarcodeAttendance v-if="activeTab === 'barcode'" />
 
-            <StudentIdCards
-                v-if="activeTab === 'idcards'"
-            />
-
+            <StudentIdCards v-if="activeTab === 'idcards'" />
         </div>
     </Master>
 </template>
