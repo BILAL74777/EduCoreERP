@@ -1,0 +1,1 @@
+@media print{body{background:#fff!important}body *{visibility:hidden}#fee-card-print-area,#fee-card-print-area *{visibility:visible}#fee-card-print-area{width:100%;position:absolute;top:0;left:0;box-shadow:none!important;border:none!important}.no-print{display:none!important}.fee-card-print{padding:20px!important}@page{size:A4;margin:10mm}}
