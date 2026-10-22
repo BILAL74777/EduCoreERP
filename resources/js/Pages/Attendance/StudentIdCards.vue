@@ -1,4 +1,3 @@
- 
 <script setup>
 import { onMounted, ref } from "vue";
 import axios from "axios";
@@ -153,7 +152,6 @@ onMounted(async () => {
 <template>
     <div class="min-h-screen bg-gray-50 p-4 dark:bg-gray-950 sm:p-6">
         <div class="mx-auto max-w-7xl space-y-6">
-
             <!-- Header -->
             <div
                 class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-700 p-6 text-white shadow-lg"
@@ -172,37 +170,35 @@ onMounted(async () => {
                 >
                     <!-- Logo + Title -->
                     <div class="flex items-center gap-4">
-    <div
-        class="flex h-25 w-25 shrink-0 items-center justify-center rounded-full bg-white shadow-md overflow-hidden"
-    >
-        <img
-            :src="'/images/logo/transparent-logo.png'"
-            alt="Institute Logo"
-            class="h-full w-full object-contain"
-        />
-    </div>
+                        <div
+                            class="flex h-25 w-25 shrink-0 items-center justify-center rounded-full bg-white shadow-md overflow-hidden"
+                        >
+                            <img
+                                :src="'/images/logo/transparent-logo.png'"
+                                alt="Institute Logo"
+                                class="h-full w-full object-contain"
+                            />
+                        </div>
 
-    <div>
-        <p
-            class="text-sm font-medium uppercase tracking-wider text-blue-100"
-        >
-            Student Management
-        </p>
+                        <div>
+                            <p
+                                class="text-sm font-medium uppercase tracking-wider text-blue-100"
+                            >
+                                Student Management
+                            </p>
 
-        <h1
-            class="mt-1 text-2xl font-bold tracking-tight sm:text-3xl"
-        >
-            Student Identity Cards
-        </h1>
+                            <h1
+                                class="mt-1 text-2xl font-bold tracking-tight sm:text-3xl"
+                            >
+                                Student Identity Cards
+                            </h1>
 
-        <p
-            class="mt-1 max-w-2xl text-sm text-blue-100"
-        >
-            Generate professional student identity cards
-            with front, back and barcode.
-        </p>
-    </div>
-</div>
+                            <p class="mt-1 max-w-2xl text-sm text-blue-100">
+                                Generate professional student identity cards
+                                with front, back and barcode.
+                            </p>
+                        </div>
+                    </div>
 
                     <!-- Student Count -->
                     <div
@@ -228,9 +224,7 @@ onMounted(async () => {
                         </div>
 
                         <div>
-                            <p class="text-xs text-blue-100">
-                                Students Found
-                            </p>
+                            <p class="text-xs text-blue-100">Students Found</p>
 
                             <p class="text-xl font-bold">
                                 {{ students.length }}
@@ -275,9 +269,7 @@ onMounted(async () => {
                                 Card Generation Filters
                             </h2>
 
-                            <p
-                                class="text-sm text-gray-500 dark:text-gray-400"
-                            >
+                            <p class="text-sm text-gray-500 dark:text-gray-400">
                                 Select the students for whom you want to
                                 generate identity cards.
                             </p>
@@ -304,9 +296,7 @@ onMounted(async () => {
                                     @change="loadStudents"
                                     class="w-full appearance-none rounded-xl border border-gray-300 bg-white px-4 py-3 pr-10 text-sm text-gray-700 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
                                 >
-                                    <option value="">
-                                        Select Session
-                                    </option>
+                                    <option value="">Select Session</option>
 
                                     <option
                                         v-for="s in sessions"
@@ -348,9 +338,7 @@ onMounted(async () => {
                                     @change="loadStudents"
                                     class="w-full appearance-none rounded-xl border border-gray-300 bg-white px-4 py-3 pr-10 text-sm text-gray-700 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
                                 >
-                                    <option value="">
-                                        Select Class
-                                    </option>
+                                    <option value="">Select Class</option>
 
                                     <option
                                         v-for="c in classes"
@@ -384,9 +372,7 @@ onMounted(async () => {
                                 class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
                             >
                                 Section
-                                <span
-                                    class="font-normal text-gray-400"
-                                >
+                                <span class="font-normal text-gray-400">
                                     (Optional)
                                 </span>
                             </label>
@@ -547,9 +533,7 @@ onMounted(async () => {
                     class="flex flex-col gap-3 border-b border-gray-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 dark:border-gray-800"
                 >
                     <div>
-                        <h2
-                            class="font-semibold text-gray-900 dark:text-white"
-                        >
+                        <h2 class="font-semibold text-gray-900 dark:text-white">
                             Students
                         </h2>
 
@@ -589,10 +573,7 @@ onMounted(async () => {
                 </div>
 
                 <!-- Table -->
-                <div
-                    v-else-if="students.length"
-                    class="overflow-x-auto"
-                >
+                <div v-else-if="students.length" class="overflow-x-auto">
                     <table class="w-full text-sm">
                         <thead>
                             <tr
@@ -688,15 +669,11 @@ onMounted(async () => {
                                 <td
                                     class="whitespace-nowrap px-5 py-4 font-medium text-gray-700 dark:text-gray-300"
                                 >
-                                    {{
-                                        st.student?.admission_no || "-"
-                                    }}
+                                    {{ st.student?.admission_no || "-" }}
                                 </td>
 
                                 <!-- Card -->
-                                <td
-                                    class="whitespace-nowrap px-5 py-4"
-                                >
+                                <td class="whitespace-nowrap px-5 py-4">
                                     <span
                                         class="inline-flex items-center rounded-lg bg-gray-100 px-3 py-1.5 font-mono text-xs font-semibold text-gray-700 dark:bg-gray-800 dark:text-gray-300"
                                     >
@@ -760,8 +737,8 @@ onMounted(async () => {
                     <p
                         class="mt-1 max-w-md text-sm text-gray-500 dark:text-gray-400"
                     >
-                        Select an academic session and class above to load
-                        the students and generate their identity cards.
+                        Select an academic session and class above to load the
+                        students and generate their identity cards.
                     </p>
                 </div>
             </div>
@@ -795,10 +772,9 @@ onMounted(async () => {
                     <p
                         class="mt-0.5 text-sm text-blue-700/80 dark:text-blue-400/80"
                     >
-                        Generated cards will include the student's
-                        information, photograph, institute details and
-                        barcode. Use Preview to verify the cards before
-                        downloading the final PDF.
+                        Generated cards will include the student's information,
+                        photograph, institute details and barcode. Use Preview
+                        to verify the cards before downloading the final PDF.
                     </p>
                 </div>
             </div>
