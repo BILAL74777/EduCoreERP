@@ -10,10 +10,13 @@ use Illuminate\Validation\ValidationException;
 class GateAttendanceService
 {
     /**
-     * Search active student by:
-     * registration number,
-     * admission number,
-     * card number.
+     * Search active/current student enrollment by:
+     * - registration number
+     * - admission number
+     * - card number
+     *
+     * registration_no and admission_no are on students table.
+     * card_no is on student_enrollments table.
      */
     public function findStudent(string $value)
     {
@@ -25,36 +28,34 @@ class GateAttendanceService
             ])
             ->where('status', 'Active')
             ->where('is_current', true)
-            ->whereHas(
-                'student',
-                function ($query) use ($value) {
-                    $query->where(
-                        'registration_no',
-                        $value
-                    )
-                    ->orWhere(
-                        'admission_no',
-                        $value
-                    )
-                    ->orWhere(
-                        'card_no',
-                        $value
-                    );
-                }
-            )
+            ->where(function ($query) use ($value) {
+
+                // Card number belongs to student_enrollments
+                $query->where('card_no', $value)
+
+                    // Registration/admission numbers belong to students
+                    ->orWhereHas('student', function ($studentQuery) use ($value) {
+                        $studentQuery
+                            ->where('registration_no', $value)
+                            ->orWhere('admission_no', $value);
+                    });
+            })
             ->first();
     }
 
     /**
-     * Get today's latest gate event for student.
+     * Get today's latest gate event for student enrollment.
      */
-    public function latestEvent(
-        string $enrollmentId
-    ) {
+    public function latestEvent(string $enrollmentId)
+    {
         return GateAttendance::query()
             ->where(
                 'student_enrollment_id',
                 $enrollmentId
+            )
+            ->whereDate(
+                'event_time',
+                today()
             )
             ->latest('event_time')
             ->first();
@@ -67,6 +68,9 @@ class GateAttendanceService
     {
         return DB::transaction(function () use ($data) {
 
+            /*
+             * Find active/current enrollment.
+             */
             $enrollment = StudentEnrollment::query()
                 ->where(
                     'id',
@@ -90,6 +94,12 @@ class GateAttendanceService
                 ]);
             }
 
+            /*
+             * Get today's latest event.
+             *
+             * This is important because a student's previous day's
+             * OUT should not prevent them from making an IN today.
+             */
             $lastEvent = $this->latestEvent(
                 $enrollment->id
             );
@@ -97,8 +107,14 @@ class GateAttendanceService
             /*
              * Prevent invalid sequence:
              *
-             * No OUT before IN.
-             * No IN while already inside.
+             * IN -> IN = invalid
+             * OUT -> OUT = invalid
+             *
+             * Valid:
+             *
+             * no event -> IN
+             * IN -> OUT
+             * OUT -> IN
              */
             if ($lastEvent) {
 
@@ -127,6 +143,9 @@ class GateAttendanceService
 
             /*
              * Prevent accidental duplicate scans.
+             *
+             * Example:
+             * Scanner scans same card twice within 2 minutes.
              */
             $recent = GateAttendance::query()
                 ->where(
@@ -152,30 +171,26 @@ class GateAttendanceService
                 ]);
             }
 
+            /*
+             * Create attendance record.
+             */
             return GateAttendance::create([
-                'student_enrollment_id' =>
-                    $enrollment->id,
+                'student_enrollment_id' => $enrollment->id,
 
-                'event_type' =>
-                    $data['event_type'],
+                'event_type' => $data['event_type'],
 
-                'method' =>
-                    $data['method'],
+                'method' => $data['method'],
 
-                'event_time' =>
-                    $data['event_time'] ?? now(),
+                'event_time' => $data['event_time'] ?? now(),
 
-                'gate_id' =>
-                    $data['gate_id'] ?? null,
+                'gate_id' => $data['gate_id'] ?? null,
 
-                'device_id' =>
-                    $data['device_id'] ?? null,
+                'device_id' => $data['device_id'] ?? null,
 
-                'marked_by' =>
-                    auth()->id(),
+                'marked_by' => auth()->id(),
 
-                'remarks' =>
-                    $data['remarks'] ?? null,
+                'remarks' => $data['remarks'] ?? null,
+
             ])->load([
                 'enrollment.student',
                 'enrollment.academicClass',
@@ -186,10 +201,15 @@ class GateAttendanceService
 
     /**
      * Today's gate history.
+     *
+     * Search:
+     * - student name
+     * - registration number
+     * - admission number
+     * - enrollment card number
      */
-    public function todayHistory(
-        ?string $search = null
-    ) {
+    public function todayHistory(?string $search = null)
+    {
         return GateAttendance::query()
             ->with([
                 'enrollment.student',
@@ -200,45 +220,67 @@ class GateAttendanceService
                 'event_time',
                 today()
             )
-
             ->when(
                 $search,
                 function ($query) use ($search) {
-                    $query->whereHas(
-                        'enrollment.student',
-                        function ($q) use ($search) {
 
-                            $q->where(
-                                'name',
-                                'like',
-                                "%{$search}%"
-                            )
-                            ->orWhere(
-                                'registration_no',
-                                'like',
-                                "%{$search}%"
-                            )
-                            ->orWhere(
-                                'admission_no',
-                                'like',
-                                "%{$search}%"
-                            )
-                            ->orWhere(
-                                'card_no',
-                                'like',
-                                "%{$search}%"
-                            );
-                        }
-                    );
+                    $query->where(function ($query) use ($search) {
+
+                        /*
+                         * Search student fields.
+                         */
+                        $query->whereHas(
+                            'enrollment.student',
+                            function ($studentQuery) use ($search) {
+
+                                $studentQuery
+                                    ->where(
+                                        'name',
+                                        'like',
+                                        "%{$search}%"
+                                    )
+                                    ->orWhere(
+                                        'registration_no',
+                                        'like',
+                                        "%{$search}%"
+                                    )
+                                    ->orWhere(
+                                        'admission_no',
+                                        'like',
+                                        "%{$search}%"
+                                    );
+                            }
+                        )
+
+                        /*
+                         * Search card number on enrollment.
+                         */
+                        ->orWhereHas(
+                            'enrollment',
+                            function ($enrollmentQuery) use ($search) {
+
+                                $enrollmentQuery->where(
+                                    'card_no',
+                                    'like',
+                                    "%{$search}%"
+                                );
+                            }
+                        );
+                    });
                 }
             )
-
             ->latest('event_time')
             ->paginate(20);
     }
 
     /**
      * Complete gate history for one student.
+     *
+     * Filters:
+     * - from
+     * - to
+     * - event_type
+     * - per_page
      */
     public function studentHistory(
         string $studentId,
@@ -253,6 +295,7 @@ class GateAttendanceService
             ->whereHas(
                 'enrollment',
                 function ($q) use ($studentId) {
+
                     $q->where(
                         'student_id',
                         $studentId
@@ -263,32 +306,35 @@ class GateAttendanceService
             ->when(
                 !empty($filters['from']),
                 fn ($q) =>
-                $q->whereDate(
-                    'event_time',
-                    '>=',
-                    $filters['from']
-                )
+                    $q->whereDate(
+                        'event_time',
+                        '>=',
+                        $filters['from']
+                    )
             )
 
             ->when(
                 !empty($filters['to']),
                 fn ($q) =>
-                $q->whereDate(
-                    'event_time',
-                    '<=',
-                    $filters['to']
-                )
+                    $q->whereDate(
+                        'event_time',
+                        '<=',
+                        $filters['to']
+                    )
             )
 
             ->when(
                 !empty($filters['event_type']),
                 fn ($q) =>
-                $q->where(
-                    'event_type',
-                    $filters['event_type']
-                )
+                    $q->where(
+                        'event_type',
+                        $filters['event_type']
+                    )
             );
 
+        /*
+         * Get all matching records for summary.
+         */
         $all = (clone $query)->get();
 
         return [

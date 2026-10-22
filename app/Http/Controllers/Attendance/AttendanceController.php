@@ -206,55 +206,73 @@ class AttendanceController extends Controller
         ]);
     }
 
-    /**
-     * Student search for reports.
-     */
-    public function studentSearch(Request $request)
-    {
-        $request->validate([
-            'search' => [
-                'required',
-                'string',
-                'max:100',
-            ],
-        ]);
+ 
+public function studentSearch(Request $request)
+{
+    $request->validate([
+        'search' => [
+            'required',
+            'string',
+            'max:100',
+        ],
+    ]);
 
-        $search = $request->search;
+    $search = $request->search;
 
-        $students = Student::query()
-            ->with([
-                'currentEnrollment.academicClass',
-                'currentEnrollment.academicSession',
-            ])
-            ->where(function ($query) use ($search) {
-                $query->where(
-                    'name',
-                    'like',
-                    "%{$search}%"
-                )
-                ->orWhere(
-                    'admission_no',
-                    'like',
-                    "%{$search}%"
-                )
-                ->orWhere(
-                    'registration_no',
-                    'like',
-                    "%{$search}%"
-                )
-                ->orWhere(
-                    'card_no',
-                    'like',
-                    "%{$search}%"
-                );
-            })
-            ->orderBy('name')
-            ->limit(20)
-            ->get();
+    $students = Student::query()
+        ->with([
+            'currentEnrollment.academicClass',
+            'currentEnrollment.academicSession',
+        ])
 
-        return response()->json([
-            'success' => true,
-            'students' => $students,
-        ]);
-    }
+        /*
+         * Search student fields and current enrollment card number.
+         */
+        ->where(function ($query) use ($search) {
+
+            /*
+             * Student table fields.
+             */
+            $query->where(
+                'name',
+                'like',
+                "%{$search}%"
+            )
+            ->orWhere(
+                'admission_no',
+                'like',
+                "%{$search}%"
+            )
+            ->orWhere(
+                'registration_no',
+                'like',
+                "%{$search}%"
+            )
+
+            /*
+             * card_no belongs to student_enrollments,
+             * not students.
+             */
+            ->orWhereHas(
+                'currentEnrollment',
+                function ($enrollmentQuery) use ($search) {
+
+                    $enrollmentQuery->where(
+                        'card_no',
+                        'like',
+                        "%{$search}%"
+                    );
+                }
+            );
+        })
+
+        ->orderBy('name')
+        ->limit(20)
+        ->get();
+
+    return response()->json([
+        'success' => true,
+        'students' => $students,
+    ]);
+}
 }
