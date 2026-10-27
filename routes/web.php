@@ -14,15 +14,27 @@ use Inertia\Inertia;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () {
-    return Inertia::render('Auth/Login', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+// Route::get('/', function () {
+//     return Inertia::render('Auth/Login', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
+//     ]);
+// });
 
+
+/*
+|--------------------------------------------------------------------------
+| Front end 
+|--------------------------------------------------------------------------
+
+*/
+
+
+Route::get('/', function () { 
+        return Inertia::render('Frontend/Index');
+    });
 /*
 |--------------------------------------------------------------------------
 | Dashboard
@@ -50,17 +62,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    /*
-    |--------------------------------------------------------------------------
-    | Example
-    |--------------------------------------------------------------------------
-    */
-
-    Route::get('/example', function () {
-        return Inertia::render('Example/Index');
-    })->name('example');
-
+ 
     /*
     |--------------------------------------------------------------------------
     | Users
